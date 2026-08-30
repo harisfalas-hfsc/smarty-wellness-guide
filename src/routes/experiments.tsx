@@ -24,8 +24,6 @@ export const Route = createFileRoute("/experiments")({
 function ExperimentsPage() {
   const { state } = useWellness();
 
-  return null as never; // placeholder — replaced below
-
   return (
     <PageShell>
       <PageHeader
