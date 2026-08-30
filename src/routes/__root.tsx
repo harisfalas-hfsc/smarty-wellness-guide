@@ -123,20 +123,30 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WellnessProvider>
-        <div className="min-h-screen bg-background">
-          <Navigation />
-          <div className="mx-auto flex w-full max-w-7xl">
-            <DesktopNav />
-            <div className="min-w-0 flex-1">
-              {/* Required: nested routes render here. */}
-              <Outlet />
-            </div>
-          </div>
-          <BottomNav />
-          <Toaster />
-        </div>
-      </WellnessProvider>
+      <AuthProvider>
+        <WellnessProvider>
+          <AppFrame />
+        </WellnessProvider>
+      </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+function AppFrame() {
+  const { session } = useAuth();
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <div className="mx-auto flex w-full max-w-7xl">
+        {session && <DesktopNav />}
+        <div className="min-w-0 flex-1">
+          {/* Required: nested routes render here. */}
+          <Outlet />
+        </div>
+      </div>
+      {session && <BottomNav />}
+      <Toaster />
+    </div>
   );
 }
