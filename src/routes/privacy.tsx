@@ -1,0 +1,188 @@
+import { createFileRoute } from "@tanstack/react-router";
+import { Shield } from "lucide-react";
+import { LegalLayout } from "@/components/LegalLayout";
+
+export const Route = createFileRoute("/privacy")({
+  head: () => ({
+    meta: [
+      { title: "Privacy Policy | SmartyWellness" },
+      {
+        name: "description",
+        content:
+          "How SmartyWellness collects, uses, and protects your personal data — GDPR-compliant privacy policy for your wellness check-ins and daily guidance.",
+      },
+      { property: "og:title", content: "Privacy Policy — SmartyWellness" },
+      {
+        property: "og:description",
+        content: "How SmartyWellness protects your personal data and wellbeing information.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
+    ],
+  }),
+  component: Privacy,
+});
+
+function Privacy() {
+  return (
+    <LegalLayout title="Privacy Policy" icon={<Shield className="h-5 w-5" />} lastUpdated="August 2026">
+      <p>
+        At <strong>Smarty Wellness</strong> (smartywellness.com) we value your privacy and are
+        committed to protecting your personal data. This Privacy Policy explains how Smarty
+        Wellness collects, uses, stores, and protects your information when you use our wellness
+        guidance service. Our practices comply with the General Data Protection Regulation (GDPR)
+        (EU) 2016/679, the ePrivacy Directive 2002/58/EC, and applicable data protection laws
+        worldwide.
+      </p>
+
+      <h2>1. Data We Collect</h2>
+      <h3>Account &amp; Profile Data</h3>
+      <ul>
+        <li>Name, email address, and password (stored hashed) when you create an account.</li>
+        <li>Optional profile information: display name, timezone, and notification preferences.</li>
+        <li>Billing information needed to process any membership payment (handled by our payment processor — we do not store full card numbers).</li>
+      </ul>
+
+      <h3>Wellbeing &amp; Lifestyle Data</h3>
+      <ul>
+        <li>
+          Self-reported information such as age, life focus areas, daily energy, mood, sleep,
+          stress and focus ratings, and personal notes you write.
+        </li>
+        <li>Your missions, challenges, bucket-list goals, journey history and review entries.</li>
+        <li>
+          Wellbeing-related answers you choose to provide, which may reveal information about your
+          physical or mental health.
+        </li>
+      </ul>
+
+      <h3>Usage &amp; Technical Data</h3>
+      <ul>
+        <li>Technical data such as IP address, browser type, device type, and operating system.</li>
+        <li>Aggregated usage analytics (which features you use, missions completed).</li>
+      </ul>
+
+      <h2>2. How We Use Your Data</h2>
+      <ul>
+        <li>Generate your personalized daily missions, coach guidance and recommendations.</li>
+        <li>Adapt guidance to your focus areas, energy level and preferences.</li>
+        <li>Save your check-ins and journey history so you can track progress over time.</li>
+        <li>Process any membership payment and manage your subscription.</li>
+        <li>Send transactional emails (account, billing, security) and, with consent, product updates.</li>
+        <li>Improve Smarty Wellness through anonymized, aggregated analytics.</li>
+        <li>Ensure legal compliance and platform security.</li>
+      </ul>
+      <p>
+        <strong>We will never sell or rent your personal data to third parties.</strong>
+      </p>
+
+      <h2>3. Legal Basis for Processing (GDPR Article 6)</h2>
+      <ul>
+        <li><strong>Consent (Art. 6(1)(a)):</strong> Marketing emails, optional analytics.</li>
+        <li>
+          <strong>Contractual necessity (Art. 6(1)(b)):</strong> Running your account, generating
+          guidance, processing any membership payment, and saving your journey history.
+        </li>
+        <li><strong>Legal obligation (Art. 6(1)(c)):</strong> Record keeping, tax compliance, fraud prevention.</li>
+        <li><strong>Legitimate interests (Art. 6(1)(f)):</strong> Service security, product improvement.</li>
+        <li>
+          <strong>Health-related self-reports (Art. 9(2)(a)):</strong> Mood, stress, sleep and
+          similar entries are processed only with your explicit consent and used solely to make
+          your guidance more relevant. We do not share them for any other purpose.
+        </li>
+      </ul>
+
+      <h2>4. Data Sharing &amp; Sub-Processors</h2>
+      <ul>
+        <li><strong>Cloud hosting provider</strong> — database hosting and authentication.</li>
+        <li>
+          <strong>AI provider(s)</strong> — used only to generate your personalized guidance. No
+          direct identifiers (name, email) are sent to the AI provider unless strictly required.
+        </li>
+        <li><strong>Payment processor</strong> — securely handles any membership billing.</li>
+        <li><strong>Email delivery provider</strong> — for transactional and (with consent) marketing emails.</li>
+      </ul>
+      <p>
+        All processors are required to comply with GDPR standards and maintain appropriate
+        technical and organizational security measures.
+      </p>
+
+      <h2>5. Data Retention</h2>
+      <ul>
+        <li>
+          <strong>Account data:</strong> retained while your account is active and deleted when you
+          delete your account, except where short operational backup windows or legal obligations
+          apply.
+        </li>
+        <li>
+          <strong>Check-in &amp; journey data:</strong> retained while your account is active and
+          deleted with your account.
+        </li>
+        <li><strong>Transaction records:</strong> retained for 7 years as required by tax law.</li>
+        <li><strong>Marketing preferences:</strong> retained until you withdraw consent.</li>
+        <li>
+          <strong>Anonymized analytics:</strong> may be retained beyond account deletion in fully
+          anonymized form.
+        </li>
+      </ul>
+
+      <h2>6. Your Rights Under GDPR</h2>
+      <ul>
+        <li><strong>Right of Access (Art. 15)</strong></li>
+        <li><strong>Right to Rectification (Art. 16)</strong></li>
+        <li><strong>Right to Erasure (Art. 17)</strong> — delete your account and data from settings.</li>
+        <li><strong>Right to Restrict Processing (Art. 18)</strong></li>
+        <li><strong>Right to Data Portability (Art. 20)</strong> — download your data in JSON format.</li>
+        <li><strong>Right to Object (Art. 21)</strong></li>
+        <li><strong>Right to Withdraw Consent (Art. 7)</strong></li>
+        <li><strong>Right to Lodge a Complaint</strong> with your local data protection authority.</li>
+      </ul>
+      <div className="note">
+        To exercise these rights, use the controls in your settings or email{" "}
+        <a href="mailto:smartywellness@outlook.com">smartywellness@outlook.com</a>. We respond within 30 days.
+      </div>
+
+      <h2>7. Security Measures</h2>
+      <ul>
+        <li>Encryption in transit (TLS 1.2+) and at rest (AES-256).</li>
+        <li>Hashed passwords and secure session management.</li>
+        <li>Row Level Security (RLS) ensuring each user can only access their own data.</li>
+        <li>Strict access controls and least-privilege principles.</li>
+        <li>Regular dependency, infrastructure, and security reviews.</li>
+      </ul>
+
+      <h2>8. Cookies &amp; Local Storage</h2>
+      <p>Smarty Wellness uses cookies and local storage for the following purposes:</p>
+      <ul>
+        <li><strong>Essential:</strong> authentication tokens, session security, fraud prevention.</li>
+        <li><strong>Functional:</strong> UI preferences, check-in and mission progress.</li>
+      </ul>
+
+      <h2>9. Children</h2>
+      <p>
+        Smarty Wellness is intended for users aged 18 and over. Users between 13 and 18 may only
+        use Smarty Wellness with parental or guardian supervision and consent. We do not knowingly
+        collect data from children under 13.
+      </p>
+
+      <h2>10. International Transfers</h2>
+      <p>
+        Your data is primarily processed within the EU. Where transfers outside the EU are
+        necessary, we rely on Standard Contractual Clauses or other lawful transfer mechanisms
+        approved under GDPR.
+      </p>
+
+      <h2>11. Changes to This Policy</h2>
+      <p>
+        We may update this Privacy Policy from time to time. We will notify users of material
+        changes via the app or email.
+      </p>
+
+      <h2>12. Contact</h2>
+      <p>
+        Data Controller: <strong>Smarty Wellness</strong> (smartywellness.com). Contact{" "}
+        <a href="mailto:smartywellness@outlook.com">smartywellness@outlook.com</a>.
+      </p>
+    </LegalLayout>
+  );
+}
