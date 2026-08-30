@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { LogIn, UserPlus } from "lucide-react";
-import heroImage from "@/assets/hero-wellness-white.jpg";
+import heroAsset from "@/assets/hero-family-sky.jpg.asset.json";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/PageHeader";
 
