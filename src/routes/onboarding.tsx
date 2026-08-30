@@ -183,7 +183,7 @@ function OnboardingPage() {
     },
   ];
 
-  const current = steps[step];
+  const current = steps[step] ?? steps[0]!;
   const last = step === steps.length - 1;
 
   function next() {
