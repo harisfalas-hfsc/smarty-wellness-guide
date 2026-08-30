@@ -8,6 +8,15 @@ import { useWellness } from "@/lib/wellness-store";
 import { buildRecommendations } from "@/lib/recommendation";
 import { MOODS, NEEDS } from "@/lib/checkin-options";
 
+/** One wellness color per quick mood button. */
+const MOOD_TONES = [
+  "border-bloom/50 hover:border-bloom",
+  "border-calm/60 hover:border-calm",
+  "border-sun/70 hover:border-sun",
+  "border-primary/50 hover:border-primary",
+  "border-mind/50 hover:border-mind",
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
