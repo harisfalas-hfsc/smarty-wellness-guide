@@ -64,14 +64,16 @@ export function Navigation() {
     >
       <div className="flex h-11 items-center justify-between gap-2 px-3">
         <div className="flex min-w-0 items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary hover:bg-primary/10"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+          {session && (
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary hover:bg-primary/10"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          )}
           {canGoBack && (
             <button
               type="button"
