@@ -61,10 +61,10 @@ export function Landing() {
             </div>
           </div>
           <img
-            src={heroImage}
-            alt="A happy couple walking together holding hands"
-            width={1536}
-            height={1024}
+            src={heroAsset.url}
+            alt="Happy parents carrying their two laughing children piggyback against a bright blue sky"
+            width={1000}
+            height={453}
             fetchPriority="high"
             decoding="async"
             className="mx-auto h-auto w-full max-w-xl object-contain"
