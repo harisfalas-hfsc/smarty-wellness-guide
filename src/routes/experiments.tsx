@@ -35,7 +35,10 @@ function ExperimentsPage() {
 
       <div className="grid gap-3 lg:grid-cols-2">
         {state.experiments.map((e) => (
-          <div key={e.id} className="rounded-3xl border-2 border-border bg-card p-5">
+          <div
+            key={e.id}
+            className={`rounded-3xl border-2 bg-card p-5 shadow-soft ${EXP_TONES[idx % EXP_TONES.length]}`}
+          >
             <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
               {e.days} days
             </p>
