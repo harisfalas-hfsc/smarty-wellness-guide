@@ -10,6 +10,7 @@ import {
   Home,
   LineChart,
   ListChecks,
+  LogOut,
   Menu,
   Settings,
   Sparkles,
@@ -27,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useWellness } from "@/lib/wellness-store";
+import { useAuth } from "@/lib/auth";
 
 export function Navigation() {
   const router = useRouter();
@@ -34,6 +36,7 @@ export function Navigation() {
   const [navCount, setNavCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const { state } = useWellness();
+  const { session, user, signOut } = useAuth();
 
   useEffect(() => {
     const unsub = router.subscribe("onResolved", () => setNavCount((n) => n + 1));
