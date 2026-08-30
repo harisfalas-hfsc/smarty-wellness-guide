@@ -21,6 +21,14 @@ export const Route = createFileRoute("/experiments")({
   component: ExperimentsPage,
 });
 
+/** Cycle of wellness colors for experiment cards. */
+const EXP_TONES = [
+  "border-mind/50",
+  "border-calm/60",
+  "border-sun/70",
+  "border-bloom/50",
+];
+
 function ExperimentsPage() {
   const { state } = useWellness();
 
