@@ -26,6 +26,16 @@ export const Route = createFileRoute("/bucket-list")({
   component: BucketListPage,
 });
 
+/** Cycle of wellness colors for goal cards. */
+const GOAL_TONES = [
+  "border-bloom/60",
+  "border-primary/50",
+  "border-calm/60",
+  "border-sun/70",
+  "border-mind/50",
+  "border-energy/50",
+];
+
 const IDEAS = [
   "Run a 10K",
   "Read 20 books",
