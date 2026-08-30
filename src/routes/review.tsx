@@ -33,6 +33,16 @@ const AREAS = [
   { label: "Consistency", status: "Improving" },
 ];
 
+/** Cycle of wellness colors for review area cards. */
+const AREA_TONES = [
+  "border-calm/60",
+  "border-primary/50",
+  "border-sun/70",
+  "border-mind/50",
+  "border-bloom/50",
+  "border-energy/50",
+];
+
 const TONE: Record<string, string> = {
   Improving: "border-emerald-300 bg-emerald-50 text-emerald-700",
   Stable: "border-primary/40 bg-primary/5 text-primary",
@@ -61,8 +71,11 @@ function ReviewPage() {
       </SmartyCard>
 
       <div className="mt-5 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-        {AREAS.map((a) => (
-          <div key={a.label} className="rounded-2xl border-2 border-border bg-card p-4">
+        {AREAS.map((a, i) => (
+          <div
+            key={a.label}
+            className={`rounded-2xl border-2 bg-card p-4 shadow-soft ${AREA_TONES[i % AREA_TONES.length]}`}
+          >
             <p className="text-sm font-bold text-foreground">{a.label}</p>
             <span
               className={`mt-2 inline-block rounded-full border px-3 py-1 text-[10px] font-bold uppercase tracking-wider ${TONE[a.status]}`}

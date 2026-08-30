@@ -31,6 +31,16 @@ const SAMPLE: TrendItem[] = [
   { label: "Sleep", then: "Broken", now: "Stable", status: "stable" },
 ];
 
+/** Cycle of wellness colors for journey trend cards. */
+const TREND_TONES = [
+  "border-calm/60",
+  "border-primary/50",
+  "border-sun/70",
+  "border-mind/50",
+  "border-bloom/50",
+  "border-energy/50",
+];
+
 const STATUS_STYLE: Record<TrendItem["status"], string> = {
   improving: "border-emerald-300 bg-emerald-50 text-emerald-700",
   stable: "border-primary/40 bg-primary/5 text-primary",
@@ -60,7 +70,7 @@ function JourneyPage() {
       />
 
       {!hasHistory && (
-        <div className="mb-5 rounded-2xl border-2 border-border bg-card p-4 text-xs leading-5 text-muted-foreground">
+        <div className="mb-5 rounded-2xl border-2 border-primary/40 bg-card p-4 text-xs leading-5 text-muted-foreground shadow-soft">
           You have {state.checkIns.length} check-in
           {state.checkIns.length === 1 ? "" : "s"} so far. The view below shows how your journey
           will be presented — it becomes your own data once you have a couple of weeks of
@@ -69,8 +79,11 @@ function JourneyPage() {
       )}
 
       <div className="grid gap-3 lg:grid-cols-2">
-        {trends.map((t) => (
-          <div key={t.label} className="rounded-3xl border-2 border-border bg-card p-5">
+        {trends.map((t, i) => (
+          <div
+            key={t.label}
+            className={`rounded-3xl border-2 bg-card p-5 shadow-soft ${TREND_TONES[i % TREND_TONES.length]}`}
+          >
             <div className="flex items-center justify-between gap-3">
               <p className="text-sm font-bold text-foreground">{t.label}</p>
               <span
@@ -98,7 +111,7 @@ function JourneyPage() {
       </div>
 
       <div className="mt-5 pb-2">
-        <SmartyCard eyebrow="Smarty says" title="Keep going rather than adding more">
+        <SmartyCard tone="green" eyebrow="Smarty says" title="Keep going rather than adding more">
           <p className="text-sm leading-6 text-muted-foreground">
             You have become more consistent with movement and training, and your stress is
             improving. Let's continue rather than adding another major goal.
