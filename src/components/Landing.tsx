@@ -51,9 +51,7 @@ export function Landing() {
         <div className="relative mx-auto w-full max-w-6xl px-5 py-12 lg:px-6 lg:py-20">
           <div className="max-w-xl lg:max-w-3xl">
             <h1 className="text-[34px] font-extrabold uppercase leading-[1.05] text-hero-foreground sm:text-[44px] lg:text-[60px]">
-              Your personal guide to a healthier,
-              <br />
-              <span className="text-primary">more balanced and more fulfilling life.</span>
+              {TAGLINE}
             </h1>
             <p className="mt-5 text-base leading-relaxed text-hero-foreground/80 lg:mt-6 lg:text-lg">
               One honest check-in. One clear action. Every day.
