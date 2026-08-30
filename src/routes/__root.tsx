@@ -145,7 +145,7 @@ function AppFrame() {
 
   useEffect(() => {
     if (loading || session) return;
-    if (!PUBLIC_PATHS.includes(pathname)) void navigate({ to: "/auth" });
+    if (!PUBLIC_PATHS.includes(pathname)) void navigate({ to: "/auth", search: { mode: "signin" } });
   }, [loading, session, pathname, navigate]);
 
   return (
