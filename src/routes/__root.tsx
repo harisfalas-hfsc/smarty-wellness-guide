@@ -11,6 +11,11 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { Navigation } from "../components/Navigation";
+import { BottomNav } from "../components/BottomNav";
+import { DesktopNav } from "../components/DesktopNav";
+import { Toaster } from "../components/ui/sonner";
+import { WellnessProvider } from "../lib/wellness-store";
 
 function NotFoundComponent() {
   return (
@@ -72,25 +77,24 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
+const DESCRIPTION =
+  "Smarty Wellness is your personal wellness guidance system — one daily check-in, one clear recommendation, connected to Smarty Workout, Smarty Diet and Smarty Move.";
+
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Smarty Wellness — Personal Wellness Guidance System" },
+      { name: "description", content: DESCRIPTION },
+      { name: "author", content: "Smarty" },
+      { property: "og:title", content: "Smarty Wellness" },
+      { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
-      {
-        rel: "stylesheet",
-        href: appCss,
-      },
+      { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
     ],
   }),
@@ -119,8 +123,20 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <WellnessProvider>
+        <div className="min-h-screen bg-background">
+          <Navigation />
+          <div className="mx-auto flex w-full max-w-7xl">
+            <DesktopNav />
+            <div className="min-w-0 flex-1">
+              {/* Required: nested routes render here. */}
+              <Outlet />
+            </div>
+          </div>
+          <BottomNav />
+          <Toaster />
+        </div>
+      </WellnessProvider>
     </QueryClientProvider>
   );
 }

@@ -10,33 +10,167 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as BucketListRouteImport } from './routes/bucket-list'
+import { Route as ChallengesRouteImport } from './routes/challenges'
+import { Route as CheckInRouteImport } from './routes/check-in'
+import { Route as CoachRouteImport } from './routes/coach'
+import { Route as ExperimentsRouteImport } from './routes/experiments'
+import { Route as HomeRouteImport } from './routes/home'
+import { Route as JourneyRouteImport } from './routes/journey'
+import { Route as MissionsRouteImport } from './routes/missions'
+import { Route as ReviewRouteImport } from './routes/review'
+import { Route as TodayRouteImport } from './routes/today'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BucketListRoute = BucketListRouteImport.update({
+  id: '/bucket-list',
+  path: '/bucket-list',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ChallengesRoute = ChallengesRouteImport.update({
+  id: '/challenges',
+  path: '/challenges',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CheckInRoute = CheckInRouteImport.update({
+  id: '/check-in',
+  path: '/check-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CoachRoute = CoachRouteImport.update({
+  id: '/coach',
+  path: '/coach',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ExperimentsRoute = ExperimentsRouteImport.update({
+  id: '/experiments',
+  path: '/experiments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HomeRoute = HomeRouteImport.update({
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JourneyRoute = JourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MissionsRoute = MissionsRouteImport.update({
+  id: '/missions',
+  path: '/missions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ReviewRoute = ReviewRouteImport.update({
+  id: '/review',
+  path: '/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TodayRoute = TodayRouteImport.update({
+  id: '/today',
+  path: '/today',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/bucket-list': typeof BucketListRoute
+  '/challenges': typeof ChallengesRoute
+  '/check-in': typeof CheckInRoute
+  '/coach': typeof CoachRoute
+  '/experiments': typeof ExperimentsRoute
+  '/home': typeof HomeRoute
+  '/journey': typeof JourneyRoute
+  '/missions': typeof MissionsRoute
+  '/review': typeof ReviewRoute
+  '/today': typeof TodayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/bucket-list': typeof BucketListRoute
+  '/challenges': typeof ChallengesRoute
+  '/check-in': typeof CheckInRoute
+  '/coach': typeof CoachRoute
+  '/experiments': typeof ExperimentsRoute
+  '/home': typeof HomeRoute
+  '/journey': typeof JourneyRoute
+  '/missions': typeof MissionsRoute
+  '/review': typeof ReviewRoute
+  '/today': typeof TodayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/bucket-list': typeof BucketListRoute
+  '/challenges': typeof ChallengesRoute
+  '/check-in': typeof CheckInRoute
+  '/coach': typeof CoachRoute
+  '/experiments': typeof ExperimentsRoute
+  '/home': typeof HomeRoute
+  '/journey': typeof JourneyRoute
+  '/missions': typeof MissionsRoute
+  '/review': typeof ReviewRoute
+  '/today': typeof TodayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/bucket-list'
+    | '/challenges'
+    | '/check-in'
+    | '/coach'
+    | '/experiments'
+    | '/home'
+    | '/journey'
+    | '/missions'
+    | '/review'
+    | '/today'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/bucket-list'
+    | '/challenges'
+    | '/check-in'
+    | '/coach'
+    | '/experiments'
+    | '/home'
+    | '/journey'
+    | '/missions'
+    | '/review'
+    | '/today'
+  id:
+    | '__root__'
+    | '/'
+    | '/bucket-list'
+    | '/challenges'
+    | '/check-in'
+    | '/coach'
+    | '/experiments'
+    | '/home'
+    | '/journey'
+    | '/missions'
+    | '/review'
+    | '/today'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BucketListRoute: typeof BucketListRoute
+  ChallengesRoute: typeof ChallengesRoute
+  CheckInRoute: typeof CheckInRoute
+  CoachRoute: typeof CoachRoute
+  ExperimentsRoute: typeof ExperimentsRoute
+  HomeRoute: typeof HomeRoute
+  JourneyRoute: typeof JourneyRoute
+  MissionsRoute: typeof MissionsRoute
+  ReviewRoute: typeof ReviewRoute
+  TodayRoute: typeof TodayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +182,91 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/bucket-list': {
+      id: '/bucket-list'
+      path: '/bucket-list'
+      fullPath: '/bucket-list'
+      preLoaderRoute: typeof BucketListRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/challenges': {
+      id: '/challenges'
+      path: '/challenges'
+      fullPath: '/challenges'
+      preLoaderRoute: typeof ChallengesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/check-in': {
+      id: '/check-in'
+      path: '/check-in'
+      fullPath: '/check-in'
+      preLoaderRoute: typeof CheckInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/coach': {
+      id: '/coach'
+      path: '/coach'
+      fullPath: '/coach'
+      preLoaderRoute: typeof CoachRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/experiments': {
+      id: '/experiments'
+      path: '/experiments'
+      fullPath: '/experiments'
+      preLoaderRoute: typeof ExperimentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/home': {
+      id: '/home'
+      path: '/home'
+      fullPath: '/home'
+      preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journey': {
+      id: '/journey'
+      path: '/journey'
+      fullPath: '/journey'
+      preLoaderRoute: typeof JourneyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/missions': {
+      id: '/missions'
+      path: '/missions'
+      fullPath: '/missions'
+      preLoaderRoute: typeof MissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/review': {
+      id: '/review'
+      path: '/review'
+      fullPath: '/review'
+      preLoaderRoute: typeof ReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/today': {
+      id: '/today'
+      path: '/today'
+      fullPath: '/today'
+      preLoaderRoute: typeof TodayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BucketListRoute: BucketListRoute,
+  ChallengesRoute: ChallengesRoute,
+  CheckInRoute: CheckInRoute,
+  CoachRoute: CoachRoute,
+  ExperimentsRoute: ExperimentsRoute,
+  HomeRoute: HomeRoute,
+  JourneyRoute: JourneyRoute,
+  MissionsRoute: MissionsRoute,
+  ReviewRoute: ReviewRoute,
+  TodayRoute: TodayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

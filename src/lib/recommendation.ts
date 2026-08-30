@@ -1,0 +1,105 @@
+import type { CheckIn, Recommendation, WellnessState } from "./wellness-types";
+
+/**
+ * Recommendation foundation.
+ *
+ * This is deliberately a small, transparent rule set — NOT a pretend AI.
+ * The real engine will eventually weigh: who the person is, how they are today,
+ * what changed, when they are free, where they are, whether the action is
+ * realistic, and what has worked before. The UI contract below is what the
+ * future engine must return.
+ */
+
+export const SMARTY_APPS = {
+  workout: { name: "SMARTY WORKOUT", claim: "Train Better", url: "https://smarty-workout-buddy.lovable.app" },
+  diet: { name: "SMARTY DIET", claim: "Fuel Better", url: "https://smarty-meals-hub.lovable.app" },
+  move: { name: "SMARTY MOVE", claim: "Move Better", url: "https://smarty-motion-pro.lovable.app" },
+} as const;
+
+const WELCOME: Recommendation = {
+  id: "r-welcome",
+  level: "primary",
+  headline: "Start with a one-minute check-in.",
+  action: "Tell Smarty how you are today.",
+  reason: "Smarty needs a starting point before it can suggest anything realistic.",
+  product: "wellness",
+  ctaLabel: "CHECK IN",
+};
+
+export function buildRecommendations(state: WellnessState, checkIn: CheckIn | null): Recommendation[] {
+  if (!checkIn) return [WELCOME];
+
+  const list: Recommendation[] = [];
+
+  if (checkIn.stress >= 4 || checkIn.need === "calm" || checkIn.need === "switch-off") {
+    list.push({
+      id: "r-calm",
+      level: "primary",
+      headline: "Today, your biggest opportunity is recovery.",
+      action: "Take a 15 minute walk outside without your phone.",
+      reason: "You reported high stress today. Low-intensity movement lowers it without adding load.",
+      product: "wellness",
+      ctaLabel: "START",
+    });
+  } else if (checkIn.energy >= 4 || checkIn.need === "move") {
+    list.push({
+      id: "r-train",
+      level: "primary",
+      headline: "Today, your biggest opportunity is training.",
+      action: "Use the energy you have and complete one session.",
+      reason: "Your energy is good and your activity has been low. This is the right day to train.",
+      product: "workout",
+      ctaLabel: "START A WORKOUT",
+      externalUrl: SMARTY_APPS.workout.url,
+    });
+  } else {
+    list.push({
+      id: "r-move",
+      level: "primary",
+      headline: "Today, your biggest opportunity is movement.",
+      action: "Walk for 20 minutes after lunch.",
+      reason: "Energy is moderate. A short walk is realistic today and keeps momentum.",
+      product: "move",
+      ctaLabel: "START",
+      externalUrl: SMARTY_APPS.move.url,
+    });
+  }
+
+  const openMission = state.missions.find((m) => !m.completed);
+  if (openMission) {
+    list.push({
+      id: "r-mission",
+      level: "secondary",
+      headline: `Mission: ${openMission.title}`,
+      action: `${openMission.target} — step ${openMission.step} of ${openMission.totalSteps}.`,
+      reason: "Small, repeatable actions build the habit before the size of the action matters.",
+      product: "wellness",
+      ctaLabel: "OPEN MISSIONS",
+    });
+  }
+
+  if (checkIn.sleep <= 2) {
+    list.push({
+      id: "r-sleep",
+      level: "optional",
+      headline: "Optional: protect tonight's sleep.",
+      action: "Screens off 30 minutes before bed.",
+      reason: "You reported poor sleep. Tomorrow's energy starts tonight.",
+      product: "wellness",
+      ctaLabel: "ADD TO TODAY",
+    });
+  } else {
+    list.push({
+      id: "r-nutrition",
+      level: "optional",
+      headline: "Optional: nutrition consistency.",
+      action: "Prepare one meal at home today.",
+      reason: "Consistency matters more than a perfect plan.",
+      product: "diet",
+      ctaLabel: "BUILD MY PLAN",
+      externalUrl: SMARTY_APPS.diet.url,
+    });
+  }
+
+  return list;
+}
