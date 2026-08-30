@@ -57,7 +57,7 @@ function SettingsPage() {
           </Link>
         </section>
 
-        <section className="rounded-3xl border-2 border-border bg-card p-6">
+        <section className="rounded-3xl border-2 border-sun/70 bg-card p-6 shadow-soft">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
             Your data
           </p>
