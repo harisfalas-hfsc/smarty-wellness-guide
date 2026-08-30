@@ -15,14 +15,17 @@ import { Route as BucketListRouteImport } from './routes/bucket-list'
 import { Route as ChallengesRouteImport } from './routes/challenges'
 import { Route as CheckInRouteImport } from './routes/check-in'
 import { Route as CoachRouteImport } from './routes/coach'
+import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as ExperimentsRouteImport } from './routes/experiments'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TodayRouteImport } from './routes/today'
 
 const IndexRoute = IndexRouteImport.update({
@@ -55,6 +58,11 @@ const CoachRoute = CoachRouteImport.update({
   path: '/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DisclaimerRoute = DisclaimerRouteImport.update({
+  id: '/disclaimer',
+  path: '/disclaimer',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExperimentsRoute = ExperimentsRouteImport.update({
   id: '/experiments',
   path: '/experiments',
@@ -80,6 +88,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
@@ -95,6 +108,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TodayRoute = TodayRouteImport.update({
   id: '/today',
   path: '/today',
@@ -108,14 +126,17 @@ export interface FileRoutesByFullPath {
   '/challenges': typeof ChallengesRoute
   '/check-in': typeof CheckInRoute
   '/coach': typeof CoachRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/experiments': typeof ExperimentsRoute
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/missions': typeof MissionsRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/review': typeof ReviewRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/today': typeof TodayRoute
 }
 export interface FileRoutesByTo {
@@ -125,14 +146,17 @@ export interface FileRoutesByTo {
   '/challenges': typeof ChallengesRoute
   '/check-in': typeof CheckInRoute
   '/coach': typeof CoachRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/experiments': typeof ExperimentsRoute
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/missions': typeof MissionsRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/review': typeof ReviewRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/today': typeof TodayRoute
 }
 export interface FileRoutesById {
@@ -143,14 +167,17 @@ export interface FileRoutesById {
   '/challenges': typeof ChallengesRoute
   '/check-in': typeof CheckInRoute
   '/coach': typeof CoachRoute
+  '/disclaimer': typeof DisclaimerRoute
   '/experiments': typeof ExperimentsRoute
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/missions': typeof MissionsRoute
   '/onboarding': typeof OnboardingRoute
+  '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/review': typeof ReviewRoute
   '/settings': typeof SettingsRoute
+  '/terms': typeof TermsRoute
   '/today': typeof TodayRoute
 }
 export interface FileRouteTypes {
@@ -162,14 +189,17 @@ export interface FileRouteTypes {
     | '/challenges'
     | '/check-in'
     | '/coach'
+    | '/disclaimer'
     | '/experiments'
     | '/home'
     | '/journey'
     | '/missions'
     | '/onboarding'
+    | '/privacy'
     | '/profile'
     | '/review'
     | '/settings'
+    | '/terms'
     | '/today'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -179,14 +209,17 @@ export interface FileRouteTypes {
     | '/challenges'
     | '/check-in'
     | '/coach'
+    | '/disclaimer'
     | '/experiments'
     | '/home'
     | '/journey'
     | '/missions'
     | '/onboarding'
+    | '/privacy'
     | '/profile'
     | '/review'
     | '/settings'
+    | '/terms'
     | '/today'
   id:
     | '__root__'
@@ -196,14 +229,17 @@ export interface FileRouteTypes {
     | '/challenges'
     | '/check-in'
     | '/coach'
+    | '/disclaimer'
     | '/experiments'
     | '/home'
     | '/journey'
     | '/missions'
     | '/onboarding'
+    | '/privacy'
     | '/profile'
     | '/review'
     | '/settings'
+    | '/terms'
     | '/today'
   fileRoutesById: FileRoutesById
 }
@@ -214,14 +250,17 @@ export interface RootRouteChildren {
   ChallengesRoute: typeof ChallengesRoute
   CheckInRoute: typeof CheckInRoute
   CoachRoute: typeof CoachRoute
+  DisclaimerRoute: typeof DisclaimerRoute
   ExperimentsRoute: typeof ExperimentsRoute
   HomeRoute: typeof HomeRoute
   JourneyRoute: typeof JourneyRoute
   MissionsRoute: typeof MissionsRoute
   OnboardingRoute: typeof OnboardingRoute
+  PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   ReviewRoute: typeof ReviewRoute
   SettingsRoute: typeof SettingsRoute
+  TermsRoute: typeof TermsRoute
   TodayRoute: typeof TodayRoute
 }
 
@@ -269,6 +308,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CoachRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/disclaimer': {
+      id: '/disclaimer'
+      path: '/disclaimer'
+      fullPath: '/disclaimer'
+      preLoaderRoute: typeof DisclaimerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/experiments': {
       id: '/experiments'
       path: '/experiments'
@@ -304,6 +350,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
@@ -325,6 +378,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/today': {
       id: '/today'
       path: '/today'
@@ -342,14 +402,17 @@ const rootRouteChildren: RootRouteChildren = {
   ChallengesRoute: ChallengesRoute,
   CheckInRoute: CheckInRoute,
   CoachRoute: CoachRoute,
+  DisclaimerRoute: DisclaimerRoute,
   ExperimentsRoute: ExperimentsRoute,
   HomeRoute: HomeRoute,
   JourneyRoute: JourneyRoute,
   MissionsRoute: MissionsRoute,
   OnboardingRoute: OnboardingRoute,
+  PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   ReviewRoute: ReviewRoute,
   SettingsRoute: SettingsRoute,
+  TermsRoute: TermsRoute,
   TodayRoute: TodayRoute,
 }
 export const routeTree = rootRouteImport
