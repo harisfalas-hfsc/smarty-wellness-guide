@@ -119,9 +119,10 @@ function TodayPage() {
           </p>
           {todayCheckIn ? (
             <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              <SmartyPill icon={MOODS.find((m) => m.key === todayCheckIn.mood)?.emoji}>
-                Mood: {MOODS.find((m) => m.key === todayCheckIn.mood)?.label}
+              <SmartyPill icon={MOODS.find((m) => m.key === todayCheckIn.mood)?.emoji ?? "🙂"}>
+                Mood: {MOODS.find((m) => m.key === todayCheckIn.mood)?.label ?? "Okay"}
               </SmartyPill>
+
               <SmartyPill icon="⚡">Energy: {todayCheckIn.energy}/5</SmartyPill>
               <SmartyPill icon="🌊">Stress: {todayCheckIn.stress}/5</SmartyPill>
               <SmartyPill icon="🔥">Motivation: {todayCheckIn.motivation}/5</SmartyPill>
