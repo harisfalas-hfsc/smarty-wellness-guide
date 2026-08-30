@@ -16,6 +16,7 @@ import { reportLovableError } from "../lib/lovable-error-reporting";
 import { Navigation } from "@/components/Navigation";
 import { BottomNav } from "@/components/BottomNav";
 import { DesktopNav } from "@/components/DesktopNav";
+import { SiteFooter } from "@/components/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
 import { WellnessProvider } from "@/lib/wellness-store";
 import { AuthProvider, useAuth } from "@/lib/auth";
@@ -157,6 +158,7 @@ function AppFrame() {
           <Outlet />
         </div>
       </div>
+      {!session && <SiteFooter />}
       {session && <BottomNav />}
       <Toaster />
     </div>

@@ -10,6 +10,7 @@ import {
   Home,
   LineChart,
   ListChecks,
+  LogIn,
   LogOut,
   Menu,
   Settings,
@@ -67,16 +68,14 @@ export function Navigation() {
     >
       <div className="flex h-11 items-center justify-between gap-2 px-3">
         <div className="flex min-w-0 items-center gap-2">
-          {session && (
-            <button
-              type="button"
-              onClick={() => setMenuOpen(true)}
-              aria-label="Open menu"
-              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary hover:bg-primary/10"
-            >
-              <Menu className="h-5 w-5" />
-            </button>
-          )}
+          <button
+            type="button"
+            onClick={() => setMenuOpen(true)}
+            aria-label="Open menu"
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary hover:bg-primary/10"
+          >
+            <Menu className="h-5 w-5" />
+          </button>
           {canGoBack && (
             <button
               type="button"
@@ -105,22 +104,25 @@ export function Navigation() {
 
         <div className="flex shrink-0 items-center gap-2">
           {!session ? (
-            <>
-              <Link
-                to="/auth"
-                className="hidden h-8 items-center rounded-full border-2 border-primary px-3 text-[11px] font-bold uppercase tracking-wide text-primary hover:bg-primary/10 sm:inline-flex"
-                style={{ textDecoration: "none" }}
-              >
-                Sign in
-              </Link>
-              <Link
-                to="/auth"
-                className="inline-flex h-8 items-center rounded-full border-2 border-emerald-500 bg-emerald-500 px-3 text-[11px] font-bold uppercase tracking-wide text-white"
-                style={{ textDecoration: "none" }}
-              >
-                Get started
-              </Link>
-            </>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <button
+                  type="button"
+                  aria-label="Account"
+                  className="inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary text-primary hover:bg-primary/10"
+                >
+                  <User className="h-4 w-4" />
+                </button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-52">
+                <DropdownMenuLabel>Account</DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link to="/auth" search={{ mode: "signin" }}>
+                    <LogIn className="mr-2 h-4 w-4" /> Sign in
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           ) : (
             <>
               <Link
@@ -179,10 +181,11 @@ export function Navigation() {
 }
 
 function NavDrawer({ onClose }: { onClose: () => void }) {
+  const { session } = useAuth();
   const sections: {
     heading: string;
     items: { to: string; label: string; Icon: typeof Home }[];
-  }[] = [
+  }[] = session ? [
     {
       heading: "Daily",
       items: [
@@ -209,6 +212,15 @@ function NavDrawer({ onClose }: { onClose: () => void }) {
         { to: "/profile", label: "Wellness profile", Icon: UserCircle },
         { to: "/onboarding", label: "Set up Smarty Wellness", Icon: BookOpen },
         { to: "/settings", label: "Settings & account", Icon: User },
+      ],
+    },
+  ] : [
+    {
+      heading: "Smarty Wellness",
+      items: [
+        { to: "/", label: "Home", Icon: Home },
+        { to: "/auth", label: "Create your account", Icon: UserCircle },
+        { to: "/auth", label: "Sign in", Icon: LogIn },
       ],
     },
   ];
