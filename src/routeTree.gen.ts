@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BucketListRouteImport } from './routes/bucket-list'
 import { Route as ChallengesRouteImport } from './routes/challenges'
 import { Route as CheckInRouteImport } from './routes/check-in'
@@ -27,6 +28,11 @@ import { Route as TodayRouteImport } from './routes/today'
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BucketListRoute = BucketListRouteImport.update({
@@ -97,6 +103,7 @@ const TodayRoute = TodayRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/bucket-list': typeof BucketListRoute
   '/challenges': typeof ChallengesRoute
   '/check-in': typeof CheckInRoute
@@ -113,6 +120,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/bucket-list': typeof BucketListRoute
   '/challenges': typeof ChallengesRoute
   '/check-in': typeof CheckInRoute
@@ -130,6 +138,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/auth': typeof AuthRoute
   '/bucket-list': typeof BucketListRoute
   '/challenges': typeof ChallengesRoute
   '/check-in': typeof CheckInRoute
@@ -148,6 +157,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/bucket-list'
     | '/challenges'
     | '/check-in'
@@ -164,6 +174,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/auth'
     | '/bucket-list'
     | '/challenges'
     | '/check-in'
@@ -180,6 +191,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/auth'
     | '/bucket-list'
     | '/challenges'
     | '/check-in'
@@ -197,6 +209,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AuthRoute: typeof AuthRoute
   BucketListRoute: typeof BucketListRoute
   ChallengesRoute: typeof ChallengesRoute
   CheckInRoute: typeof CheckInRoute
@@ -219,6 +232,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bucket-list': {
@@ -317,6 +337,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AuthRoute: AuthRoute,
   BucketListRoute: BucketListRoute,
   ChallengesRoute: ChallengesRoute,
   CheckInRoute: CheckInRoute,
