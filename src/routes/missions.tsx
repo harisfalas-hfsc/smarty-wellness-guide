@@ -39,7 +39,7 @@ const AREA_TONE: Record<string, { border: string; text: string }> = {
   social: { border: "border-bloom/50 hover:border-bloom", text: "text-bloom-deep" },
   personal: { border: "border-primary/50 hover:border-primary", text: "text-primary" },
 };
-const FALLBACK_TONE = AREA_TONE.personal!;
+const FALLBACK_TONE = AREA_TONE["personal"]!;
 
 function MissionsPage() {
   const { state, toggleMission } = useWellness();
