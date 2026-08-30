@@ -11,11 +11,11 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { Navigation } from "../components/Navigation";
-import { BottomNav } from "../components/BottomNav";
-import { DesktopNav } from "../components/DesktopNav";
-import { Toaster } from "../components/ui/sonner";
-import { WellnessProvider } from "../lib/wellness-store";
+import { Navigation } from "@/components/Navigation";
+import { BottomNav } from "@/components/BottomNav";
+import { DesktopNav } from "@/components/DesktopNav";
+import { Toaster } from "@/components/ui/sonner";
+import { WellnessProvider } from "@/lib/wellness-store";
 
 function NotFoundComponent() {
   return (
