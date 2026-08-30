@@ -49,10 +49,10 @@ export function Landing() {
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-black/60 to-black/20" />
         <div className="relative mx-auto w-full max-w-6xl px-5 py-12 lg:px-6 lg:py-20">
           <div className="max-w-xl lg:max-w-3xl">
-            <h1 className="text-[34px] font-extrabold uppercase leading-[1.05] tracking-tight text-white sm:text-[44px] lg:text-[60px]">
-              Your personal guide
+            <h1 className="text-[34px] font-extrabold uppercase leading-[1.05] tracking-tight text-white sm:text-[42px] lg:text-[56px]">
+              <span className="whitespace-nowrap">Your personal guide to a</span>
               <br />
-              to a healthier, more balanced,
+              <span className="whitespace-nowrap">healthier, more balanced,</span>
               <br />
               <span className="whitespace-nowrap text-primary">and more fulfilling life.</span>
             </h1>
