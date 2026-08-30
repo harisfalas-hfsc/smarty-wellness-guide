@@ -12,12 +12,43 @@ export type SmartyTone =
   | "pink"
   | "blue";
 
-// Single brand tone: every card across the site uses the same blue border.
+// Wellness tone system: Smarty blue + calm green, mind violet, sun yellow,
+// energy coral and bloom pink. Borders only — card backgrounds stay white.
 const BLUE = {
   border: "border-primary",
-  text: "text-blue-500 dark:text-blue-300",
-  softBg: "bg-blue-50 dark:bg-blue-500/15",
-  softBorder: "border-blue-200 dark:border-blue-500/40",
+  text: "text-primary",
+  softBg: "bg-primary/10",
+  softBorder: "border-primary/40",
+};
+const GREEN = {
+  border: "border-calm",
+  text: "text-calm-deep",
+  softBg: "bg-calm/15",
+  softBorder: "border-calm/60",
+};
+const PURPLE = {
+  border: "border-mind",
+  text: "text-mind-deep",
+  softBg: "bg-mind/10",
+  softBorder: "border-mind/50",
+};
+const YELLOW = {
+  border: "border-sun",
+  text: "text-sun-deep",
+  softBg: "bg-sun/25",
+  softBorder: "border-sun/70",
+};
+const ORANGE = {
+  border: "border-energy",
+  text: "text-energy-deep",
+  softBg: "bg-energy/10",
+  softBorder: "border-energy/50",
+};
+const PINK = {
+  border: "border-bloom",
+  text: "text-bloom-deep",
+  softBg: "bg-bloom/10",
+  softBorder: "border-bloom/50",
 };
 
 const TONE: Record<
@@ -25,12 +56,12 @@ const TONE: Record<
   { border: string; text: string; softBg: string; softBorder: string }
 > = {
   cyan: BLUE,
-  green: BLUE,
-  orange: BLUE,
-  purple: BLUE,
-  yellow: BLUE,
-  pink: BLUE,
   blue: BLUE,
+  green: GREEN,
+  purple: PURPLE,
+  yellow: YELLOW,
+  orange: ORANGE,
+  pink: PINK,
 };
 
 

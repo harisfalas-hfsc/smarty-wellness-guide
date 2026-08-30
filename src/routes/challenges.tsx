@@ -20,6 +20,16 @@ export const Route = createFileRoute("/challenges")({
   component: ChallengesPage,
 });
 
+/** Cycle of wellness colors so challenge cards feel energetic and varied. */
+const CHALLENGE_TONES = [
+  "border-sun/70",
+  "border-primary/50",
+  "border-calm/60",
+  "border-mind/50",
+  "border-energy/50",
+  "border-bloom/50",
+];
+
 function ChallengesPage() {
   const { state, toggleChallenge } = useWellness();
   const done = state.challenges.filter((c) => c.completed).length;
@@ -34,19 +44,21 @@ function ChallengesPage() {
       />
 
       <div className="grid gap-3 sm:grid-cols-2">
-        {state.challenges.map((c) => (
+        {state.challenges.map((c, i) => (
           <button
             key={c.id}
             type="button"
             onClick={() => toggleChallenge(c.id)}
-            className={`flex cursor-pointer items-start gap-3 rounded-2xl border-2 bg-card p-4 text-left transition ${
-              c.completed ? "border-emerald-400" : "border-border hover:border-primary/50"
+            className={`flex cursor-pointer items-start gap-3 rounded-2xl border-2 bg-card p-4 text-left transition shadow-soft ${
+              c.completed
+                ? "border-calm"
+                : CHALLENGE_TONES[i % CHALLENGE_TONES.length]
             }`}
           >
             {c.completed ? (
-              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" />
+              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-calm-deep" />
             ) : (
-              <Circle className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+              <Circle className="mt-0.5 h-5 w-5 shrink-0 text-sun-deep" />
             )}
             <span className="min-w-0">
               <span className="block text-sm font-bold text-foreground">{c.title}</span>

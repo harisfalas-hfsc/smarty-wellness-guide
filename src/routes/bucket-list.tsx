@@ -26,6 +26,16 @@ export const Route = createFileRoute("/bucket-list")({
   component: BucketListPage,
 });
 
+/** Cycle of wellness colors for goal cards. */
+const GOAL_TONES = [
+  "border-bloom/60",
+  "border-primary/50",
+  "border-calm/60",
+  "border-sun/70",
+  "border-mind/50",
+  "border-energy/50",
+];
+
 const IDEAS = [
   "Run a 10K",
   "Read 20 books",
@@ -106,8 +116,11 @@ function BucketListPage() {
 
       {state.bucketList.length > 0 && (
         <div className="mt-5 grid gap-3 lg:grid-cols-2">
-          {state.bucketList.map((g) => (
-            <div key={g.id} className="rounded-3xl border-2 border-border bg-card p-5">
+          {state.bucketList.map((g, idx) => (
+            <div
+              key={g.id}
+              className={`rounded-3xl border-2 bg-card p-5 shadow-soft ${GOAL_TONES[idx % GOAL_TONES.length]}`}
+            >
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <p className="text-sm font-bold text-foreground">{g.title}</p>
@@ -141,7 +154,7 @@ function BucketListPage() {
               key={i}
               type="button"
               onClick={() => add(i)}
-              className="cursor-pointer rounded-full border-2 border-border bg-card px-4 py-2 text-xs font-semibold transition hover:border-primary"
+              className="cursor-pointer rounded-full border-2 border-bloom/50 bg-card px-4 py-2 text-xs font-semibold text-bloom-deep transition hover:border-bloom hover:bg-bloom/10"
             >
               {i}
             </button>

@@ -8,6 +8,15 @@ import { useWellness } from "@/lib/wellness-store";
 import { buildRecommendations } from "@/lib/recommendation";
 import { MOODS, NEEDS } from "@/lib/checkin-options";
 
+/** One wellness color per quick mood button. */
+const MOOD_TONES = [
+  "border-bloom/50 hover:border-bloom",
+  "border-calm/60 hover:border-calm",
+  "border-sun/70 hover:border-sun",
+  "border-primary/50 hover:border-primary",
+  "border-mind/50 hover:border-mind",
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -79,7 +88,7 @@ function HomePage() {
           ) : (
             <div className="space-y-4">
               <div className="grid grid-cols-5 gap-2">
-                {MOODS.map((m) => (
+                {MOODS.map((m, i) => (
                   <button
                     key={m.key}
                     type="button"
@@ -93,7 +102,7 @@ function HomePage() {
                         need: null,
                       })
                     }
-                    className="flex cursor-pointer flex-col items-center gap-1 rounded-2xl border-2 border-border bg-card py-3 transition hover:border-primary"
+                    className={`flex cursor-pointer flex-col items-center gap-1 rounded-2xl border-2 bg-card py-3 transition hover:-translate-y-0.5 hover:shadow-soft ${MOOD_TONES[i % MOOD_TONES.length]}`}
                   >
                     <span className="text-2xl leading-none">{m.emoji}</span>
                     <span className="text-[10px] font-semibold text-muted-foreground">
@@ -141,7 +150,7 @@ function HomePage() {
         </SmartyCard>
 
         {secondary.length > 0 && (
-          <div className="rounded-3xl border-2 border-border bg-card p-6 sm:p-7">
+          <div className="rounded-3xl border-2 border-calm/60 bg-card p-6 shadow-soft sm:p-7">
             <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               If you have more in you
             </p>

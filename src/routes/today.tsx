@@ -64,8 +64,8 @@ function TodayPage() {
         </SmartyCard>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <section className="rounded-3xl border-2 border-border bg-card p-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <section className="rounded-3xl border-2 border-calm/60 bg-card p-6 shadow-soft">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-calm-deep">
               Today's mission
             </p>
             {mission && (
@@ -89,8 +89,8 @@ function TodayPage() {
             )}
           </section>
 
-          <section className="rounded-3xl border-2 border-border bg-card p-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <section className="rounded-3xl border-2 border-sun/70 bg-card p-6 shadow-soft">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-sun-deep">
               Optional challenge
             </p>
             {challenge && (
@@ -113,20 +113,20 @@ function TodayPage() {
           </section>
         </div>
 
-        <section className="rounded-3xl border-2 border-border bg-card p-6">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+        <section className="rounded-3xl border-2 border-primary/50 bg-card p-6 shadow-soft">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
             Today's wellness status
           </p>
           {todayCheckIn ? (
             <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              <SmartyPill icon={MOODS.find((m) => m.key === todayCheckIn.mood)?.emoji ?? "🙂"}>
+              <SmartyPill tone="pink" icon={MOODS.find((m) => m.key === todayCheckIn.mood)?.emoji ?? "🙂"}>
                 Mood: {MOODS.find((m) => m.key === todayCheckIn.mood)?.label ?? "Okay"}
               </SmartyPill>
 
-              <SmartyPill icon="⚡">Energy: {todayCheckIn.energy}/5</SmartyPill>
-              <SmartyPill icon="🌊">Stress: {todayCheckIn.stress}/5</SmartyPill>
-              <SmartyPill icon="🔥">Motivation: {todayCheckIn.motivation}/5</SmartyPill>
-              <SmartyPill icon="🌙">Sleep: {todayCheckIn.sleep}/5</SmartyPill>
+              <SmartyPill tone="yellow" icon="⚡">Energy: {todayCheckIn.energy}/5</SmartyPill>
+              <SmartyPill tone="purple" icon="🌊">Stress: {todayCheckIn.stress}/5</SmartyPill>
+              <SmartyPill tone="orange" icon="🔥">Motivation: {todayCheckIn.motivation}/5</SmartyPill>
+              <SmartyPill tone="blue" icon="🌙">Sleep: {todayCheckIn.sleep}/5</SmartyPill>
             </div>
           ) : (
             <div className="mt-3">
@@ -139,8 +139,8 @@ function TodayPage() {
         </section>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <section className="rounded-3xl border-2 border-border bg-card p-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <section className="rounded-3xl border-2 border-mind/50 bg-card p-6 shadow-soft">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-mind-deep">
               Upcoming action
             </p>
             <div className="mt-3 flex items-start gap-3">
@@ -155,8 +155,8 @@ function TodayPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border-2 border-border bg-card p-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <section className="rounded-3xl border-2 border-bloom/50 bg-card p-6 shadow-soft">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-bloom-deep">
               Completed
             </p>
             {done.length === 0 ? (

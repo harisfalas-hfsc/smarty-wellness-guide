@@ -4,10 +4,11 @@ import { Heart } from "lucide-react";
 import { toast } from "sonner";
 import { PageShell } from "@/components/PageShell";
 import { PageHeader } from "@/components/PageHeader";
-import { SelectionCard, ScaleControl } from "@/components/SelectionCard";
+import { SelectionCard, ScaleControl, type ScaleTone } from "@/components/SelectionCard";
 import { Button } from "@/components/ui/button";
 import { MOODS, NEEDS } from "@/lib/checkin-options";
 import { useWellness } from "@/lib/wellness-store";
+import { cn } from "@/lib/utils";
 import type { MoodKey, NeedKey, Scale5 } from "@/lib/wellness-types";
 
 export const Route = createFileRoute("/check-in")({
@@ -29,10 +30,28 @@ export const Route = createFileRoute("/check-in")({
   component: CheckInPage,
 });
 
-function Block({ title, children }: { title: string; children: React.ReactNode }) {
+const BLOCK_TONE: Record<ScaleTone, { border: string; title: string }> = {
+  primary: { border: "border-primary/50", title: "text-primary" },
+  calm: { border: "border-calm/60", title: "text-calm-deep" },
+  mind: { border: "border-mind/50", title: "text-mind-deep" },
+  sun: { border: "border-sun/70", title: "text-sun-deep" },
+  energy: { border: "border-energy/50", title: "text-energy-deep" },
+  bloom: { border: "border-bloom/50", title: "text-bloom-deep" },
+};
+
+function Block({
+  title,
+  tone = "primary",
+  children,
+}: {
+  title: string;
+  tone?: ScaleTone;
+  children: React.ReactNode;
+}) {
+  const t = BLOCK_TONE[tone];
   return (
-    <section className="rounded-3xl border-2 border-border bg-card p-5 sm:p-6">
-      <h2 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+    <section className={cn("rounded-3xl border-2 bg-card p-5 shadow-soft sm:p-6", t.border)}>
+      <h2 className={cn("text-[10px] font-bold uppercase tracking-widest", t.title)}>
         {title}
       </h2>
       <div className="mt-4">{children}</div>
@@ -78,7 +97,7 @@ function CheckInPage() {
       />
 
       <div className="space-y-4">
-        <Block title="How are you today?">
+        <Block title="How are you today?" tone="bloom">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
             {MOODS.map((m) => (
               <SelectionCard
@@ -93,26 +112,27 @@ function CheckInPage() {
         </Block>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Block title="Energy">
-            <ScaleControl value={energy} onChange={setEnergy} lowLabel="Low" highLabel="High" />
+          <Block title="Energy" tone="sun">
+            <ScaleControl value={energy} onChange={setEnergy} lowLabel="Low" highLabel="High" tone="sun" />
           </Block>
-          <Block title="Stress">
-            <ScaleControl value={stress} onChange={setStress} lowLabel="Low" highLabel="High" />
+          <Block title="Stress" tone="mind">
+            <ScaleControl value={stress} onChange={setStress} lowLabel="Low" highLabel="High" tone="mind" />
           </Block>
-          <Block title="Motivation">
+          <Block title="Motivation" tone="energy">
             <ScaleControl
               value={motivation}
               onChange={setMotivation}
               lowLabel="Low"
               highLabel="High"
+              tone="energy"
             />
           </Block>
-          <Block title="Sleep">
-            <ScaleControl value={sleep} onChange={setSleep} lowLabel="Poor" highLabel="Excellent" />
+          <Block title="Sleep" tone="primary">
+            <ScaleControl value={sleep} onChange={setSleep} lowLabel="Poor" highLabel="Excellent" tone="primary" />
           </Block>
         </div>
 
-        <Block title="What do you need today?">
+        <Block title="What do you need today?" tone="calm">
           <div className="grid gap-2 sm:grid-cols-2">
             {NEEDS.map((n) => (
               <SelectionCard

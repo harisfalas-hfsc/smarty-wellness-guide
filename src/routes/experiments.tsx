@@ -21,6 +21,14 @@ export const Route = createFileRoute("/experiments")({
   component: ExperimentsPage,
 });
 
+/** Cycle of wellness colors for experiment cards. */
+const EXP_TONES = [
+  "border-mind/50",
+  "border-calm/60",
+  "border-sun/70",
+  "border-bloom/50",
+];
+
 function ExperimentsPage() {
   const { state } = useWellness();
 
@@ -34,8 +42,11 @@ function ExperimentsPage() {
       />
 
       <div className="grid gap-3 lg:grid-cols-2">
-        {state.experiments.map((e) => (
-          <div key={e.id} className="rounded-3xl border-2 border-border bg-card p-5">
+        {state.experiments.map((e, idx) => (
+          <div
+            key={e.id}
+            className={`rounded-3xl border-2 bg-card p-5 shadow-soft ${EXP_TONES[idx % EXP_TONES.length]}`}
+          >
             <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
               {e.days} days
             </p>

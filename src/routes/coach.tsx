@@ -78,7 +78,7 @@ function CoachPage() {
 
       <div className="mt-5 space-y-3">
         {state.coachMessages.length === 0 ? (
-          <div className="rounded-3xl border-2 border-border bg-card p-6 text-sm leading-6 text-muted-foreground">
+          <div className="rounded-3xl border-2 border-calm/60 bg-card p-6 text-sm leading-6 text-muted-foreground shadow-soft">
             Start with how you actually feel. For example: "I've had a heavy week at work and I
             haven't trained."
           </div>
@@ -89,7 +89,7 @@ function CoachPage() {
               className={
                 m.role === "user"
                   ? "ml-auto max-w-[85%] rounded-3xl rounded-br-lg bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
-                  : "mr-auto max-w-[90%] rounded-3xl rounded-bl-lg border-2 border-border bg-card px-4 py-3 text-sm leading-6 text-foreground"
+                  : "mr-auto max-w-[90%] rounded-3xl rounded-bl-lg border-2 border-calm/60 bg-card px-4 py-3 text-sm leading-6 text-foreground"
               }
             >
               {m.text}
@@ -108,7 +108,7 @@ function CoachPage() {
               key={s}
               type="button"
               onClick={() => send(s)}
-              className="cursor-pointer rounded-full border-2 border-border bg-card px-4 py-2 text-xs font-semibold text-foreground transition hover:border-primary"
+              className="cursor-pointer rounded-full border-2 border-mind/50 bg-card px-4 py-2 text-xs font-semibold text-mind-deep transition hover:border-mind hover:bg-mind/10"
             >
               {s}
             </button>

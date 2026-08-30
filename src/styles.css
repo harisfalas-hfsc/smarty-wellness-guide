@@ -28,6 +28,15 @@
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
   --color-calm: var(--calm);
+  --color-calm-deep: var(--calm-deep);
+  --color-mind: var(--mind);
+  --color-mind-deep: var(--mind-deep);
+  --color-sun: var(--sun);
+  --color-sun-deep: var(--sun-deep);
+  --color-energy: var(--energy);
+  --color-energy-deep: var(--energy-deep);
+  --color-bloom: var(--bloom);
+  --color-bloom-deep: var(--bloom-deep);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -71,6 +80,17 @@
   --accent: oklch(0.745 0.131 220);
   --accent-foreground: oklch(0.19 0.04 260);
   --calm: oklch(0.72 0.12 160);
+  /* Wellness accent palette — energetic but calm. Each tone has a deep
+   * variant used for text so colored accents stay readable on white. */
+  --calm-deep: oklch(0.52 0.11 160);
+  --mind: oklch(0.6 0.17 295);
+  --mind-deep: oklch(0.46 0.15 295);
+  --sun: oklch(0.8 0.15 85);
+  --sun-deep: oklch(0.52 0.13 70);
+  --energy: oklch(0.66 0.19 30);
+  --energy-deep: oklch(0.52 0.17 30);
+  --bloom: oklch(0.68 0.16 350);
+  --bloom-deep: oklch(0.52 0.15 350);
   --destructive: oklch(0.6 0.22 25);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.91 0 0);

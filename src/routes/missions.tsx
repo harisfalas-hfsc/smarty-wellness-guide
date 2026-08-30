@@ -30,6 +30,17 @@ const AREA_LABEL: Record<string, string> = {
   personal: "Personal time",
 };
 
+/** One wellness color per mission area — consistent everywhere. */
+const AREA_TONE: Record<string, { border: string; text: string }> = {
+  movement: { border: "border-calm/60 hover:border-calm", text: "text-calm-deep" },
+  training: { border: "border-energy/50 hover:border-energy", text: "text-energy-deep" },
+  nutrition: { border: "border-sun/70 hover:border-sun", text: "text-sun-deep" },
+  mind: { border: "border-mind/50 hover:border-mind", text: "text-mind-deep" },
+  social: { border: "border-bloom/50 hover:border-bloom", text: "text-bloom-deep" },
+  personal: { border: "border-primary/50 hover:border-primary", text: "text-primary" },
+};
+const FALLBACK_TONE = AREA_TONE["personal"]!;
+
 function MissionsPage() {
   const { state, toggleMission } = useWellness();
   const completed = state.missions.filter((m) => m.completed).length;
@@ -55,22 +66,24 @@ function MissionsPage() {
       </section>
 
       <div className="mt-5 grid gap-3 lg:grid-cols-2">
-        {state.missions.map((m) => (
+        {state.missions.map((m) => {
+          const tone = AREA_TONE[m.area] ?? FALLBACK_TONE;
+          return (
           <button
             key={m.id}
             type="button"
             onClick={() => toggleMission(m.id)}
-            className={`flex cursor-pointer items-start gap-3 rounded-3xl border-2 bg-card p-5 text-left transition ${
-              m.completed ? "border-emerald-400" : "border-border hover:border-primary/50"
+            className={`flex cursor-pointer items-start gap-3 rounded-3xl border-2 bg-card p-5 text-left transition shadow-soft ${
+              m.completed ? "border-calm" : tone.border
             }`}
           >
             {m.completed ? (
-              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" />
+              <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-calm-deep" />
             ) : (
-              <Circle className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
+              <Circle className={`mt-0.5 h-5 w-5 shrink-0 ${tone.text}`} />
             )}
             <div className="min-w-0">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
+              <p className={`text-[10px] font-bold uppercase tracking-widest ${tone.text}`}>
                 {AREA_LABEL[m.area]}
               </p>
               <p className="mt-1 text-sm font-bold text-foreground">{m.title}</p>
@@ -85,7 +98,8 @@ function MissionsPage() {
               </div>
             </div>
           </button>
-        ))}
+          );
+        })}
       </div>
 
       <p className="mt-6 pb-2 text-xs leading-5 text-muted-foreground">
