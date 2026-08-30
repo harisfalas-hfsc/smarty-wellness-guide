@@ -4,6 +4,8 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
+  useNavigate,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -133,8 +135,17 @@ function RootComponent() {
   );
 }
 
+const PUBLIC_PATHS = ["/", "/auth"];
+
 function AppFrame() {
-  const { session } = useAuth();
+  const { session, loading } = useAuth();
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    if (loading || session) return;
+    if (!PUBLIC_PATHS.includes(pathname)) void navigate({ to: "/auth" });
+  }, [loading, session, pathname, navigate]);
 
   return (
     <div className="min-h-screen bg-background">
