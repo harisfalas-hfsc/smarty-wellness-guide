@@ -8,6 +8,7 @@ import { SelectionCard, ScaleControl, type ScaleTone } from "@/components/Select
 import { Button } from "@/components/ui/button";
 import { MOODS, NEEDS } from "@/lib/checkin-options";
 import { useWellness } from "@/lib/wellness-store";
+import { cn } from "@/lib/utils";
 import type { MoodKey, NeedKey, Scale5 } from "@/lib/wellness-types";
 
 export const Route = createFileRoute("/check-in")({
@@ -96,7 +97,7 @@ function CheckInPage() {
       />
 
       <div className="space-y-4">
-        <Block title="How are you today?">
+        <Block title="How are you today?" tone="bloom">
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
             {MOODS.map((m) => (
               <SelectionCard
@@ -111,26 +112,27 @@ function CheckInPage() {
         </Block>
 
         <div className="grid gap-4 sm:grid-cols-2">
-          <Block title="Energy">
-            <ScaleControl value={energy} onChange={setEnergy} lowLabel="Low" highLabel="High" />
+          <Block title="Energy" tone="sun">
+            <ScaleControl value={energy} onChange={setEnergy} lowLabel="Low" highLabel="High" tone="sun" />
           </Block>
-          <Block title="Stress">
-            <ScaleControl value={stress} onChange={setStress} lowLabel="Low" highLabel="High" />
+          <Block title="Stress" tone="mind">
+            <ScaleControl value={stress} onChange={setStress} lowLabel="Low" highLabel="High" tone="mind" />
           </Block>
-          <Block title="Motivation">
+          <Block title="Motivation" tone="energy">
             <ScaleControl
               value={motivation}
               onChange={setMotivation}
               lowLabel="Low"
               highLabel="High"
+              tone="energy"
             />
           </Block>
-          <Block title="Sleep">
-            <ScaleControl value={sleep} onChange={setSleep} lowLabel="Poor" highLabel="Excellent" />
+          <Block title="Sleep" tone="primary">
+            <ScaleControl value={sleep} onChange={setSleep} lowLabel="Poor" highLabel="Excellent" tone="primary" />
           </Block>
         </div>
 
-        <Block title="What do you need today?">
+        <Block title="What do you need today?" tone="calm">
           <div className="grid gap-2 sm:grid-cols-2">
             {NEEDS.map((n) => (
               <SelectionCard
