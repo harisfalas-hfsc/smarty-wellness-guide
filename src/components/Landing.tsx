@@ -1,6 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Button } from "@/components/ui/button";
+import { LogIn, UserPlus } from "lucide-react";
 import heroImage from "@/assets/hero-wellness.jpg";
+import { Button } from "@/components/ui/button";
+import { PageHeader } from "@/components/PageHeader";
 
 const TAGLINE =
   "Your personal guide to a healthier, more balanced, and more fulfilling life.";
@@ -8,36 +10,33 @@ const TAGLINE =
 /** Public marketing page shown to visitors who are not signed in. */
 export function Landing() {
   return (
-    <main>
-      {/* MOBILE — centered header + stacked CTAs (matches Smarty Workout) */}
-      <section className="px-5 py-10 text-center sm:hidden">
-        <p className="text-[11px] font-extrabold uppercase tracking-[0.22em] text-calm-deep">
-          Smarty Wellness
-        </p>
-        <h1 className="mx-auto mt-3 max-w-sm text-3xl font-extrabold leading-[1.15] text-foreground">
-          Your personal guide to a{" "}
-          <span className="text-calm-deep">healthier, more balanced,</span> and
-          more fulfilling life.
-        </h1>
-        <div className="mx-auto mt-8 flex max-w-xs flex-col gap-3">
-          <Link to="/auth" style={{ textDecoration: "none" }}>
-            <Button size="lg" className="w-full">
-              Create free account
-            </Button>
-          </Link>
-          <Link to="/auth" style={{ textDecoration: "none" }}>
-            <Button size="lg" variant="outline" className="w-full">
+    <main className="mx-auto flex max-w-6xl flex-col px-4 pb-4 pt-0 sm:pb-6">
+      <section className="py-6 sm:hidden">
+        <PageHeader
+          as="p"
+          title={TAGLINE}
+          subtitle="One honest check-in. One clear action. Every day."
+        />
+        <div className="mx-auto flex max-w-xs flex-col gap-3">
+          <Button asChild size="lg" className="h-12 w-full rounded-full text-[15px] font-extrabold">
+            <Link to="/auth" search={{ mode: "signup" }}>
+              <UserPlus className="h-4 w-4" />
+              Create your account
+            </Link>
+          </Button>
+          <Button asChild size="lg" variant="outline" className="h-12 w-full rounded-full border-2 border-primary text-[15px] font-extrabold text-primary">
+            <Link to="/auth" search={{ mode: "signin" }}>
+              <LogIn className="h-4 w-4" />
               Sign in
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
-        <p className="mt-5 text-[13px] text-muted-foreground">
-          One honest check-in. One clear action. Every day.
+        <p className="mt-4 text-center text-[13px] text-muted-foreground">
+          Your daily guidance for a healthier, more balanced life.
         </p>
       </section>
 
-      {/* FULL-BLEED HERO — desktop/tablet (unchanged) */}
-      <section className="relative hidden min-h-[calc(100dvh-3.5rem)] overflow-hidden sm:block">
+      <section className="relative left-1/2 mb-4 hidden w-screen -translate-x-1/2 overflow-hidden sm:mb-6 sm:block">
         <img
           src={heroImage}
           alt="A happy couple walking together along the beach at sunrise"
@@ -45,28 +44,35 @@ export function Landing() {
           height={1088}
           fetchPriority="high"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full -scale-x-100 object-cover object-center"
         />
-        <div className="relative mx-auto flex min-h-[calc(100dvh-3.5rem)] w-full max-w-6xl items-center justify-end px-8 py-12 lg:px-6">
-          <div className="max-w-[48%] lg:max-w-xl">
-            <h1 className="text-5xl font-extrabold uppercase leading-[1.08] text-foreground drop-shadow-[0_1px_2px_var(--color-card)] lg:text-6xl">
-              Your personal guide to a{" "}
-              <span className="text-calm-deep">healthier, more balanced,</span>{" "}
-              and more fulfilling life.
+        <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/65 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-transparent to-transparent" />
+        <div className="relative mx-auto w-full max-w-6xl px-5 py-12 lg:px-6 lg:py-20">
+          <div className="max-w-xl lg:max-w-3xl">
+            <h1 className="text-[34px] font-extrabold uppercase leading-[1.05] text-hero-foreground sm:text-[44px] lg:text-[60px]">
+              {TAGLINE}
             </h1>
-            <p className="mt-4 text-lg font-bold leading-7 text-foreground drop-shadow-[0_1px_2px_var(--color-card)]">
+            <p className="mt-5 text-base leading-relaxed text-hero-foreground/80 lg:mt-6 lg:text-lg">
               One honest check-in. One clear action. Every day.
             </p>
-            <div className="mt-7 flex flex-row gap-3">
-              <Link to="/auth" style={{ textDecoration: "none" }}>
-                <Button size="lg">Create free account</Button>
-              </Link>
-              <Link to="/auth" style={{ textDecoration: "none" }}>
-                <Button size="lg" variant="outline" className="bg-card/90">
+            <div className="mt-7 flex flex-wrap items-center gap-3 lg:flex-nowrap">
+              <Button asChild size="lg" className="h-12 rounded-full px-6 text-base font-bold lg:px-8">
+                <Link to="/auth" search={{ mode: "signup" }}>
+                  <UserPlus className="h-4 w-4" />
+                  Create your account
+                </Link>
+              </Button>
+              <Button asChild size="lg" variant="outline" className="h-12 rounded-full border-2 border-primary bg-transparent px-6 text-base font-bold text-primary hover:bg-primary/10 hover:text-primary lg:px-8">
+                <Link to="/auth" search={{ mode: "signin" }}>
+                  <LogIn className="h-4 w-4" />
                   Sign in
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
+            <p className="mt-4 text-sm text-hero-foreground/60">
+              Your daily guidance for a healthier, more balanced life.
+            </p>
           </div>
         </div>
       </section>
