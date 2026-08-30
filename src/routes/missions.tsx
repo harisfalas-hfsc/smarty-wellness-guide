@@ -98,7 +98,8 @@ function MissionsPage() {
               </div>
             </div>
           </button>
-        ))}
+          );
+        })}
       </div>
 
       <p className="mt-6 pb-2 text-xs leading-5 text-muted-foreground">
