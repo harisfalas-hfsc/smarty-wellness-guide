@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { useWellness } from "@/lib/wellness-store";
 import { buildRecommendations } from "@/lib/recommendation";
 import { MOODS, NEEDS } from "@/lib/checkin-options";
+import { useAuth } from "@/lib/auth";
+import { Landing } from "@/components/Landing";
 
 /** One wellness color per quick mood button. */
 const MOOD_TONES = [
@@ -37,6 +39,15 @@ export const Route = createFileRoute("/")({
 });
 
 function HomePage() {
+  const { session, loading } = useAuth();
+  if (loading) {
+    return <div className="mx-auto mt-16 h-40 w-full max-w-3xl animate-pulse rounded-3xl bg-muted" />;
+  }
+  if (!session) return <Landing />;
+  return <WellnessHome />;
+}
+
+function WellnessHome() {
   const { state, todayCheckIn, saveCheckIn, hydrated } = useWellness();
   const recs = buildRecommendations(state, todayCheckIn);
   const primary = recs.find((r) => r.level === "primary")!;

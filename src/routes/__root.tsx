@@ -4,6 +4,8 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useRouterState,
+  useNavigate,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -16,6 +18,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { DesktopNav } from "@/components/DesktopNav";
 import { Toaster } from "@/components/ui/sonner";
 import { WellnessProvider } from "@/lib/wellness-store";
+import { AuthProvider, useAuth } from "@/lib/auth";
 
 function NotFoundComponent() {
   return (
@@ -123,20 +126,39 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <WellnessProvider>
-        <div className="min-h-screen bg-background">
-          <Navigation />
-          <div className="mx-auto flex w-full max-w-7xl">
-            <DesktopNav />
-            <div className="min-w-0 flex-1">
-              {/* Required: nested routes render here. */}
-              <Outlet />
-            </div>
-          </div>
-          <BottomNav />
-          <Toaster />
-        </div>
-      </WellnessProvider>
+      <AuthProvider>
+        <WellnessProvider>
+          <AppFrame />
+        </WellnessProvider>
+      </AuthProvider>
     </QueryClientProvider>
+  );
+}
+
+const PUBLIC_PATHS = ["/", "/auth"];
+
+function AppFrame() {
+  const { session, loading } = useAuth();
+  const navigate = useNavigate();
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+
+  useEffect(() => {
+    if (loading || session) return;
+    if (!PUBLIC_PATHS.includes(pathname)) void navigate({ to: "/auth" });
+  }, [loading, session, pathname, navigate]);
+
+  return (
+    <div className="min-h-screen bg-background">
+      <Navigation />
+      <div className="mx-auto flex w-full max-w-7xl">
+        {session && <DesktopNav />}
+        <div className="min-w-0 flex-1">
+          {/* Required: nested routes render here. */}
+          <Outlet />
+        </div>
+      </div>
+      {session && <BottomNav />}
+      <Toaster />
+    </div>
   );
 }

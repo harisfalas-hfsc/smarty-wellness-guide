@@ -10,6 +10,7 @@ import {
   Home,
   LineChart,
   ListChecks,
+  LogOut,
   Menu,
   Settings,
   Sparkles,
@@ -27,6 +28,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useWellness } from "@/lib/wellness-store";
+import { useAuth } from "@/lib/auth";
 
 export function Navigation() {
   const router = useRouter();
@@ -34,6 +36,7 @@ export function Navigation() {
   const [navCount, setNavCount] = useState(0);
   const [menuOpen, setMenuOpen] = useState(false);
   const { state } = useWellness();
+  const { session, user, signOut } = useAuth();
 
   useEffect(() => {
     const unsub = router.subscribe("onResolved", () => setNavCount((n) => n + 1));
@@ -50,7 +53,11 @@ export function Navigation() {
   }, [menuOpen]);
 
   const canGoBack = navCount > 0 && pathname !== "/";
-  const accountName = state.profile.personal.name || "Account";
+  const accountName =
+    state.profile.personal.name ||
+    (user?.user_metadata?.["display_name"] as string | undefined) ||
+    user?.email ||
+    "Account";
   const initial = accountName.slice(0, 1).toUpperCase();
 
   return (
@@ -60,14 +67,16 @@ export function Navigation() {
     >
       <div className="flex h-11 items-center justify-between gap-2 px-3">
         <div className="flex min-w-0 items-center gap-2">
-          <button
-            type="button"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary hover:bg-primary/10"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
+          {session && (
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              aria-label="Open menu"
+              className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary hover:bg-primary/10"
+            >
+              <Menu className="h-5 w-5" />
+            </button>
+          )}
           {canGoBack && (
             <button
               type="button"
@@ -95,43 +104,72 @@ export function Navigation() {
         </div>
 
         <div className="flex shrink-0 items-center gap-2">
-          <Link
-            to="/check-in"
-            aria-label="Daily check-in"
-            className="hidden h-8 items-center rounded-full border-2 border-primary px-3 text-[11px] font-bold uppercase tracking-wide text-primary hover:bg-primary/10 sm:inline-flex"
-            style={{ textDecoration: "none" }}
-          >
-            Check in
-          </Link>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button
-                type="button"
-                aria-label="Account"
-                className="inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary bg-primary text-xs font-bold text-primary-foreground"
+          {!session ? (
+            <>
+              <Link
+                to="/auth"
+                className="hidden h-8 items-center rounded-full border-2 border-primary px-3 text-[11px] font-bold uppercase tracking-wide text-primary hover:bg-primary/10 sm:inline-flex"
+                style={{ textDecoration: "none" }}
               >
-                {initial}
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuLabel className="truncate">{accountName}</DropdownMenuLabel>
-              <DropdownMenuItem asChild>
-                <Link to="/profile">
-                  <UserCircle className="mr-2 h-4 w-4" /> Wellness profile
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/journey">
-                  <LineChart className="mr-2 h-4 w-4" /> My journey
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link to="/settings">
-                  <Settings className="mr-2 h-4 w-4" /> Settings & account
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                Sign in
+              </Link>
+              <Link
+                to="/auth"
+                className="inline-flex h-8 items-center rounded-full border-2 border-emerald-500 bg-emerald-500 px-3 text-[11px] font-bold uppercase tracking-wide text-white"
+                style={{ textDecoration: "none" }}
+              >
+                Get started
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to="/check-in"
+                aria-label="Daily check-in"
+                className="hidden h-8 items-center rounded-full border-2 border-primary px-3 text-[11px] font-bold uppercase tracking-wide text-primary hover:bg-primary/10 sm:inline-flex"
+                style={{ textDecoration: "none" }}
+              >
+                Check in
+              </Link>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    type="button"
+                    aria-label="Account"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary bg-primary text-xs font-bold text-primary-foreground"
+                  >
+                    {initial}
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel className="truncate">{accountName}</DropdownMenuLabel>
+                  <DropdownMenuItem asChild>
+                    <Link to="/profile">
+                      <UserCircle className="mr-2 h-4 w-4" /> Wellness profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/journey">
+                      <LineChart className="mr-2 h-4 w-4" /> My journey
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/settings">
+                      <Settings className="mr-2 h-4 w-4" /> Settings & account
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onSelect={async () => {
+                      await signOut();
+                      await router.navigate({ to: "/" });
+                    }}
+                  >
+                    <LogOut className="mr-2 h-4 w-4" /> Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </>
+          )}
         </div>
       </div>
 
