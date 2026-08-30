@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { useWellness } from "@/lib/wellness-store";
 import { buildRecommendations } from "@/lib/recommendation";
 import { MOODS, NEEDS } from "@/lib/checkin-options";
+import { useAuth } from "@/lib/auth";
+import { Landing } from "@/components/Landing";
 
 /** One wellness color per quick mood button. */
 const MOOD_TONES = [
