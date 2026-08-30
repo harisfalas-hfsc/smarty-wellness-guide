@@ -50,7 +50,11 @@ export function Navigation() {
   }, [menuOpen]);
 
   const canGoBack = navCount > 0 && pathname !== "/";
-  const accountName = state.profile.personal.name || "Account";
+  const accountName =
+    state.profile.personal.name ||
+    (user?.user_metadata?.["display_name"] as string | undefined) ||
+    user?.email ||
+    "Account";
   const initial = accountName.slice(0, 1).toUpperCase();
 
   return (
