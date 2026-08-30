@@ -64,8 +64,8 @@ function TodayPage() {
         </SmartyCard>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <section className="rounded-3xl border-2 border-border bg-card p-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <section className="rounded-3xl border-2 border-calm/60 bg-card p-6 shadow-soft">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-calm-deep">
               Today's mission
             </p>
             {mission && (
@@ -89,8 +89,8 @@ function TodayPage() {
             )}
           </section>
 
-          <section className="rounded-3xl border-2 border-border bg-card p-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <section className="rounded-3xl border-2 border-sun/70 bg-card p-6 shadow-soft">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-sun-deep">
               Optional challenge
             </p>
             {challenge && (
@@ -113,8 +113,8 @@ function TodayPage() {
           </section>
         </div>
 
-        <section className="rounded-3xl border-2 border-border bg-card p-6">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+        <section className="rounded-3xl border-2 border-primary/50 bg-card p-6 shadow-soft">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
             Today's wellness status
           </p>
           {todayCheckIn ? (
@@ -139,8 +139,8 @@ function TodayPage() {
         </section>
 
         <div className="grid gap-4 lg:grid-cols-2">
-          <section className="rounded-3xl border-2 border-border bg-card p-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <section className="rounded-3xl border-2 border-mind/50 bg-card p-6 shadow-soft">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-mind-deep">
               Upcoming action
             </p>
             <div className="mt-3 flex items-start gap-3">
@@ -155,8 +155,8 @@ function TodayPage() {
             </div>
           </section>
 
-          <section className="rounded-3xl border-2 border-border bg-card p-6">
-            <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
+          <section className="rounded-3xl border-2 border-bloom/50 bg-card p-6 shadow-soft">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-bloom-deep">
               Completed
             </p>
             {done.length === 0 ? (
