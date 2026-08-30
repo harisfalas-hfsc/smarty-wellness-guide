@@ -1,6 +1,6 @@
 import { Link } from "@tanstack/react-router";
 import { LogIn, UserPlus } from "lucide-react";
-import heroImage from "@/assets/hero-wellness.jpg";
+import heroImage from "@/assets/hero-wellness-white.jpg";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/PageHeader";
 
@@ -36,24 +36,13 @@ export function Landing() {
         </p>
       </section>
 
-      <section className="relative left-1/2 mb-4 hidden w-screen -translate-x-1/2 overflow-hidden sm:mb-6 sm:block">
-        <img
-          src={heroImage}
-          alt="A happy couple walking together along the beach at sunrise"
-          width={1920}
-          height={1088}
-          fetchPriority="high"
-          decoding="async"
-          className="absolute inset-0 h-full w-full -scale-x-100 object-cover object-center"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/65 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-transparent to-transparent" />
-        <div className="relative mx-auto w-full max-w-6xl px-5 py-12 lg:px-6 lg:py-20">
-          <div className="max-w-xl lg:max-w-3xl">
-            <h1 className="text-[34px] font-extrabold uppercase leading-[1.05] text-hero-foreground sm:text-[44px] lg:text-[60px]">
+      <section className="relative left-1/2 mb-4 hidden w-screen -translate-x-1/2 overflow-hidden bg-background sm:mb-6 sm:block">
+        <div className="relative mx-auto grid w-full max-w-6xl items-center gap-6 px-5 py-10 lg:grid-cols-2 lg:px-6 lg:py-14">
+          <div className="max-w-xl">
+            <h1 className="text-[34px] font-extrabold uppercase leading-[1.05] text-foreground sm:text-[40px] lg:text-[52px]">
               {TAGLINE}
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-hero-foreground/80 lg:mt-6 lg:text-lg">
+            <p className="mt-5 text-base leading-relaxed text-muted-foreground lg:mt-6 lg:text-lg">
               One honest check-in. One clear action. Every day.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3 lg:flex-nowrap">
@@ -70,12 +59,19 @@ export function Landing() {
                 </Link>
               </Button>
             </div>
-            <p className="mt-4 text-sm text-hero-foreground/60">
-              Your daily guidance for a healthier, more balanced life.
-            </p>
           </div>
+          <img
+            src={heroImage}
+            alt="A happy couple walking together holding hands"
+            width={1536}
+            height={1024}
+            fetchPriority="high"
+            decoding="async"
+            className="mx-auto h-auto w-full max-w-xl object-contain"
+          />
         </div>
       </section>
+
     </main>
   );
 }

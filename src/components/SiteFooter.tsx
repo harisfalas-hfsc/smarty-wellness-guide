@@ -50,16 +50,16 @@ export function SiteFooter() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-muted-foreground sm:text-sm">
-          <Link to="/" className="transition-colors hover:text-primary">Wellness</Link>
+          <a href="https://smartyworkout.com" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-primary">Smarty Workout</a>
           <span className="text-muted-foreground/40">·</span>
-          <a href="https://smartyworkout.com/privacy" className="transition-colors hover:text-primary">Privacy</a>
+          <Link to="/privacy" className="transition-colors hover:text-primary">Privacy</Link>
           <span className="text-muted-foreground/40">·</span>
-          <a href="https://smartyworkout.com/terms" className="transition-colors hover:text-primary">
+          <Link to="/terms" className="transition-colors hover:text-primary">
             <span className="md:hidden">T&amp;Cs</span>
             <span className="hidden md:inline">Terms</span>
-          </a>
+          </Link>
           <span className="text-muted-foreground/40">·</span>
-          <a href="https://smartyworkout.com/disclaimer" className="transition-colors hover:text-primary">Disclaimer</a>
+          <Link to="/disclaimer" className="transition-colors hover:text-primary">Disclaimer</Link>
         </div>
 
         <p className="text-center text-sm text-muted-foreground">
