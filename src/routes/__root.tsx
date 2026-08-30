@@ -16,6 +16,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { DesktopNav } from "@/components/DesktopNav";
 import { Toaster } from "@/components/ui/sonner";
 import { WellnessProvider } from "@/lib/wellness-store";
+import { AuthProvider, useAuth } from "@/lib/auth";
 
 function NotFoundComponent() {
   return (
