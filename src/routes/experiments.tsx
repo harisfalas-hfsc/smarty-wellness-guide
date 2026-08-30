@@ -24,6 +24,8 @@ export const Route = createFileRoute("/experiments")({
 function ExperimentsPage() {
   const { state } = useWellness();
 
+  return null as never; // placeholder — replaced below
+
   return (
     <PageShell>
       <PageHeader
@@ -34,7 +36,7 @@ function ExperimentsPage() {
       />
 
       <div className="grid gap-3 lg:grid-cols-2">
-        {state.experiments.map((e) => (
+        {state.experiments.map((e, idx) => (
           <div
             key={e.id}
             className={`rounded-3xl border-2 bg-card p-5 shadow-soft ${EXP_TONES[idx % EXP_TONES.length]}`}
