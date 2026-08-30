@@ -52,7 +52,7 @@ function ChallengesPage() {
             className={`flex cursor-pointer items-start gap-3 rounded-2xl border-2 bg-card p-4 text-left transition shadow-soft ${
               c.completed
                 ? "border-calm"
-                : `${CHALLENGE_TONES[i % CHALLENGE_TONES.length]} hover:shadow-card`
+                : CHALLENGE_TONES[i % CHALLENGE_TONES.length]
             }`}
           >
             {c.completed ? (
