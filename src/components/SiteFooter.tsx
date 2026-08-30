@@ -50,8 +50,6 @@ export function SiteFooter() {
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 text-xs text-muted-foreground sm:text-sm">
-          <a href="https://smartyworkout.com" target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-primary">Smarty Workout</a>
-          <span className="text-muted-foreground/40">·</span>
           <Link to="/privacy" className="transition-colors hover:text-primary">Privacy</Link>
           <span className="text-muted-foreground/40">·</span>
           <Link to="/terms" className="transition-colors hover:text-primary">
