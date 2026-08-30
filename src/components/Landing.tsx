@@ -49,8 +49,8 @@ export function Landing() {
             height={1088}
             className="absolute inset-0 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/85 to-background/10" />
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-transparent to-transparent" />
 
           <div className="relative mx-auto flex h-full max-w-5xl flex-col justify-center px-5 sm:px-8">
             <p className="text-[11px] font-bold uppercase tracking-widest text-primary">
