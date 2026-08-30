@@ -111,6 +111,15 @@ export const PROFILE_SECTIONS: {
   },
 ];
 
+/** One wellness color per profile section. */
+const SECTION_TONES = [
+  "border-primary/50",
+  "border-sun/70",
+  "border-energy/50",
+  "border-calm/60",
+  "border-mind/50",
+];
+
 function ProfilePage() {
   const { state, updateProfile } = useWellness();
 
@@ -124,11 +133,11 @@ function ProfilePage() {
       />
 
       <Accordion type="multiple" defaultValue={["personal"]} className="space-y-3">
-        {PROFILE_SECTIONS.map((section) => (
+        {PROFILE_SECTIONS.map((section, i) => (
           <AccordionItem
             key={section.key}
             value={section.key}
-            className="rounded-3xl border-2 border-border bg-card px-5"
+            className={`rounded-3xl border-2 bg-card px-5 shadow-soft ${SECTION_TONES[i % SECTION_TONES.length]}`}
           >
             <AccordionTrigger className="py-5 hover:no-underline">
               <span className="text-left">
