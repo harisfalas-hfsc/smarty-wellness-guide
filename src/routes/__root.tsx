@@ -136,7 +136,7 @@ function RootComponent() {
   );
 }
 
-const PUBLIC_PATHS = ["/", "/auth"];
+const PUBLIC_PATHS = ["/", "/auth", "/privacy", "/terms", "/disclaimer"];
 
 function AppFrame() {
   const { session, loading } = useAuth();
