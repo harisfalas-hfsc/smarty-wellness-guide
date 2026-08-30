@@ -26,7 +26,7 @@ export function SelectionCard({
         "flex min-h-14 w-full cursor-pointer items-center gap-3 rounded-2xl border-2 bg-card px-4 py-3 text-left transition",
         selected
           ? "border-primary bg-primary/5 shadow-soft"
-          : "border-border hover:border-primary/50",
+          : "border-primary/30 hover:border-primary/60",
         className,
       )}
     >

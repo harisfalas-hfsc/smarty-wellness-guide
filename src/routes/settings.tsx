@@ -36,7 +36,7 @@ function SettingsPage() {
       />
 
       <div className="space-y-4">
-        <section className="rounded-3xl border-2 border-border bg-card p-6">
+        <section className="rounded-3xl border-2 border-primary/50 bg-card p-6 shadow-soft">
           <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
             Your details
           </p>
