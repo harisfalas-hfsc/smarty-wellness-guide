@@ -8,13 +8,16 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    mode: search.mode === "signup" ? ("signup" as const) : ("signin" as const),
+  }),
   head: () => ({
     meta: [
       { title: "Sign in — Smarty Wellness" },
       {
         name: "description",
         content:
-          "Create your free Smarty Wellness account or sign in to continue your daily check-ins, missions and wellness journey.",
+          "Create your Smarty Wellness account or sign in to continue your daily check-ins, missions and wellness journey.",
       },
       { property: "og:title", content: "Sign in to Smarty Wellness" },
       {
@@ -27,7 +30,8 @@ export const Route = createFileRoute("/auth")({
 });
 
 function AuthPage() {
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const search = Route.useSearch();
+  const [mode, setMode] = useState<"signin" | "signup">(search.mode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -39,6 +43,10 @@ function AuthPage() {
   useEffect(() => {
     if (!loading && session) void navigate({ to: "/" });
   }, [loading, session, navigate]);
+
+  useEffect(() => {
+    setMode(search.mode);
+  }, [search.mode]);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -93,7 +101,7 @@ function AuthPage() {
           </span>
         </Link>
         <h1 className="mt-4 text-2xl font-extrabold tracking-tight">
-          {mode === "signin" ? "Sign in to continue" : "Create your free account"}
+          {mode === "signin" ? "Sign in to continue" : "Create your account"}
         </h1>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Your check-ins, missions and journey stay with you across every device.

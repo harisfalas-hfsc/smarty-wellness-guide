@@ -44,18 +44,18 @@ export function Landing() {
           height={1088}
           fetchPriority="high"
           decoding="async"
-          className="absolute inset-0 h-full w-full object-cover object-center"
+          className="absolute inset-0 h-full w-full -scale-x-100 object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-foreground/90 via-foreground/65 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-t from-foreground/75 via-transparent to-transparent" />
         <div className="relative mx-auto w-full max-w-6xl px-5 py-12 lg:px-6 lg:py-20">
           <div className="max-w-xl lg:max-w-3xl">
-            <h1 className="text-[34px] font-extrabold uppercase leading-[1.05] text-primary-foreground sm:text-[44px] lg:text-[60px]">
+            <h1 className="text-[34px] font-extrabold uppercase leading-[1.05] text-hero-foreground sm:text-[44px] lg:text-[60px]">
               Your personal guide to a healthier,
               <br />
               <span className="text-primary">more balanced and more fulfilling life.</span>
             </h1>
-            <p className="mt-5 text-base leading-relaxed text-primary-foreground/80 lg:mt-6 lg:text-lg">
+            <p className="mt-5 text-base leading-relaxed text-hero-foreground/80 lg:mt-6 lg:text-lg">
               One honest check-in. One clear action. Every day.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3 lg:flex-nowrap">
@@ -72,7 +72,7 @@ export function Landing() {
                 </Link>
               </Button>
             </div>
-            <p className="mt-4 text-sm text-primary-foreground/60">
+            <p className="mt-4 text-sm text-hero-foreground/60">
               Your daily guidance for a healthier, more balanced life.
             </p>
           </div>

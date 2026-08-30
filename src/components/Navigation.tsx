@@ -219,7 +219,6 @@ function NavDrawer({ onClose }: { onClose: () => void }) {
       heading: "Smarty Wellness",
       items: [
         { to: "/", label: "Home", Icon: Home },
-        { to: "/auth", label: "Create your account", Icon: UserCircle },
         { to: "/auth", label: "Sign in", Icon: LogIn },
       ],
     },
