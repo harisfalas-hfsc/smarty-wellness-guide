@@ -18,7 +18,10 @@ import { Route as ExperimentsRouteImport } from './routes/experiments'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as MissionsRouteImport } from './routes/missions'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ReviewRouteImport } from './routes/review'
+import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TodayRouteImport } from './routes/today'
 
 const IndexRoute = IndexRouteImport.update({
@@ -66,9 +69,24 @@ const MissionsRoute = MissionsRouteImport.update({
   path: '/missions',
   getParentRoute: () => rootRouteImport,
 } as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
   path: '/review',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TodayRoute = TodayRouteImport.update({
@@ -87,7 +105,10 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/missions': typeof MissionsRoute
+  '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
   '/review': typeof ReviewRoute
+  '/settings': typeof SettingsRoute
   '/today': typeof TodayRoute
 }
 export interface FileRoutesByTo {
@@ -100,7 +121,10 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/missions': typeof MissionsRoute
+  '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
   '/review': typeof ReviewRoute
+  '/settings': typeof SettingsRoute
   '/today': typeof TodayRoute
 }
 export interface FileRoutesById {
@@ -114,7 +138,10 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/missions': typeof MissionsRoute
+  '/onboarding': typeof OnboardingRoute
+  '/profile': typeof ProfileRoute
   '/review': typeof ReviewRoute
+  '/settings': typeof SettingsRoute
   '/today': typeof TodayRoute
 }
 export interface FileRouteTypes {
@@ -129,7 +156,10 @@ export interface FileRouteTypes {
     | '/home'
     | '/journey'
     | '/missions'
+    | '/onboarding'
+    | '/profile'
     | '/review'
+    | '/settings'
     | '/today'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -142,7 +172,10 @@ export interface FileRouteTypes {
     | '/home'
     | '/journey'
     | '/missions'
+    | '/onboarding'
+    | '/profile'
     | '/review'
+    | '/settings'
     | '/today'
   id:
     | '__root__'
@@ -155,7 +188,10 @@ export interface FileRouteTypes {
     | '/home'
     | '/journey'
     | '/missions'
+    | '/onboarding'
+    | '/profile'
     | '/review'
+    | '/settings'
     | '/today'
   fileRoutesById: FileRoutesById
 }
@@ -169,7 +205,10 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   JourneyRoute: typeof JourneyRoute
   MissionsRoute: typeof MissionsRoute
+  OnboardingRoute: typeof OnboardingRoute
+  ProfileRoute: typeof ProfileRoute
   ReviewRoute: typeof ReviewRoute
+  SettingsRoute: typeof SettingsRoute
   TodayRoute: typeof TodayRoute
 }
 
@@ -238,11 +277,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MissionsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/review': {
       id: '/review'
       path: '/review'
       fullPath: '/review'
       preLoaderRoute: typeof ReviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/today': {
@@ -265,7 +325,10 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   JourneyRoute: JourneyRoute,
   MissionsRoute: MissionsRoute,
+  OnboardingRoute: OnboardingRoute,
+  ProfileRoute: ProfileRoute,
   ReviewRoute: ReviewRoute,
+  SettingsRoute: SettingsRoute,
   TodayRoute: TodayRoute,
 }
 export const routeTree = rootRouteImport
