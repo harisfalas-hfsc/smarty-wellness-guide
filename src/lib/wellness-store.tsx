@@ -197,7 +197,32 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) setState({ ...defaultState, ...(JSON.parse(raw) as WellnessState) });
+      if (raw) {
+        type StoredCheckIn = Omit<CheckIn, "needs"> & {
+          needs?: CheckIn["needs"];
+          need?: CheckIn["needs"][number] | null;
+        };
+        const stored = JSON.parse(raw) as Omit<WellnessState, "checkIns"> & {
+          checkIns?: StoredCheckIn[];
+        };
+        setState({
+          ...defaultState,
+          ...stored,
+          checkIns: (stored.checkIns ?? []).map((checkIn) => ({
+            ...checkIn,
+            needs:
+              checkIn.needs ?? (checkIn.need ? [checkIn.need] : []),
+          })),
+          missions: (stored.missions ?? starterMissions).map((mission) => ({
+            ...mission,
+            ...(mission.completed ? { completedDate: mission.completedDate ?? todayKey() } : {}),
+          })),
+          challenges: (stored.challenges ?? starterChallenges).map((challenge) => ({
+            ...challenge,
+            ...(challenge.completed ? { completedDate: challenge.completedDate ?? todayKey() } : {}),
+          })),
+        });
+      }
     } catch {
       /* ignore corrupted storage */
     }
@@ -238,14 +263,32 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
   const toggleMission = useCallback((id: string) => {
     setState((s) => ({
       ...s,
-      missions: s.missions.map((m) => (m.id === id ? { ...m, completed: !m.completed } : m)),
+      missions: s.missions.map((m) =>
+        m.id === id
+          ? m.completed && m.completedDate === todayKey()
+            ? (({ completedDate: _completedDate, ...mission }) => ({ ...mission, completed: false }))(m)
+            : { ...m, completed: true, completedDate: todayKey() }
+          : m,
+      ),
+      completedActions: s.completedActions.includes(id)
+        ? s.completedActions.filter((a) => a !== id)
+        : [...s.completedActions, id],
     }));
   }, []);
 
   const toggleChallenge = useCallback((id: string) => {
     setState((s) => ({
       ...s,
-      challenges: s.challenges.map((c) => (c.id === id ? { ...c, completed: !c.completed } : c)),
+      challenges: s.challenges.map((c) =>
+        c.id === id
+          ? c.completed && c.completedDate === todayKey()
+            ? (({ completedDate: _completedDate, ...challenge }) => ({ ...challenge, completed: false }))(c)
+            : { ...c, completed: true, completedDate: todayKey() }
+          : c,
+      ),
+      completedActions: s.completedActions.includes(id)
+        ? s.completedActions.filter((a) => a !== id)
+        : [...s.completedActions, id],
     }));
   }, []);
 

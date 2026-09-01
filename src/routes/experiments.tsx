@@ -62,8 +62,8 @@ function ExperimentsPage() {
                 </span>
               ))}
             </div>
-            <Button variant="outline" size="lg" className="mt-4 w-full" disabled>
-              Available when your baseline is ready
+            <Button variant="outline" size="lg" className="mt-4 w-full" disabled={state.checkIns.length < 14}>
+              {state.checkIns.length < 14 ? "Available when your baseline is ready" : "Start experiment"}
             </Button>
           </div>
         ))}

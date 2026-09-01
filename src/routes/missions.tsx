@@ -3,7 +3,7 @@ import { CheckCircle2, Circle, Target } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { PageHeader } from "@/components/PageHeader";
 import { Progress } from "@/components/ui/progress";
-import { useWellness } from "@/lib/wellness-store";
+import { todayKey, useWellness } from "@/lib/wellness-store";
 
 export const Route = createFileRoute("/missions")({
   head: () => ({
@@ -43,7 +43,7 @@ const FALLBACK_TONE = AREA_TONE["personal"]!;
 
 function MissionsPage() {
   const { state, toggleMission } = useWellness();
-  const completed = state.missions.filter((m) => m.completed).length;
+  const completed = state.missions.filter((m) => m.completed && m.completedDate === todayKey()).length;
   const pct = state.missions.length ? (completed / state.missions.length) * 100 : 0;
 
   return (
@@ -73,11 +73,12 @@ function MissionsPage() {
             key={m.id}
             type="button"
             onClick={() => toggleMission(m.id)}
+            aria-pressed={m.completed && m.completedDate === todayKey()}
             className={`flex cursor-pointer items-start gap-3 rounded-3xl border-2 bg-card p-5 text-left transition shadow-soft ${
-              m.completed ? "border-calm" : tone.border
+               m.completed && m.completedDate === todayKey() ? "border-calm" : tone.border
             }`}
           >
-            {m.completed ? (
+            {m.completed && m.completedDate === todayKey() ? (
               <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-calm-deep" />
             ) : (
               <Circle className={`mt-0.5 h-5 w-5 shrink-0 ${tone.text}`} />

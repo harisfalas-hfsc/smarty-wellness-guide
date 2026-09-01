@@ -27,7 +27,7 @@ export interface CheckIn {
   stress: Scale5;
   motivation: Scale5;
   sleep: Scale5;
-  need: NeedKey | null;
+  needs: NeedKey[];
   note?: string;
 }
 
@@ -104,6 +104,7 @@ export interface Mission {
   totalSteps: number;
   target: string;
   completed: boolean;
+  completedDate?: string;
 }
 
 export interface Challenge {
@@ -111,6 +112,7 @@ export interface Challenge {
   title: string;
   detail: string;
   completed: boolean;
+  completedDate?: string;
 }
 
 export interface BucketGoal {

@@ -1,10 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CalendarCheck, CheckCircle2, Circle, Clock } from "lucide-react";
+import { useState } from "react";
+import { CalendarCheck, Check, CheckCircle2, ChevronLeft, ChevronRight, Clock, RotateCcw } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { PageHeader } from "@/components/PageHeader";
 import { SmartyCard, SmartyPill } from "@/components/SmartyCard";
 import { Button } from "@/components/ui/button";
-import { useWellness } from "@/lib/wellness-store";
+import { todayKey, useWellness } from "@/lib/wellness-store";
 import { buildRecommendations } from "@/lib/recommendation";
 import { MOODS } from "@/lib/checkin-options";
 
@@ -28,11 +29,15 @@ function TodayPage() {
   const { state, todayCheckIn, toggleMission, toggleChallenge } = useWellness();
   const recs = buildRecommendations(state, todayCheckIn);
   const primary = recs.find((r) => r.level === "primary")!;
-  const mission = state.missions.find((m) => !m.completed) ?? state.missions[0];
-  const challenge = state.challenges.find((c) => !c.completed) ?? state.challenges[0];
+  const [missionIndex, setMissionIndex] = useState(0);
+  const [challengeIndex, setChallengeIndex] = useState(0);
+  const mission = state.missions[missionIndex];
+  const challenge = state.challenges[challengeIndex];
+  const isDoneToday = (item: { completed: boolean; completedDate?: string }) =>
+    item.completed && item.completedDate === todayKey();
   const done = [
-    ...state.missions.filter((m) => m.completed).map((m) => m.title),
-    ...state.challenges.filter((c) => c.completed).map((c) => c.title),
+    ...state.missions.filter(isDoneToday).map((m) => ({ id: m.id, title: m.title, type: "mission" as const })),
+    ...state.challenges.filter(isDoneToday).map((c) => ({ id: c.id, title: c.title, type: "challenge" as const })),
   ];
 
   return (
@@ -68,24 +73,28 @@ function TodayPage() {
             <p className="text-[10px] font-bold uppercase tracking-widest text-calm-deep">
               Today's mission
             </p>
-            {mission && (
-              <button
-                type="button"
-                onClick={() => toggleMission(mission.id)}
-                className="mt-3 flex w-full cursor-pointer items-start gap-3 text-left"
-              >
-                {mission.completed ? (
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" />
-                ) : (
-                  <Circle className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-                )}
-                <span>
-                  <span className="block text-sm font-bold">{mission.title}</span>
-                  <span className="block text-xs text-muted-foreground">
+            {mission ? (
+              <div className="mt-3">
+                <div className="min-h-16">
+                  <p className="text-sm font-bold">{mission.title}</p>
+                  <p className="text-xs text-muted-foreground">
                     {mission.target} · step {mission.step} of {mission.totalSteps}
-                  </span>
-                </span>
-              </button>
+                  </p>
+                </div>
+                <div className="mt-4 flex items-center justify-between gap-3 border-t border-calm/30 pt-4">
+                  <Button variant={isDoneToday(mission) ? "outline" : "default"} onClick={() => toggleMission(mission.id)}>
+                    {isDoneToday(mission) ? <RotateCcw /> : <Check />}
+                    {isDoneToday(mission) ? "Undo" : "Mark complete"}
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="icon" aria-label="Previous mission" title="Previous mission" onClick={() => setMissionIndex((missionIndex - 1 + state.missions.length) % state.missions.length)}><ChevronLeft /></Button>
+                    <span className="min-w-12 text-center text-xs text-muted-foreground">{missionIndex + 1} / {state.missions.length}</span>
+                    <Button variant="ghost" size="icon" aria-label="Next mission" title="Next mission" onClick={() => setMissionIndex((missionIndex + 1) % state.missions.length)}><ChevronRight /></Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>
             )}
           </section>
 
@@ -93,22 +102,26 @@ function TodayPage() {
             <p className="text-[10px] font-bold uppercase tracking-widest text-sun-deep">
               Optional challenge
             </p>
-            {challenge && (
-              <button
-                type="button"
-                onClick={() => toggleChallenge(challenge.id)}
-                className="mt-3 flex w-full cursor-pointer items-start gap-3 text-left"
-              >
-                {challenge.completed ? (
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" />
-                ) : (
-                  <Circle className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-                )}
-                <span>
-                  <span className="block text-sm font-bold">{challenge.title}</span>
-                  <span className="block text-xs text-muted-foreground">{challenge.detail}</span>
-                </span>
-              </button>
+            {challenge ? (
+              <div className="mt-3">
+                <div className="min-h-16">
+                  <p className="text-sm font-bold">{challenge.title}</p>
+                  <p className="text-xs text-muted-foreground">{challenge.detail}</p>
+                </div>
+                <div className="mt-4 flex items-center justify-between gap-3 border-t border-sun/40 pt-4">
+                  <Button variant={isDoneToday(challenge) ? "outline" : "default"} onClick={() => toggleChallenge(challenge.id)}>
+                    {isDoneToday(challenge) ? <RotateCcw /> : <Check />}
+                    {isDoneToday(challenge) ? "Undo" : "Mark complete"}
+                  </Button>
+                  <div className="flex items-center gap-1">
+                    <Button variant="ghost" size="icon" aria-label="Previous challenge" title="Previous challenge" onClick={() => setChallengeIndex((challengeIndex - 1 + state.challenges.length) % state.challenges.length)}><ChevronLeft /></Button>
+                    <span className="min-w-12 text-center text-xs text-muted-foreground">{challengeIndex + 1} / {state.challenges.length}</span>
+                    <Button variant="ghost" size="icon" aria-label="Next challenge" title="Next challenge" onClick={() => setChallengeIndex((challengeIndex + 1) % state.challenges.length)}><ChevronRight /></Button>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>
             )}
           </section>
         </div>
@@ -118,15 +131,18 @@ function TodayPage() {
             Today's wellness status
           </p>
           {todayCheckIn ? (
-            <div className="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              <SmartyPill tone="pink" icon={MOODS.find((m) => m.key === todayCheckIn.mood)?.emoji ?? "🙂"}>
-                Mood: {MOODS.find((m) => m.key === todayCheckIn.mood)?.label ?? "Okay"}
-              </SmartyPill>
-
-              <SmartyPill tone="yellow" icon="⚡">Energy: {todayCheckIn.energy}/5</SmartyPill>
-              <SmartyPill tone="purple" icon="🌊">Stress: {todayCheckIn.stress}/5</SmartyPill>
-              <SmartyPill tone="orange" icon="🔥">Motivation: {todayCheckIn.motivation}/5</SmartyPill>
-              <SmartyPill tone="blue" icon="🌙">Sleep: {todayCheckIn.sleep}/5</SmartyPill>
+            <div className="mt-3">
+              <p className="mb-4 text-xs text-muted-foreground">Automatically summarised from today's check-in.</p>
+              <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                <SmartyPill tone="pink" icon={MOODS.find((m) => m.key === todayCheckIn.mood)?.emoji ?? "🙂"}>
+                  Mood: {MOODS.find((m) => m.key === todayCheckIn.mood)?.label ?? "Okay"}
+                </SmartyPill>
+                <SmartyPill tone="yellow" icon="⚡">Energy: {todayCheckIn.energy}/5</SmartyPill>
+                <SmartyPill tone="purple" icon="🌊">Stress: {todayCheckIn.stress}/5</SmartyPill>
+                <SmartyPill tone="orange" icon="🔥">Motivation: {todayCheckIn.motivation}/5</SmartyPill>
+                <SmartyPill tone="blue" icon="🌙">Sleep: {todayCheckIn.sleep}/5</SmartyPill>
+              </div>
+              <Link to="/check-in" className="mt-4 inline-block text-sm font-semibold text-primary">Update check-in</Link>
             </div>
           ) : (
             <div className="mt-3">
@@ -163,9 +179,10 @@ function TodayPage() {
               <p className="mt-3 text-sm text-muted-foreground">Nothing yet today.</p>
             ) : (
               <ul className="mt-3 space-y-2">
-                {done.map((t) => (
-                  <li key={t} className="flex items-center gap-2 text-sm text-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-emerald-500" /> {t}
+                {done.map((item) => (
+                  <li key={`${item.type}-${item.id}`} className="flex items-center justify-between gap-2 text-sm text-foreground">
+                    <span className="flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-emerald-500" /> {item.title}</span>
+                    <Button variant="ghost" size="icon" aria-label={`Undo ${item.title}`} title="Undo completion" onClick={() => item.type === "mission" ? toggleMission(item.id) : toggleChallenge(item.id)}><RotateCcw /></Button>
                   </li>
                 ))}
               </ul>

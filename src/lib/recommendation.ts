@@ -31,7 +31,7 @@ export function buildRecommendations(state: WellnessState, checkIn: CheckIn | nu
 
   const list: Recommendation[] = [];
 
-  if (checkIn.stress >= 4 || checkIn.need === "calm" || checkIn.need === "switch-off") {
+  if (checkIn.stress >= 4 || checkIn.needs.includes("calm") || checkIn.needs.includes("switch-off")) {
     list.push({
       id: "r-calm",
       level: "primary",
@@ -41,7 +41,7 @@ export function buildRecommendations(state: WellnessState, checkIn: CheckIn | nu
       product: "wellness",
       ctaLabel: "START",
     });
-  } else if (checkIn.energy >= 4 || checkIn.need === "move") {
+  } else if (checkIn.energy >= 4 || checkIn.needs.includes("move")) {
     list.push({
       id: "r-train",
       level: "primary",
