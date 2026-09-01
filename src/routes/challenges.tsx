@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { CheckCircle2, Circle, ListChecks } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { PageHeader } from "@/components/PageHeader";
-import { useWellness } from "@/lib/wellness-store";
+import { todayKey, useWellness } from "@/lib/wellness-store";
 
 export const Route = createFileRoute("/challenges")({
   head: () => ({
@@ -32,7 +32,7 @@ const CHALLENGE_TONES = [
 
 function ChallengesPage() {
   const { state, toggleChallenge } = useWellness();
-  const done = state.challenges.filter((c) => c.completed).length;
+  const done = state.challenges.filter((c) => c.completed && c.completedDate === todayKey()).length;
 
   return (
     <PageShell>
@@ -49,13 +49,14 @@ function ChallengesPage() {
             key={c.id}
             type="button"
             onClick={() => toggleChallenge(c.id)}
+            aria-pressed={c.completed && c.completedDate === todayKey()}
             className={`flex cursor-pointer items-start gap-3 rounded-2xl border-2 bg-card p-4 text-left transition shadow-soft ${
-              c.completed
+              c.completed && c.completedDate === todayKey()
                 ? "border-calm"
                 : CHALLENGE_TONES[i % CHALLENGE_TONES.length]
             }`}
           >
-            {c.completed ? (
+            {c.completed && c.completedDate === todayKey() ? (
               <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-calm-deep" />
             ) : (
               <Circle className="mt-0.5 h-5 w-5 shrink-0 text-sun-deep" />

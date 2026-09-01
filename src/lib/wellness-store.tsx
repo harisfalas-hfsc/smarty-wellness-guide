@@ -209,6 +209,14 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
             needs:
               checkIn.needs ?? (checkIn.need ? [checkIn.need] : []),
           })),
+          missions: (stored.missions ?? starterMissions).map((mission) => ({
+            ...mission,
+            completedDate: mission.completed ? mission.completedDate ?? todayKey() : undefined,
+          })),
+          challenges: (stored.challenges ?? starterChallenges).map((challenge) => ({
+            ...challenge,
+            completedDate: challenge.completed ? challenge.completedDate ?? todayKey() : undefined,
+          })),
         });
       }
     } catch {
@@ -251,7 +259,15 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
   const toggleMission = useCallback((id: string) => {
     setState((s) => ({
       ...s,
-      missions: s.missions.map((m) => (m.id === id ? { ...m, completed: !m.completed } : m)),
+      missions: s.missions.map((m) =>
+        m.id === id
+          ? {
+              ...m,
+              completed: !(m.completed && m.completedDate === todayKey()),
+              completedDate: m.completed && m.completedDate === todayKey() ? undefined : todayKey(),
+            }
+          : m,
+      ),
       completedActions: s.completedActions.includes(id)
         ? s.completedActions.filter((a) => a !== id)
         : [...s.completedActions, id],
@@ -261,7 +277,15 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
   const toggleChallenge = useCallback((id: string) => {
     setState((s) => ({
       ...s,
-      challenges: s.challenges.map((c) => (c.id === id ? { ...c, completed: !c.completed } : c)),
+      challenges: s.challenges.map((c) =>
+        c.id === id
+          ? {
+              ...c,
+              completed: !(c.completed && c.completedDate === todayKey()),
+              completedDate: c.completed && c.completedDate === todayKey() ? undefined : todayKey(),
+            }
+          : c,
+      ),
       completedActions: s.completedActions.includes(id)
         ? s.completedActions.filter((a) => a !== id)
         : [...s.completedActions, id],

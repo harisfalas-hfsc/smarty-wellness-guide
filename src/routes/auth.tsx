@@ -45,8 +45,8 @@ function AuthPage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && session) void navigate({ to: "/" });
-  }, [loading, session, navigate]);
+    if (!loading && session && mode !== "reset") void navigate({ to: "/" });
+  }, [loading, session, mode, navigate]);
 
   useEffect(() => {
     setMode(search.mode);
