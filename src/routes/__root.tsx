@@ -82,7 +82,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 const DESCRIPTION =
-  "Smarty Wellness is your personal wellness guidance system — one daily check-in, one clear recommendation, connected to Smarty Workout, Smarty Diet and Smarty Move.";
+  "Your personal guide to a healthier, more balanced, and more fulfilling life. One honest check-in. One clear action. Every day.";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
@@ -92,6 +92,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Smarty Wellness — Personal Wellness Guidance System" },
       { name: "description", content: DESCRIPTION },
       { name: "author", content: "Smarty" },
+      { name: "theme-color", content: "#67B2C4" },
+      { name: "application-name", content: "SMARTY WELLNESS" },
+      { name: "apple-mobile-web-app-title", content: "SMARTY WELLNESS" },
+      { name: "mobile-web-app-capable", content: "yes" },
+      { property: "og:site_name", content: "Smarty Wellness" },
       { property: "og:title", content: "Smarty Wellness" },
       { property: "og:description", content: DESCRIPTION },
       { property: "og:type", content: "website" },
@@ -99,9 +104,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     ],
     links: [
       { rel: "stylesheet", href: appCss },
-      { rel: "icon", href: "/favicon.ico", type: "image/x-icon" },
+      { rel: "icon", type: "image/png", href: "/smarty-wellness-icon.png" },
+      { rel: "apple-touch-icon", href: "/smarty-wellness-icon.png" },
+      { rel: "manifest", href: "/manifest.webmanifest" },
     ],
   }),
+
   shellComponent: RootShell,
   component: RootComponent,
   notFoundComponent: NotFoundComponent,
