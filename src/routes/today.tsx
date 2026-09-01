@@ -38,7 +38,7 @@ function TodayPage() {
   return (
     <PageShell>
       <PageHeader
-        eyebrow={new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+        eyebrow={new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })}
         icon={CalendarCheck}
         title="Today"
         subtitle="Your priorities for the day — not a dashboard."
@@ -60,7 +60,7 @@ function TodayPage() {
                 {primary.ctaLabel}
               </Button>
             </Link>
-          )} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+          )}
         </SmartyCard>
 
         <div className="grid gap-4 lg:grid-cols-2">
@@ -68,17 +68,13 @@ function TodayPage() {
             <p className="text-[10px] font-bold uppercase tracking-widest text-calm-deep">
               Today's mission
             </p>
-            {mission && (
+            {mission ? (
               <button
                 type="button"
-                onClick={() => toggleMission(mission.id)} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+                onClick={() => toggleMission(mission.id)}
                 className="mt-3 flex w-full cursor-pointer items-start gap-3 text-left"
               >
-                {mission.completed ? (
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" />
-                ) : (
-                  <Circle className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-                )} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+                <Circle className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
                 <span>
                   <span className="block text-sm font-bold">{mission.title}</span>
                   <span className="block text-xs text-muted-foreground">
@@ -86,30 +82,30 @@ function TodayPage() {
                   </span>
                 </span>
               </button>
-            )} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+            ) : (
+              <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>
+            )}
           </section>
 
           <section className="rounded-3xl border-2 border-sun/70 bg-card p-6 shadow-soft">
             <p className="text-[10px] font-bold uppercase tracking-widest text-sun-deep">
               Optional challenge
             </p>
-            {challenge && (
+            {challenge ? (
               <button
                 type="button"
-                onClick={() => toggleChallenge(challenge.id)} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+                onClick={() => toggleChallenge(challenge.id)}
                 className="mt-3 flex w-full cursor-pointer items-start gap-3 text-left"
               >
-                {challenge.completed ? (
-                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-500" />
-                ) : (
-                  <Circle className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
-                )} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+                <Circle className="mt-0.5 h-5 w-5 shrink-0 text-muted-foreground" />
                 <span>
                   <span className="block text-sm font-bold">{challenge.title}</span>
                   <span className="block text-xs text-muted-foreground">{challenge.detail}</span>
                 </span>
               </button>
-            )} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+            ) : (
+              <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>
+            )}
           </section>
         </div>
 
@@ -135,7 +131,7 @@ function TodayPage() {
                 <Button className="mt-4">Check in</Button>
               </Link>
             </div>
-          )} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+          )}
         </section>
 
         <div className="grid gap-4 lg:grid-cols-2">
@@ -167,9 +163,9 @@ function TodayPage() {
                   <li key={t} className="flex items-center gap-2 text-sm text-foreground">
                     <CheckCircle2 className="h-4 w-4 text-emerald-500" /> {t}
                   </li>
-                ))} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+                ))}
               </ul>
-            )} {!challenge && <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>} {!mission && <p className="mt-3 text-xs text-muted-foreground">All missions complete for today.</p>}
+            )}
           </section>
         </div>
       </div>

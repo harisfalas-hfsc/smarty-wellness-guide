@@ -251,14 +251,20 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
   const toggleMission = useCallback((id: string) => {
     setState((s) => ({
       ...s,
-      missions: s.missions.map((m) => (m.id === id ? { ...m, completed: !m.completed } : m)), completedActions: s.completedActions.includes(id) ? s.completedActions.filter(a => a !== id) : [...s.completedActions, id],
+      missions: s.missions.map((m) => (m.id === id ? { ...m, completed: !m.completed } : m)),
+      completedActions: s.completedActions.includes(id)
+        ? s.completedActions.filter((a) => a !== id)
+        : [...s.completedActions, id],
     }));
   }, []);
 
   const toggleChallenge = useCallback((id: string) => {
     setState((s) => ({
       ...s,
-      challenges: s.challenges.map((c) => (c.id === id ? { ...c, completed: !c.completed } : c)), completedActions: s.completedActions.includes(id) ? s.completedActions.filter(a => a !== id) : [...s.completedActions, id],
+      challenges: s.challenges.map((c) => (c.id === id ? { ...c, completed: !c.completed } : c)),
+      completedActions: s.completedActions.includes(id)
+        ? s.completedActions.filter((a) => a !== id)
+        : [...s.completedActions, id],
     }));
   }, []);
 
