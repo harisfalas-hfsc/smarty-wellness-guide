@@ -23,6 +23,7 @@ import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TermsRouteImport } from './routes/terms'
@@ -98,6 +99,11 @@ const ProfileRoute = ProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ReviewRoute = ReviewRouteImport.update({
   id: '/review',
   path: '/review',
@@ -134,6 +140,7 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/review': typeof ReviewRoute
   '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
@@ -154,6 +161,7 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/review': typeof ReviewRoute
   '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
@@ -175,6 +183,7 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/review': typeof ReviewRoute
   '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
@@ -197,6 +206,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/privacy'
     | '/profile'
+    | '/reset-password'
     | '/review'
     | '/settings'
     | '/terms'
@@ -217,6 +227,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/privacy'
     | '/profile'
+    | '/reset-password'
     | '/review'
     | '/settings'
     | '/terms'
@@ -237,6 +248,7 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/privacy'
     | '/profile'
+    | '/reset-password'
     | '/review'
     | '/settings'
     | '/terms'
@@ -258,6 +270,7 @@ export interface RootRouteChildren {
   OnboardingRoute: typeof OnboardingRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   ReviewRoute: typeof ReviewRoute
   SettingsRoute: typeof SettingsRoute
   TermsRoute: typeof TermsRoute
@@ -364,6 +377,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProfileRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/review': {
       id: '/review'
       path: '/review'
@@ -410,6 +430,7 @@ const rootRouteChildren: RootRouteChildren = {
   OnboardingRoute: OnboardingRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   ReviewRoute: ReviewRoute,
   SettingsRoute: SettingsRoute,
   TermsRoute: TermsRoute,

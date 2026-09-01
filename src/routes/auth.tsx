@@ -8,10 +8,10 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>): { mode: "signin" | "signup" | "forgot" | "reset" } => {
+  validateSearch: (search: Record<string, unknown>): { mode: "signin" | "signup" | "forgot" } => {
     const requestedMode = search["mode"];
     const mode =
-      requestedMode === "signup" || requestedMode === "forgot" || requestedMode === "reset"
+      requestedMode === "signup" || requestedMode === "forgot"
         ? requestedMode
         : "signin";
     return { mode };
@@ -36,18 +36,17 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const search = Route.useSearch();
-  const [mode, setMode] = useState<"signin" | "signup" | "forgot" | "reset">(search.mode);
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot">(search.mode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
-  const [confirmPassword, setConfirmPassword] = useState("");
   const { session, loading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && session && mode !== "reset") void navigate({ to: "/" });
+    if (!loading && session) void navigate({ to: "/" });
   }, [loading, session, mode, navigate]);
 
   useEffect(() => {
@@ -60,16 +59,10 @@ function AuthPage() {
     try {
       if (mode === "forgot") {
         const { error } = await supabase.auth.resetPasswordForEmail(email, {
-          redirectTo: `${window.location.origin}/auth?mode=reset`,
+          redirectTo: `${window.location.origin}/reset-password`,
         });
         if (error) throw error;
         setSent(true);
-      } else if (mode === "reset") {
-        if (password !== confirmPassword) throw new Error("Passwords do not match");
-        const { error } = await supabase.auth.updateUser({ password });
-        if (error) throw error;
-        toast.success("Password updated. You can now continue.");
-        void navigate({ to: "/" });
       } else if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email,
@@ -125,7 +118,7 @@ function AuthPage() {
               ? "Create your account"
               : mode === "forgot"
                 ? "Reset your password"
-                : "Choose a new password"}
+                : "Reset your password"}
         </h1>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Your check-ins, missions and journey stay with you across every device.
@@ -153,7 +146,7 @@ function AuthPage() {
         </div>
       ) : (
         <div className="mt-8 rounded-3xl border-2 border-primary/60 bg-card p-6 shadow-soft sm:p-7">
-          {mode !== "forgot" && mode !== "reset" && <Button
+          {mode !== "forgot" && <Button
             type="button"
             variant="outline"
             size="lg"
@@ -164,7 +157,7 @@ function AuthPage() {
             Continue with Google
           </Button>}
 
-          {mode !== "forgot" && mode !== "reset" && <div className="my-5 flex items-center gap-3">
+          {mode !== "forgot" && <div className="my-5 flex items-center gap-3">
             <span className="h-px flex-1 bg-border" />
             <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               or with email
@@ -183,26 +176,19 @@ function AuthPage() {
                 required={false}
               />
             )}
-            {mode !== "reset" && <Field
+            <Field
                 label="Email"
                 type="email"
                 value={email}
                 onChange={setEmail}
                 placeholder="you@example.com"
-              />}
+              />
             {mode !== "forgot" && <Field
-                label={mode === "reset" ? "New password" : "Password"}
+                label="Password"
                 type="password"
                 value={password}
                 onChange={setPassword}
                 placeholder="At least 6 characters"
-              />}
-            {mode === "reset" && <Field
-                label="Confirm new password"
-                type="password"
-                value={confirmPassword}
-                onChange={setConfirmPassword}
-                placeholder="Type it again"
               />}
             {mode === "signin" && (
               <div className="text-right">
@@ -219,11 +205,11 @@ function AuthPage() {
                   ? "Create account"
                   : mode === "forgot"
                     ? "Email reset link"
-                    : "Update password"}
+                    : "Create account"}
             </Button>
           </form>
 
-          {mode !== "reset" && <p className="mt-5 text-center text-sm text-muted-foreground">
+          <p className="mt-5 text-center text-sm text-muted-foreground">
             {mode === "signin" ? "New to Smarty Wellness?" : mode === "signup" ? "Already have an account?" : "Remembered your password?"}{" "}
             <button
               type="button"
@@ -232,7 +218,7 @@ function AuthPage() {
             >
               {mode === "signin" ? "Create an account" : "Sign in"}
             </button>
-          </p>}
+          </p>
         </div>
       )}
 

@@ -1,12 +1,11 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { CalendarCheck, Check, CheckCircle2, ChevronLeft, ChevronRight, Clock, RotateCcw } from "lucide-react";
+import { CalendarCheck, Check, CheckCircle2, Clock, RotateCcw } from "lucide-react";
 import { PageShell } from "@/components/PageShell";
 import { PageHeader } from "@/components/PageHeader";
 import { SmartyCard, SmartyPill } from "@/components/SmartyCard";
 import { Button } from "@/components/ui/button";
 import { todayKey, useWellness } from "@/lib/wellness-store";
-import { buildRecommendations } from "@/lib/recommendation";
+import { buildRecommendations, getTodaysChallenge, getTodaysMission } from "@/lib/recommendation";
 import { MOODS } from "@/lib/checkin-options";
 
 export const Route = createFileRoute("/today")({
@@ -28,11 +27,9 @@ export const Route = createFileRoute("/today")({
 function TodayPage() {
   const { state, todayCheckIn, toggleMission, toggleChallenge } = useWellness();
   const recs = buildRecommendations(state, todayCheckIn);
-  const primary = recs.find((r) => r.level === "primary")!;
-  const [missionIndex, setMissionIndex] = useState(0);
-  const [challengeIndex, setChallengeIndex] = useState(0);
-  const mission = state.missions[missionIndex];
-  const challenge = state.challenges[challengeIndex];
+  const primary = recs.find((r) => r.level === "primary") ?? recs[0];
+  const mission = getTodaysMission(state, todayCheckIn);
+  const challenge = getTodaysChallenge(state, todayCheckIn);
   const isDoneToday = (item: { completed: boolean; completedDate?: string }) =>
     item.completed && item.completedDate === todayKey();
   const done = [
@@ -46,11 +43,11 @@ function TodayPage() {
         eyebrow={new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" })}
         icon={CalendarCheck}
         title="Today"
-        subtitle="Your priorities for the day — not a dashboard."
+        subtitle={todayCheckIn ? "Your plan is based on today's check-in. Complete it at your own pace." : "Check in first, then Smarty will create your plan for today."}
       />
 
       <div className="space-y-5">
-        <SmartyCard eyebrow="Today's recommendation" title={primary.headline}>
+        {primary && <SmartyCard eyebrow={todayCheckIn ? "Step 2 · Your recommendation" : "Start here"} title={primary.headline}>
           <p className="text-lg font-bold sm:text-xl">{primary.action}</p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">{primary.reason}</p>
           {primary.externalUrl ? (
@@ -66,12 +63,12 @@ function TodayPage() {
               </Button>
             </Link>
           )}
-        </SmartyCard>
+        </SmartyCard>}
 
-        <div className="grid gap-4 lg:grid-cols-2">
+        {todayCheckIn && <div className="grid gap-4 lg:grid-cols-2">
           <section className="rounded-3xl border-2 border-calm/60 bg-card p-6 shadow-soft">
             <p className="text-[10px] font-bold uppercase tracking-widest text-calm-deep">
-              Today's mission
+              Step 3 · Today's mission
             </p>
             {mission ? (
               <div className="mt-3">
@@ -80,17 +77,13 @@ function TodayPage() {
                   <p className="text-xs text-muted-foreground">
                     {mission.target} · step {mission.step} of {mission.totalSteps}
                   </p>
+                  <p className="mt-2 text-xs leading-5 text-muted-foreground">{mission.detail}</p>
                 </div>
-                <div className="mt-4 flex items-center justify-between gap-3 border-t border-calm/30 pt-4">
+                <div className="mt-4 border-t border-calm/30 pt-4">
                   <Button variant={isDoneToday(mission) ? "outline" : "default"} onClick={() => toggleMission(mission.id)}>
                     {isDoneToday(mission) ? <RotateCcw /> : <Check />}
                     {isDoneToday(mission) ? "Undo" : "Mark complete"}
                   </Button>
-                  <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" aria-label="Previous mission" title="Previous mission" onClick={() => setMissionIndex((missionIndex - 1 + state.missions.length) % state.missions.length)}><ChevronLeft /></Button>
-                    <span className="min-w-12 text-center text-xs text-muted-foreground">{missionIndex + 1} / {state.missions.length}</span>
-                    <Button variant="ghost" size="icon" aria-label="Next mission" title="Next mission" onClick={() => setMissionIndex((missionIndex + 1) % state.missions.length)}><ChevronRight /></Button>
-                  </div>
                 </div>
               </div>
             ) : (
@@ -100,31 +93,27 @@ function TodayPage() {
 
           <section className="rounded-3xl border-2 border-sun/70 bg-card p-6 shadow-soft">
             <p className="text-[10px] font-bold uppercase tracking-widest text-sun-deep">
-              Optional challenge
+              Optional extra challenge
             </p>
             {challenge ? (
               <div className="mt-3">
                 <div className="min-h-16">
                   <p className="text-sm font-bold">{challenge.title}</p>
                   <p className="text-xs text-muted-foreground">{challenge.detail}</p>
+                  <p className="mt-2 text-xs leading-5 text-muted-foreground">Skip this if you only want to focus on your mission.</p>
                 </div>
-                <div className="mt-4 flex items-center justify-between gap-3 border-t border-sun/40 pt-4">
+                <div className="mt-4 border-t border-sun/40 pt-4">
                   <Button variant={isDoneToday(challenge) ? "outline" : "default"} onClick={() => toggleChallenge(challenge.id)}>
                     {isDoneToday(challenge) ? <RotateCcw /> : <Check />}
                     {isDoneToday(challenge) ? "Undo" : "Mark complete"}
                   </Button>
-                  <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" aria-label="Previous challenge" title="Previous challenge" onClick={() => setChallengeIndex((challengeIndex - 1 + state.challenges.length) % state.challenges.length)}><ChevronLeft /></Button>
-                    <span className="min-w-12 text-center text-xs text-muted-foreground">{challengeIndex + 1} / {state.challenges.length}</span>
-                    <Button variant="ghost" size="icon" aria-label="Next challenge" title="Next challenge" onClick={() => setChallengeIndex((challengeIndex + 1) % state.challenges.length)}><ChevronRight /></Button>
-                  </div>
                 </div>
               </div>
             ) : (
               <p className="mt-3 text-xs text-muted-foreground">All challenges complete for today.</p>
             )}
           </section>
-        </div>
+        </div>}
 
         <section className="rounded-3xl border-2 border-primary/50 bg-card p-6 shadow-soft">
           <p className="text-[10px] font-bold uppercase tracking-widest text-primary">
@@ -132,7 +121,7 @@ function TodayPage() {
           </p>
           {todayCheckIn ? (
             <div className="mt-3">
-              <p className="mb-4 text-xs text-muted-foreground">Automatically summarised from today's check-in.</p>
+              <p className="mb-4 text-xs text-muted-foreground">These answers automatically update your recommendation, mission and optional challenge above.</p>
               <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
                 <SmartyPill tone="pink" icon={MOODS.find((m) => m.key === todayCheckIn.mood)?.emoji ?? "🙂"}>
                   Mood: {MOODS.find((m) => m.key === todayCheckIn.mood)?.label ?? "Okay"}

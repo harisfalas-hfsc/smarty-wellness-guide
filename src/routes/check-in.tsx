@@ -77,29 +77,29 @@ function CheckInPage() {
   }
 
   function submit() {
-    if (!mood) {
-      toast.error("Start with how you are today.");
+    if (!mood || !energy || !stress || !motivation || !sleep) {
+      toast.error("Please answer the five daily questions first.");
       return;
     }
     saveCheckIn({
       mood,
-      energy: energy ?? 3,
-      stress: stress ?? 3,
-      motivation: motivation ?? 3,
-      sleep: sleep ?? 3,
+      energy,
+      stress,
+      motivation,
+      sleep,
       needs,
     });
-    toast.success("Check-in saved. Smarty has updated your day.");
+    toast.success("Your plan for today is ready.");
     void navigate({ to: "/today" });
   }
 
   return (
     <PageShell width="3xl">
       <PageHeader
-        eyebrow="About one minute"
+        eyebrow="Step 1 · About one minute"
         icon={Heart}
-        title="Check-in"
-        subtitle="Answer what you can. Skipping a question is fine — Smarty uses what it has."
+        title="Tell us how you feel"
+        subtitle="Your answers create one recommendation, one mission and one optional challenge for today."
       />
 
       <div className="space-y-4">
@@ -138,7 +138,7 @@ function CheckInPage() {
           </Block>
         </div>
 
-        <Block title="What do you need today? Choose any that apply (optional)" tone="calm">
+        <Block title="What support would help today? Select one or more (optional)" tone="calm">
           <div className="grid gap-2 sm:grid-cols-2">
             {NEEDS.map((n) => (
               <SelectionCard
@@ -153,7 +153,7 @@ function CheckInPage() {
         </Block>
 
         <Button size="lg" className="w-full" onClick={submit}>
-          Save check-in
+          Create my plan for today
         </Button>
         <p className="pb-2 text-center text-xs leading-5 text-muted-foreground">
           Your answers are stored so Smarty can compare them with your own baseline over time.
