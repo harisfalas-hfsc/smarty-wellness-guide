@@ -86,11 +86,14 @@ function WellnessHome() {
                 <span className="font-semibold text-foreground">
                   {MOODS.find((m) => m.key === todayCheckIn.mood)?.label}
                 </span>
-                {todayCheckIn.need && (
+                {todayCheckIn.needs.length > 0 && (
                   <>
                     , you asked Smarty to{" "}
                     <span className="font-semibold text-foreground">
-                      {NEEDS.find((n) => n.key === todayCheckIn.need)?.label.toLowerCase()}
+                      {todayCheckIn.needs
+                        .map((need) => NEEDS.find((option) => option.key === need)?.label.toLowerCase())
+                        .filter(Boolean)
+                        .join(", ")}
                     </span>
                     .
                   </>
@@ -116,7 +119,7 @@ function WellnessHome() {
                         stress: 3,
                         motivation: 3,
                         sleep: 3,
-                        need: null,
+                        needs: [],
                       })
                     }
                     className={`flex cursor-pointer flex-col items-center gap-1 rounded-2xl border-2 bg-card py-3 transition hover:-translate-y-0.5 hover:shadow-soft ${MOOD_TONES[i % MOOD_TONES.length]}`}

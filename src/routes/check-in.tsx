@@ -68,7 +68,13 @@ function CheckInPage() {
   const [stress, setStress] = useState<Scale5 | null>(todayCheckIn?.stress ?? null);
   const [motivation, setMotivation] = useState<Scale5 | null>(todayCheckIn?.motivation ?? null);
   const [sleep, setSleep] = useState<Scale5 | null>(todayCheckIn?.sleep ?? null);
-  const [need, setNeed] = useState<NeedKey | null>(todayCheckIn?.need ?? null);
+  const [needs, setNeeds] = useState<NeedKey[]>(todayCheckIn?.needs ?? []);
+
+  function toggleNeed(value: NeedKey) {
+    setNeeds((current) =>
+      current.includes(value) ? current.filter((item) => item !== value) : [...current, value],
+    );
+  }
 
   function submit() {
     if (!mood) {
@@ -81,7 +87,7 @@ function CheckInPage() {
       stress: stress ?? 3,
       motivation: motivation ?? 3,
       sleep: sleep ?? 3,
-      need,
+      needs,
     });
     toast.success("Check-in saved. Smarty has updated your day.");
     void navigate({ to: "/today" });
@@ -103,7 +109,7 @@ function CheckInPage() {
               <SelectionCard
                 key={m.key}
                 selected={mood === m.key}
-                onSelect={() => setMood(m.key)}
+                onSelect={() => setMood(mood === m.key ? null : m.key)}
                 label={m.label}
                 icon={m.emoji}
               />
@@ -132,13 +138,13 @@ function CheckInPage() {
           </Block>
         </div>
 
-        <Block title="What do you need today?" tone="calm">
+        <Block title="What do you need today? Choose any that apply (optional)" tone="calm">
           <div className="grid gap-2 sm:grid-cols-2">
             {NEEDS.map((n) => (
               <SelectionCard
                 key={n.key}
-                selected={need === n.key}
-                onSelect={() => setNeed(need === n.key ? null : n.key)}
+                selected={needs.includes(n.key)}
+                onSelect={() => toggleNeed(n.key)}
                 label={n.label}
                 icon={n.emoji}
               />

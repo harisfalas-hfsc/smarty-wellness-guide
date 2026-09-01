@@ -27,7 +27,7 @@ export interface CheckIn {
   stress: Scale5;
   motivation: Scale5;
   sleep: Scale5;
-  need: NeedKey | null;
+  needs: NeedKey[];
   note?: string;
 }
 

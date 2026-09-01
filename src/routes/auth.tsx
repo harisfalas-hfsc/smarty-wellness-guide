@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { Loader2, Mail, ShieldCheck } from "lucide-react";
+import { Eye, EyeOff, Loader2, Mail, ShieldCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
@@ -9,7 +9,10 @@ import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>) => ({
-    mode: search["mode"] === "signup" ? ("signup" as const) : ("signin" as const),
+    mode:
+      search["mode"] === "signup" || search["mode"] === "forgot" || search["mode"] === "reset"
+        ? search["mode"]
+        : ("signin" as const),
   }),
   head: () => ({
     meta: [
@@ -31,12 +34,13 @@ export const Route = createFileRoute("/auth")({
 
 function AuthPage() {
   const search = Route.useSearch();
-  const [mode, setMode] = useState<"signin" | "signup">(search.mode);
+  const [mode, setMode] = useState<"signin" | "signup" | "forgot" | "reset">(search.mode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState("");
   const { session, loading } = useAuth();
   const navigate = useNavigate();
 
@@ -52,7 +56,19 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     try {
-      if (mode === "signup") {
+      if (mode === "forgot") {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: `${window.location.origin}/auth?mode=reset`,
+        });
+        if (error) throw error;
+        setSent(true);
+      } else if (mode === "reset") {
+        if (password !== confirmPassword) throw new Error("Passwords do not match");
+        const { error } = await supabase.auth.updateUser({ password });
+        if (error) throw error;
+        toast.success("Password updated. You can now continue.");
+        void navigate({ to: "/" });
+      } else if (mode === "signup") {
         const { error } = await supabase.auth.signUp({
           email,
           password,
@@ -101,7 +117,13 @@ function AuthPage() {
           </span>
         </Link>
         <h1 className="mt-4 text-2xl font-extrabold tracking-tight">
-          {mode === "signin" ? "Sign in to continue" : "Create your account"}
+          {mode === "signin"
+            ? "Sign in to continue"
+            : mode === "signup"
+              ? "Create your account"
+              : mode === "forgot"
+                ? "Reset your password"
+                : "Choose a new password"}
         </h1>
         <p className="mt-2 text-sm leading-6 text-muted-foreground">
           Your check-ins, missions and journey stay with you across every device.
@@ -113,8 +135,8 @@ function AuthPage() {
           <Mail className="mx-auto h-8 w-8 text-calm-deep" />
           <h2 className="mt-3 text-lg font-bold">Confirm your email</h2>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            We sent a confirmation link to <span className="font-semibold">{email}</span>. Open it to
-            activate your Smarty Wellness account, then come back and sign in.
+            We sent a secure link to <span className="font-semibold">{email}</span>. Open it to
+            {mode === "forgot" ? " choose a new password." : " activate your account, then come back and sign in."}
           </p>
           <Button
             variant="outline"
@@ -129,7 +151,7 @@ function AuthPage() {
         </div>
       ) : (
         <div className="mt-8 rounded-3xl border-2 border-primary/60 bg-card p-6 shadow-soft sm:p-7">
-          <Button
+          {mode !== "forgot" && mode !== "reset" && <Button
             type="button"
             variant="outline"
             size="lg"
@@ -138,15 +160,15 @@ function AuthPage() {
             onClick={handleGoogle}
           >
             Continue with Google
-          </Button>
+          </Button>}
 
-          <div className="my-5 flex items-center gap-3">
+          {mode !== "forgot" && mode !== "reset" && <div className="my-5 flex items-center gap-3">
             <span className="h-px flex-1 bg-border" />
             <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
               or with email
             </span>
             <span className="h-px flex-1 bg-border" />
-          </div>
+          </div>}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {mode === "signup" && (
@@ -159,28 +181,48 @@ function AuthPage() {
                 required={false}
               />
             )}
-            <Field
-              label="Email"
-              type="email"
-              value={email}
-              onChange={setEmail}
-              placeholder="you@example.com"
-            />
-            <Field
-              label="Password"
-              type="password"
-              value={password}
-              onChange={setPassword}
-              placeholder="At least 6 characters"
-            />
+            {mode !== "reset" && <Field
+                label="Email"
+                type="email"
+                value={email}
+                onChange={setEmail}
+                placeholder="you@example.com"
+              />}
+            {mode !== "forgot" && <Field
+                label={mode === "reset" ? "New password" : "Password"}
+                type="password"
+                value={password}
+                onChange={setPassword}
+                placeholder="At least 6 characters"
+              />}
+            {mode === "reset" && <Field
+                label="Confirm new password"
+                type="password"
+                value={confirmPassword}
+                onChange={setConfirmPassword}
+                placeholder="Type it again"
+              />}
+            {mode === "signin" && (
+              <div className="text-right">
+                <button type="button" className="text-sm font-semibold text-primary" onClick={() => setMode("forgot")}>
+                  Forgot password?
+                </button>
+              </div>
+            )}
             <Button type="submit" size="lg" className="w-full" disabled={busy}>
               {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {mode === "signin" ? "Sign in" : "Create account"}
+              {mode === "signin"
+                ? "Sign in"
+                : mode === "signup"
+                  ? "Create account"
+                  : mode === "forgot"
+                    ? "Email reset link"
+                    : "Update password"}
             </Button>
           </form>
 
-          <p className="mt-5 text-center text-sm text-muted-foreground">
-            {mode === "signin" ? "New to Smarty Wellness?" : "Already have an account?"}{" "}
+          {mode !== "reset" && <p className="mt-5 text-center text-sm text-muted-foreground">
+            {mode === "signin" ? "New to Smarty Wellness?" : mode === "signup" ? "Already have an account?" : "Remembered your password?"}{" "}
             <button
               type="button"
               className="font-semibold text-primary"
@@ -188,7 +230,7 @@ function AuthPage() {
             >
               {mode === "signin" ? "Create an account" : "Sign in"}
             </button>
-          </p>
+          </p>}
         </div>
       )}
 
@@ -216,19 +258,37 @@ function Field({
   placeholder?: string;
   required?: boolean;
 }) {
+  const [visible, setVisible] = useState(false);
+  const isPassword = type === "password";
   return (
     <label className="block">
       <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
         {label}
       </span>
-      <input
-        type={type}
-        value={value}
-        required={required}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        className="mt-1.5 w-full rounded-2xl border-2 border-border bg-background px-4 py-3 text-sm outline-none transition focus:border-primary"
-      />
+      <span className="relative mt-1.5 block">
+        <input
+          type={isPassword && visible ? "text" : type}
+          value={value}
+          required={required}
+          minLength={isPassword ? 6 : undefined}
+          placeholder={placeholder}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full rounded-2xl border-2 border-primary/40 bg-background px-4 py-3 pr-12 text-sm outline-none transition focus:border-primary"
+        />
+        {isPassword && (
+          <Button
+            type="button"
+            variant="ghost"
+            size="icon"
+            aria-label={visible ? "Hide password" : "Show password"}
+            title={visible ? "Hide password" : "Show password"}
+            className="absolute right-1.5 top-1/2 -translate-y-1/2"
+            onClick={() => setVisible((current) => !current)}
+          >
+            {visible ? <EyeOff /> : <Eye />}
+          </Button>
+        )}
+      </span>
     </label>
   );
 }
