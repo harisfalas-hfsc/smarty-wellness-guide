@@ -26,15 +26,21 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "Tell Smarty how you are today. Smarty Wellness finds your biggest opportunity and gives you one realistic action.",
+          "Your personal guide to a healthier, more balanced, and more fulfilling life. One honest check-in. One clear action. Every day.",
       },
       { property: "og:title", content: "Smarty Wellness" },
       {
         property: "og:description",
-        content: "Train Better. Fuel Better. Move Better. Think Better. Live Better.",
+        content:
+          "Your personal guide to a healthier, more balanced, and more fulfilling life. One honest check-in. One clear action. Every day.",
       },
+      { property: "og:url", content: "https://smartywellness.com/" },
+      { property: "og:image", content: "https://smartywellness.com/smarty-wellness-icon.png" },
+      { name: "twitter:image", content: "https://smartywellness.com/smarty-wellness-icon.png" },
     ],
+    links: [{ rel: "canonical", href: "https://smartywellness.com/" }],
   }),
+
   component: HomePage,
 });
 
