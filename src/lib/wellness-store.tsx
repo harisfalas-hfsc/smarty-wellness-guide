@@ -211,11 +211,11 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
           })),
           missions: (stored.missions ?? starterMissions).map((mission) => ({
             ...mission,
-            completedDate: mission.completed ? mission.completedDate ?? todayKey() : undefined,
+            ...(mission.completed ? { completedDate: mission.completedDate ?? todayKey() } : {}),
           })),
           challenges: (stored.challenges ?? starterChallenges).map((challenge) => ({
             ...challenge,
-            completedDate: challenge.completed ? challenge.completedDate ?? todayKey() : undefined,
+            ...(challenge.completed ? { completedDate: challenge.completedDate ?? todayKey() } : {}),
           })),
         });
       }
@@ -261,11 +261,9 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
       ...s,
       missions: s.missions.map((m) =>
         m.id === id
-          ? {
-              ...m,
-              completed: !(m.completed && m.completedDate === todayKey()),
-              completedDate: m.completed && m.completedDate === todayKey() ? undefined : todayKey(),
-            }
+          ? m.completed && m.completedDate === todayKey()
+            ? (({ completedDate: _completedDate, ...mission }) => ({ ...mission, completed: false }))(m)
+            : { ...m, completed: true, completedDate: todayKey() }
           : m,
       ),
       completedActions: s.completedActions.includes(id)
@@ -279,11 +277,9 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
       ...s,
       challenges: s.challenges.map((c) =>
         c.id === id
-          ? {
-              ...c,
-              completed: !(c.completed && c.completedDate === todayKey()),
-              completedDate: c.completed && c.completedDate === todayKey() ? undefined : todayKey(),
-            }
+          ? c.completed && c.completedDate === todayKey()
+            ? (({ completedDate: _completedDate, ...challenge }) => ({ ...challenge, completed: false }))(c)
+            : { ...c, completed: true, completedDate: todayKey() }
           : c,
       ),
       completedActions: s.completedActions.includes(id)

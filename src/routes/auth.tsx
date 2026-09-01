@@ -8,12 +8,14 @@ import { useAuth } from "@/lib/auth";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/auth")({
-  validateSearch: (search: Record<string, unknown>) => ({
-    mode:
-      search["mode"] === "signup" || search["mode"] === "forgot" || search["mode"] === "reset"
-        ? search["mode"]
-        : ("signin" as const),
-  }),
+  validateSearch: (search: Record<string, unknown>): { mode: "signin" | "signup" | "forgot" | "reset" } => {
+    const requestedMode = search["mode"];
+    const mode =
+      requestedMode === "signup" || requestedMode === "forgot" || requestedMode === "reset"
+        ? requestedMode
+        : "signin";
+    return { mode };
+  },
   head: () => ({
     meta: [
       { title: "Sign in — Smarty Wellness" },
