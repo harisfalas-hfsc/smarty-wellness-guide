@@ -1,4 +1,4 @@
 # Roadmap
 
 - [x] Clear all current preview typecheck/build errors.
-- [ ] Verify the preview build is clean.
+- [x] Verify the preview build is clean.
