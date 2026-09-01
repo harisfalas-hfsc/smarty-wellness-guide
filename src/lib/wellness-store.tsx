@@ -198,8 +198,12 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
     try {
       const raw = window.localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        const stored = JSON.parse(raw) as WellnessState & {
-          checkIns?: Array<CheckIn & { need?: CheckIn["needs"][number] | null }>;
+        type StoredCheckIn = Omit<CheckIn, "needs"> & {
+          needs?: CheckIn["needs"];
+          need?: CheckIn["needs"][number] | null;
+        };
+        const stored = JSON.parse(raw) as Omit<WellnessState, "checkIns"> & {
+          checkIns?: StoredCheckIn[];
         };
         setState({
           ...defaultState,
