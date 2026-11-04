@@ -29,6 +29,7 @@ const ITEMS = [
   { to: "/coach", label: "Coach", Icon: Sparkles },
   { to: "/missions", label: "Missions", Icon: Target },
   { to: "/challenges", label: "Challenges", Icon: ListChecks },
+  { to: "/progress", label: "Development", Icon: Sprout },
   { to: "/bucket-list", label: "Bucket list", Icon: Compass },
   { to: "/experiments", label: "Experiments", Icon: FlaskConical },
   { to: "/journey", label: "Journey", Icon: LineChart },

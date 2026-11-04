@@ -183,6 +183,7 @@ function NavDrawer({ onClose }: { onClose: () => void }) {
     {
       heading: "Progress",
       items: [
+        { to: "/progress", label: "Personal development", Icon: Sprout },
         { to: "/missions", label: "Missions", Icon: Target },
         { to: "/challenges", label: "Daily challenges", Icon: ListChecks },
         { to: "/bucket-list", label: "Bucket list", Icon: Compass },
