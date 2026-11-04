@@ -87,7 +87,7 @@ function ProgressPage() {
         name: state.profile.personal.name, review: review!, reflection,
         goals: data!.goals.filter((g) => g.status !== "cancelled").map((g) => {
           const p = goalProgress(g, data!.milestones, data!.actions, state, data, today);
-          return { title: g.title, status: STATUS_LABEL[g.status] ?? g.status, pct: p.pct, method: p.method, milestones: data!.milestones.filter((m) => m.goal_id === g.id).map((m) => `${m.done_at ? "✓" : "○"} ${m.title}`).join(", ") };
+          return { title: g.title, status: STATUS_LABEL[g.status] ?? g.status, pct: p.pct, method: p.method, milestones: data!.milestones.filter((m) => m.goal_id === g.id).map((m) => `${m.title}${m.done_at ? " (done)" : ""}`).join(", ") };
         }),
         experiments: data!.experiments.filter((e) => e.status === "completed" && e.end_date && e.end_date >= review!.start).map((e) => ({ title: e.custom_title ?? defTitle(e.experiment_id) ?? "Experiment", result: e.result_summary ?? "" })),
       });
