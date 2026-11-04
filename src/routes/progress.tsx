@@ -188,10 +188,10 @@ function ProgressPage() {
                   <YAxis domain={[1, 5]} ticks={[1, 2, 3, 4, 5]} tick={{ fontSize: 11 }} />
                   <Tooltip />
                   <Legend wrapperStyle={{ fontSize: 12 }} />
-                  <Line type="monotone" dataKey="mood" name="Mood" stroke="var(--bloom)" strokeWidth={2} dot={false} connectNulls={false} />
-                  <Line type="monotone" dataKey="energy" name="Energy" stroke="var(--sun)" strokeWidth={2} dot={false} connectNulls={false} />
-                  <Line type="monotone" dataKey="stress" name="Stress" stroke="var(--energy)" strokeWidth={2} dot={false} connectNulls={false} />
-                  <Line type="monotone" dataKey="sleep" name="Sleep" stroke="var(--mind)" strokeWidth={2} dot={false} connectNulls={false} />
+                  <Line type="monotone" dataKey="mood" name="Mood" stroke="var(--bloom)" strokeWidth={2} dot={{ r: 2 }} connectNulls={false} isAnimationActive={false} />
+                  <Line type="monotone" dataKey="energy" name="Energy" stroke="var(--sun)" strokeWidth={2} dot={{ r: 2 }} connectNulls={false} isAnimationActive={false} />
+                  <Line type="monotone" dataKey="stress" name="Stress" stroke="var(--energy)" strokeWidth={2} dot={{ r: 2 }} connectNulls={false} isAnimationActive={false} />
+                  <Line type="monotone" dataKey="sleep" name="Sleep" stroke="var(--mind)" strokeWidth={2} dot={{ r: 2 }} connectNulls={false} isAnimationActive={false} />
                 </LineChart>
               </ResponsiveContainer>
             </div>
