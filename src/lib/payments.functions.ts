@@ -50,6 +50,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const prices = await stripe.prices.list({ lookup_keys: [data.priceId] });
       const price = prices.data[0];
       if (!price) throw new Error("Price not found");
+      // EU consumer prices are shown VAT-inclusive (€19.99 is the total the member pays).
+      if (price.tax_behavior === "unspecified" || price.tax_behavior == null) {
+        await stripe.prices.update(price.id, { tax_behavior: "inclusive" });
+      }
       const customerId = await resolveOrCreateCustomer(stripe, { email: u.user?.email ?? undefined, userId });
       const session = await stripe.checkout.sessions.create({
         line_items: [{ price: price.id, quantity: 1 }],
