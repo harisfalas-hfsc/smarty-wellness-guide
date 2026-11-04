@@ -22,10 +22,19 @@ export function useSubscription() {
       return data as (SubscriptionRow & { created_at: string }) | null;
     },
   });
+  // Backend access check: covers administrators and complimentary access too.
+  const access = useQuery({
+    queryKey: ["has-access", user?.id],
+    enabled: !!user && paymentsConfigured(),
+    queryFn: async () => {
+      const { data } = await supabase.rpc("has_active_subscription", { user_uuid: user!.id, check_env: getStripeEnvironment() });
+      return !!data;
+    },
+  });
   return {
     subscription: q.data ?? null,
-    isActive: isSubscriptionActive(q.data),
-    loading: !!user && q.isLoading,
+    isActive: isSubscriptionActive(q.data) || access.data === true,
+    loading: !!user && (q.isLoading || access.isLoading),
     refetch: q.refetch,
   };
 }
