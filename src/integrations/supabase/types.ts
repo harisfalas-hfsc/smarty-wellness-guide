@@ -14,6 +14,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      breathing_sessions: {
+        Row: {
+          completed_at: string
+          duration_seconds: number
+          id: string
+          local_date: string
+          pattern: string
+          ritual_slot: string | null
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string
+          duration_seconds: number
+          id?: string
+          local_date: string
+          pattern: string
+          ritual_slot?: string | null
+          user_id?: string
+        }
+        Update: {
+          completed_at?: string
+          duration_seconds?: number
+          id?: string
+          local_date?: string
+          pattern?: string
+          ritual_slot?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "breathing_sessions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       bucket_goals: {
         Row: {
           category: string
@@ -106,26 +144,50 @@ export type Database = {
       challenge_definitions: {
         Row: {
           active: boolean
+          cadence: string
+          category: string
           created_at: string
           detail: string
+          duration_days: number
+          goal: number | null
           id: string
+          instructions: string
+          metric: string
+          objective: string
           sort_order: number
+          target_days: number
           title: string
         }
         Insert: {
           active?: boolean
+          cadence?: string
+          category?: string
           created_at?: string
           detail?: string
+          duration_days?: number
+          goal?: number | null
           id: string
+          instructions?: string
+          metric?: string
+          objective?: string
           sort_order?: number
+          target_days?: number
           title: string
         }
         Update: {
           active?: boolean
+          cadence?: string
+          category?: string
           created_at?: string
           detail?: string
+          duration_days?: number
+          goal?: number | null
           id?: string
+          instructions?: string
+          metric?: string
+          objective?: string
           sort_order?: number
+          target_days?: number
           title?: string
         }
         Relationships: []
@@ -361,6 +423,38 @@ export type Database = {
           },
         ]
       }
+      hydration_entries: {
+        Row: {
+          amount_ml: number
+          created_at: string
+          id: string
+          local_date: string
+          user_id: string
+        }
+        Insert: {
+          amount_ml: number
+          created_at?: string
+          id?: string
+          local_date: string
+          user_id?: string
+        }
+        Update: {
+          amount_ml?: number
+          created_at?: string
+          id?: string
+          local_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hydration_entries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       legacy_imports: {
         Row: {
           completed_at: string | null
@@ -451,10 +545,15 @@ export type Database = {
         Row: {
           active: boolean
           area: string
+          completion_criteria: string
           created_at: string
+          days_per_step: number
           detail: string
           id: string
+          metric: string
+          objective: string
           sort_order: number
+          step_goals: number[]
           step_targets: string[]
           title: string
           total_steps: number
@@ -462,10 +561,15 @@ export type Database = {
         Insert: {
           active?: boolean
           area: string
+          completion_criteria?: string
           created_at?: string
+          days_per_step?: number
           detail?: string
           id: string
+          metric?: string
+          objective?: string
           sort_order?: number
+          step_goals?: number[]
           step_targets?: string[]
           title: string
           total_steps?: number
@@ -473,15 +577,96 @@ export type Database = {
         Update: {
           active?: boolean
           area?: string
+          completion_criteria?: string
           created_at?: string
+          days_per_step?: number
           detail?: string
           id?: string
+          metric?: string
+          objective?: string
           sort_order?: number
+          step_goals?: number[]
           step_targets?: string[]
           title?: string
           total_steps?: number
         }
         Relationships: []
+      }
+      period_check_ins: {
+        Row: {
+          answers: Json
+          created_at: string
+          id: string
+          local_date: string
+          period: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          answers?: Json
+          created_at?: string
+          id?: string
+          local_date: string
+          period: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          answers?: Json
+          created_at?: string
+          id?: string
+          local_date?: string
+          period?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "period_check_ins_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      personal_time_entries: {
+        Row: {
+          category: string
+          created_at: string
+          id: string
+          local_date: string
+          minutes: number
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          id?: string
+          local_date: string
+          minutes: number
+          note?: string | null
+          user_id?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          id?: string
+          local_date?: string
+          minutes?: number
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personal_time_entries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -512,6 +697,41 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      protein_entries: {
+        Row: {
+          created_at: string
+          grams: number
+          id: string
+          label: string | null
+          local_date: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          grams: number
+          id?: string
+          label?: string | null
+          local_date: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          grams?: number
+          id?: string
+          label?: string | null
+          local_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "protein_entries_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       recommendations: {
         Row: {
@@ -599,8 +819,96 @@ export type Database = {
           },
         ]
       }
+      ritual_activity_completions: {
+        Row: {
+          activity_id: string
+          completed_at: string
+          duration_seconds: number | null
+          id: string
+          local_date: string
+          user_id: string
+        }
+        Insert: {
+          activity_id: string
+          completed_at?: string
+          duration_seconds?: number | null
+          id?: string
+          local_date: string
+          user_id?: string
+        }
+        Update: {
+          activity_id?: string
+          completed_at?: string
+          duration_seconds?: number | null
+          id?: string
+          local_date?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ritual_activity_completions_activity_id_fkey"
+            columns: ["activity_id"]
+            isOneToOne: false
+            referencedRelation: "ritual_activity_definitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ritual_activity_completions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ritual_activity_definitions: {
+        Row: {
+          detail: string
+          id: string
+          kind: string
+          minutes: number
+          optional: boolean
+          personal_category: string | null
+          ritual_id: string
+          sort_order: number
+          title: string
+        }
+        Insert: {
+          detail?: string
+          id: string
+          kind: string
+          minutes?: number
+          optional?: boolean
+          personal_category?: string | null
+          ritual_id: string
+          sort_order?: number
+          title: string
+        }
+        Update: {
+          detail?: string
+          id?: string
+          kind?: string
+          minutes?: number
+          optional?: boolean
+          personal_category?: string | null
+          ritual_id?: string
+          sort_order?: number
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ritual_activity_definitions_ritual_id_fkey"
+            columns: ["ritual_id"]
+            isOneToOne: false
+            referencedRelation: "ritual_definitions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       ritual_completions: {
         Row: {
+          closing_message: string | null
+          completed_at: string
           created_at: string
           id: string
           local_date: string
@@ -608,6 +916,8 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          closing_message?: string | null
+          completed_at?: string
           created_at?: string
           id?: string
           local_date: string
@@ -615,6 +925,8 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          closing_message?: string | null
+          completed_at?: string
           created_at?: string
           id?: string
           local_date?: string
@@ -664,6 +976,99 @@ export type Database = {
           title?: string
         }
         Relationships: []
+      }
+      user_challenge_days: {
+        Row: {
+          created_at: string
+          local_date: string
+          user_challenge_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          local_date: string
+          user_challenge_id: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          local_date?: string
+          user_challenge_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenge_days_user_challenge_id_fkey"
+            columns: ["user_challenge_id"]
+            isOneToOne: false
+            referencedRelation: "user_challenges"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_challenge_days_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_challenges: {
+        Row: {
+          challenge_id: string | null
+          completed_at: string | null
+          created_at: string
+          custom_detail: string | null
+          custom_title: string | null
+          ends_on: string
+          id: string
+          started_on: string
+          status: string
+          target_days: number
+          user_id: string
+        }
+        Insert: {
+          challenge_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          custom_detail?: string | null
+          custom_title?: string | null
+          ends_on: string
+          id?: string
+          started_on: string
+          status?: string
+          target_days?: number
+          user_id?: string
+        }
+        Update: {
+          challenge_id?: string | null
+          completed_at?: string | null
+          created_at?: string
+          custom_detail?: string | null
+          custom_title?: string | null
+          ends_on?: string
+          id?: string
+          started_on?: string
+          status?: string
+          target_days?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_challenges_challenge_id_fkey"
+            columns: ["challenge_id"]
+            isOneToOne: false
+            referencedRelation: "challenge_definitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_challenges_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_experiments: {
         Row: {
@@ -721,22 +1126,28 @@ export type Database = {
       }
       user_mission_progress: {
         Row: {
+          completed_at: string | null
           mission_id: string
           started_at: string
+          status: string
           step: number
           updated_at: string
           user_id: string
         }
         Insert: {
+          completed_at?: string | null
           mission_id: string
           started_at?: string
+          status?: string
           step?: number
           updated_at?: string
           user_id?: string
         }
         Update: {
+          completed_at?: string | null
           mission_id?: string
           started_at?: string
+          status?: string
           step?: number
           updated_at?: string
           user_id?: string
@@ -753,6 +1164,56 @@ export type Database = {
             foreignKeyName: "user_mission_progress_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      wellness_preferences: {
+        Row: {
+          created_at: string
+          hidden_ritual_activities: string[]
+          personal_time_goal_min: number | null
+          personal_time_goal_period: string
+          protein_target_g: number | null
+          protein_target_source: string
+          reminders: Json
+          ritual_minutes: Json
+          updated_at: string
+          user_id: string
+          water_target_ml: number | null
+        }
+        Insert: {
+          created_at?: string
+          hidden_ritual_activities?: string[]
+          personal_time_goal_min?: number | null
+          personal_time_goal_period?: string
+          protein_target_g?: number | null
+          protein_target_source?: string
+          reminders?: Json
+          ritual_minutes?: Json
+          updated_at?: string
+          user_id?: string
+          water_target_ml?: number | null
+        }
+        Update: {
+          created_at?: string
+          hidden_ritual_activities?: string[]
+          personal_time_goal_min?: number | null
+          personal_time_goal_period?: string
+          protein_target_g?: number | null
+          protein_target_source?: string
+          reminders?: Json
+          ritual_minutes?: Json
+          updated_at?: string
+          user_id?: string
+          water_target_ml?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "wellness_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -935,7 +1396,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      credit_linked_progress: {
+        Args: { _date: string; _user: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never

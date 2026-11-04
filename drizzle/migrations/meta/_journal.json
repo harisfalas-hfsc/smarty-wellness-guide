@@ -8,6 +8,13 @@
       "when": 1793781727896,
       "tag": "0000_wellness_foundation",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793782290398,
+      "tag": "0001_daily_wellness_experience",
+      "breakpoints": true
     }
   ]
 }
