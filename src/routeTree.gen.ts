@@ -27,6 +27,7 @@ import { Route as MiddayRouteImport } from './routes/midday'
 import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as MorningRouteImport } from './routes/morning'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
+import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProgressRouteImport } from './routes/progress'
@@ -35,6 +36,7 @@ import { Route as ReviewRouteImport } from './routes/review'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TodayRouteImport } from './routes/today'
+import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as GoalsGoalIdRouteImport } from './routes/goals.$goalId'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
@@ -128,6 +130,11 @@ const OnboardingRoute = OnboardingRouteImport.update({
   path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const PrivacyRoute = PrivacyRouteImport.update({
   id: '/privacy',
   path: '/privacy',
@@ -168,6 +175,11 @@ const TodayRoute = TodayRouteImport.update({
   path: '/today',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CheckoutReturnRoute = CheckoutReturnRouteImport.update({
+  id: '/checkout/return',
+  path: '/checkout/return',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const GoalsGoalIdRoute = GoalsGoalIdRouteImport.update({
   id: '/goals/$goalId',
   path: '/goals/$goalId',
@@ -199,6 +211,7 @@ export interface FileRoutesByFullPath {
   '/missions': typeof MissionsRoute
   '/morning': typeof MorningRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
@@ -207,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
   '/today': typeof TodayRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/goals/$goalId': typeof GoalsGoalIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -229,6 +243,7 @@ export interface FileRoutesByTo {
   '/missions': typeof MissionsRoute
   '/morning': typeof MorningRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
@@ -237,6 +252,7 @@ export interface FileRoutesByTo {
   '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
   '/today': typeof TodayRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/goals/$goalId': typeof GoalsGoalIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -260,6 +276,7 @@ export interface FileRoutesById {
   '/missions': typeof MissionsRoute
   '/morning': typeof MorningRoute
   '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
   '/progress': typeof ProgressRoute
@@ -268,6 +285,7 @@ export interface FileRoutesById {
   '/settings': typeof SettingsRoute
   '/terms': typeof TermsRoute
   '/today': typeof TodayRoute
+  '/checkout/return': typeof CheckoutReturnRoute
   '/goals/$goalId': typeof GoalsGoalIdRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
@@ -292,6 +310,7 @@ export interface FileRouteTypes {
     | '/missions'
     | '/morning'
     | '/onboarding'
+    | '/pricing'
     | '/privacy'
     | '/profile'
     | '/progress'
@@ -300,6 +319,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/terms'
     | '/today'
+    | '/checkout/return'
     | '/goals/$goalId'
     | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
@@ -322,6 +342,7 @@ export interface FileRouteTypes {
     | '/missions'
     | '/morning'
     | '/onboarding'
+    | '/pricing'
     | '/privacy'
     | '/profile'
     | '/progress'
@@ -330,6 +351,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/terms'
     | '/today'
+    | '/checkout/return'
     | '/goals/$goalId'
     | '/api/public/payments/webhook'
   id:
@@ -352,6 +374,7 @@ export interface FileRouteTypes {
     | '/missions'
     | '/morning'
     | '/onboarding'
+    | '/pricing'
     | '/privacy'
     | '/profile'
     | '/progress'
@@ -360,6 +383,7 @@ export interface FileRouteTypes {
     | '/settings'
     | '/terms'
     | '/today'
+    | '/checkout/return'
     | '/goals/$goalId'
     | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
@@ -383,6 +407,7 @@ export interface RootRouteChildren {
   MissionsRoute: typeof MissionsRoute
   MorningRoute: typeof MorningRoute
   OnboardingRoute: typeof OnboardingRoute
+  PricingRoute: typeof PricingRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
   ProgressRoute: typeof ProgressRoute
@@ -391,6 +416,7 @@ export interface RootRouteChildren {
   SettingsRoute: typeof SettingsRoute
   TermsRoute: typeof TermsRoute
   TodayRoute: typeof TodayRoute
+  CheckoutReturnRoute: typeof CheckoutReturnRoute
   GoalsGoalIdRoute: typeof GoalsGoalIdRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
@@ -523,6 +549,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/privacy': {
       id: '/privacy'
       path: '/privacy'
@@ -579,6 +612,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TodayRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/checkout/return': {
+      id: '/checkout/return'
+      path: '/checkout/return'
+      fullPath: '/checkout/return'
+      preLoaderRoute: typeof CheckoutReturnRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/goals/$goalId': {
       id: '/goals/$goalId'
       path: '/goals/$goalId'
@@ -615,6 +655,7 @@ const rootRouteChildren: RootRouteChildren = {
   MissionsRoute: MissionsRoute,
   MorningRoute: MorningRoute,
   OnboardingRoute: OnboardingRoute,
+  PricingRoute: PricingRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,
   ProgressRoute: ProgressRoute,
@@ -623,6 +664,7 @@ const rootRouteChildren: RootRouteChildren = {
   SettingsRoute: SettingsRoute,
   TermsRoute: TermsRoute,
   TodayRoute: TodayRoute,
+  CheckoutReturnRoute: CheckoutReturnRoute,
   GoalsGoalIdRoute: GoalsGoalIdRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
