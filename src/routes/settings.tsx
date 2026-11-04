@@ -62,15 +62,16 @@ function SettingsPage() {
             Your data
           </p>
           <p className="mt-2 text-sm leading-6 text-muted-foreground">
-            Your profile, check-ins, missions and goals are stored on this device. You have{" "}
+            Your profile, check-ins, missions and goals are saved securely to your account, so only you can see them. You have{" "}
             {state.checkIns.length} check-in{state.checkIns.length === 1 ? "" : "s"} saved.
           </p>
           <Button
             variant="outline"
             className="mt-4"
             onClick={() => {
+              if (!window.confirm("Delete all your Smarty Wellness data from your account? This can't be undone.")) return;
               reset();
-              toast.success("All Smarty Wellness data cleared on this device.");
+              toast.success("All your Smarty Wellness data was cleared.");
             }}
           >
             Clear my data
