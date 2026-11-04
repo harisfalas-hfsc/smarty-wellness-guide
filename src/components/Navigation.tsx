@@ -1,6 +1,6 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import {
-  Sprout, BookOpen, CreditCard, CalendarCheck, ChevronLeft, ClipboardList, Compass, FlaskConical, Heart, Home, LineChart, ListChecks, LogIn, LogOut, Menu, Settings, Sparkles, Target, User, UserCircle, X, Sunrise, Sun, Moon, Wind, Droplets } from "lucide-react";
+  Sprout, BookOpen, CreditCard, Inbox, LifeBuoy, ShieldCheck, CalendarCheck, ChevronLeft, ClipboardList, Compass, FlaskConical, Heart, Home, LineChart, ListChecks, LogIn, LogOut, Menu, Settings, Sparkles, Target, User, UserCircle, X, Sunrise, Sun, Moon, Wind, Droplets } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   DropdownMenu,
@@ -11,6 +11,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useWellness } from "@/lib/wellness-store";
 import { useAuth } from "@/lib/auth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useUnreadMessages } from "@/routes/messages";
 
 export function Navigation() {
   const router = useRouter();
@@ -34,6 +37,15 @@ export function Navigation() {
     };
   }, [menuOpen]);
 
+  const { data: unread = 0 } = useUnreadMessages();
+  const { data: isAdmin = false } = useQuery({
+    queryKey: ["is-admin", user?.id],
+    enabled: !!user,
+    queryFn: async () => {
+      const { data } = await supabase.rpc("has_role", { _user_id: user!.id, _role: "admin" });
+      return !!data;
+    },
+  });
   const canGoBack = navCount > 0 && pathname !== "/";
   const accountName =
     state.profile.personal.name ||
@@ -124,9 +136,10 @@ export function Navigation() {
                   <button
                     type="button"
                     aria-label="Account"
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary bg-primary text-xs font-bold text-primary-foreground"
+                    className="relative inline-flex h-8 w-8 items-center justify-center rounded-full border-2 border-primary bg-primary text-xs font-bold text-primary-foreground"
                   >
                     {initial}
+                    {unread > 0 && <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full border-2 border-background bg-calm" />}
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
@@ -141,6 +154,24 @@ export function Navigation() {
                       <LineChart className="mr-2 h-4 w-4" /> My journey
                     </Link>
                   </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/messages">
+                      <Inbox className="mr-2 h-4 w-4" /> Messages
+                      {unread > 0 && <span className="ml-auto rounded-full bg-calm px-2 text-[11px] font-bold">{unread}</span>}
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/support">
+                      <LifeBuoy className="mr-2 h-4 w-4" /> Support
+                    </Link>
+                  </DropdownMenuItem>
+                  {isAdmin && (
+                    <DropdownMenuItem asChild>
+                      <Link to="/admin">
+                        <ShieldCheck className="mr-2 h-4 w-4" /> Admin panel
+                      </Link>
+                    </DropdownMenuItem>
+                  )}
                   <DropdownMenuItem asChild>
                     <Link to="/account">
                       <CreditCard className="mr-2 h-4 w-4" /> Account & membership

@@ -645,6 +645,47 @@ export type Database = {
           },
         ]
       }
+      inbox_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          kind: string
+          local_date: string | null
+          read_at: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          kind?: string
+          local_date?: string | null
+          read_at?: string | null
+          title: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          local_date?: string | null
+          read_at?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inbox_messages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       insight_snapshots: {
         Row: {
           created_at: string
@@ -682,6 +723,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      job_runs: {
+        Row: {
+          detail: Json
+          finished_at: string | null
+          id: string
+          job: string
+          started_at: string
+          status: string
+        }
+        Insert: {
+          detail?: Json
+          finished_at?: string | null
+          id?: string
+          job: string
+          started_at?: string
+          status?: string
+        }
+        Update: {
+          detail?: Json
+          finished_at?: string | null
+          id?: string
+          job?: string
+          started_at?: string
+          status?: string
+        }
+        Relationships: []
       }
       legacy_imports: {
         Row: {
@@ -722,6 +790,35 @@ export type Database = {
             foreignKeyName: "legacy_imports_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      membership_grants: {
+        Row: {
+          expires_at: string | null
+          granted_at: string
+          note: string
+          user_id: string
+        }
+        Insert: {
+          expires_at?: string | null
+          granted_at?: string
+          note?: string
+          user_id: string
+        }
+        Update: {
+          expires_at?: string | null
+          granted_at?: string
+          note?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "membership_grants_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
@@ -1425,6 +1522,92 @@ export type Database = {
           },
         ]
       }
+      support_messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          sender: string
+          thread_id: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          sender?: string
+          thread_id: string
+          user_id?: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          sender?: string
+          thread_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_messages_thread_id_fkey"
+            columns: ["thread_id"]
+            isOneToOne: false
+            referencedRelation: "support_threads"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "support_messages_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      support_threads: {
+        Row: {
+          admin_unread: boolean
+          category: string
+          created_at: string
+          id: string
+          member_unread: boolean
+          status: string
+          subject: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_unread?: boolean
+          category?: string
+          created_at?: string
+          id?: string
+          member_unread?: boolean
+          status?: string
+          subject: string
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          admin_unread?: boolean
+          category?: string
+          created_at?: string
+          id?: string
+          member_unread?: boolean
+          status?: string
+          subject?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "support_threads_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_challenge_days: {
         Row: {
           created_at: string
@@ -1644,9 +1827,31 @@ export type Database = {
           },
         ]
       }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
       wellness_preferences: {
         Row: {
           created_at: string
+          daily_messages: boolean
           hidden_ritual_activities: string[]
           personal_time_goal_min: number | null
           personal_time_goal_period: string
@@ -1660,6 +1865,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          daily_messages?: boolean
           hidden_ritual_activities?: string[]
           personal_time_goal_min?: number | null
           personal_time_goal_period?: string
@@ -1673,6 +1879,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          daily_messages?: boolean
           hidden_ritual_activities?: string[]
           personal_time_goal_min?: number | null
           personal_time_goal_period?: string
@@ -1878,6 +2085,7 @@ export type Database = {
         Args: { _delta: number; _mission_id: string; _reason: string }
         Returns: number
       }
+      admin_report: { Args: { _from: string; _to: string }; Returns: Json }
       credit_linked_progress: {
         Args: { _date: string; _user: string }
         Returns: undefined
@@ -1886,9 +2094,16 @@ export type Database = {
         Args: { check_env?: string; user_uuid: string }
         Returns: boolean
       }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2015,6 +2230,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

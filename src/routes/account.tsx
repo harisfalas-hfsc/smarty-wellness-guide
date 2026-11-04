@@ -177,6 +177,8 @@ function Account() {
           )}
         </section>
 
+        <NotificationSettings userId={user.id} />
+
         <section className="rounded-3xl border-2 border-mind bg-card p-5">
           <h2 className="flex items-center gap-2 font-bold"><Download className="h-4 w-4" /> Download my data</h2>
           <p className="mt-2 text-sm text-muted-foreground">Get a copy of everything Smarty Wellness stores about you.</p>
@@ -205,5 +207,34 @@ function Account() {
         </section>
       </div>
     </PageShell>
+  );
+}
+
+function NotificationSettings({ userId }: { userId: string }) {
+  const qc = useQueryClient();
+  const { data } = useQuery({
+    queryKey: ["notif-prefs", userId],
+    queryFn: async () => {
+      const { data } = await supabase.from("wellness_preferences").select("daily_messages").eq("user_id", userId).maybeSingle();
+      return data?.daily_messages ?? true;
+    },
+  });
+  const set = async (v: boolean) => {
+    const { error } = await supabase.from("wellness_preferences").upsert({ user_id: userId, daily_messages: v }, { onConflict: "user_id" });
+    if (error) { toast.error("Could not save"); return; }
+    void qc.invalidateQueries({ queryKey: ["notif-prefs", userId] });
+  };
+  return (
+    <section className="rounded-3xl border-2 border-sun bg-card p-5">
+      <h2 className="font-bold">Notifications</h2>
+      <label className="mt-3 flex items-center justify-between gap-3 text-sm">
+        <span>
+          <span className="block font-semibold">Daily coaching message</span>
+          <span className="text-muted-foreground">One short, practical note each morning in your <Link to="/messages" className="underline">message center</Link>.</span>
+        </span>
+        <input type="checkbox" className="h-5 w-5 accent-primary" checked={data ?? true} onChange={(e) => void set(e.target.checked)} />
+      </label>
+      <p className="mt-2 text-xs text-muted-foreground">Ritual and habit reminders can be set in <Link to="/settings" className="underline">Settings</Link>. Billing receipts are always sent by email by our payment provider.</p>
+    </section>
   );
 }

@@ -43,6 +43,13 @@
       "when": 1793785131610,
       "tag": "0005_subscriptions_and_premium_gate",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793785989747,
+      "tag": "0006_admin_support_inbox_reports",
+      "breakpoints": true
     }
   ]
 }
