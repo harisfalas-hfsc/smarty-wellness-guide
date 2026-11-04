@@ -1,5 +1,6 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
-import { BookOpen, CalendarCheck, ChevronLeft, ClipboardList, Compass, FlaskConical, Heart, Home, LineChart, ListChecks, LogIn, LogOut, Menu, Settings, Sparkles, Target, User, UserCircle, X, Sunrise, Sun, Moon, Wind, Droplets } from "lucide-react";
+import {
+  Sprout, BookOpen, CalendarCheck, ChevronLeft, ClipboardList, Compass, FlaskConical, Heart, Home, LineChart, ListChecks, LogIn, LogOut, Menu, Settings, Sparkles, Target, User, UserCircle, X, Sunrise, Sun, Moon, Wind, Droplets } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   DropdownMenu,
@@ -183,6 +184,7 @@ function NavDrawer({ onClose }: { onClose: () => void }) {
     {
       heading: "Progress",
       items: [
+        { to: "/progress", label: "Personal development", Icon: Sprout },
         { to: "/missions", label: "Missions", Icon: Target },
         { to: "/challenges", label: "Daily challenges", Icon: ListChecks },
         { to: "/bucket-list", label: "Bucket list", Icon: Compass },
