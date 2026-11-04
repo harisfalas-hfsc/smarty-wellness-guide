@@ -50,6 +50,13 @@
       "when": 1793785989747,
       "tag": "0006_admin_support_inbox_reports",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793789974249,
+      "tag": "0007_owner_admin_harisfalas",
+      "breakpoints": true
     }
   ]
 }
