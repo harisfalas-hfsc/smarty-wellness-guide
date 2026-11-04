@@ -117,6 +117,9 @@ export interface Mission {
   /** Days completed at the current step. */
   stepDays?: number;
   totalCompletions?: number;
+  /** Every day this mission was completed, newest first. */
+  completionDates?: string[];
+  startedAt?: string;
 }
 
 export interface Challenge {
