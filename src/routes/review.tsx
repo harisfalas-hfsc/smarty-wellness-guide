@@ -42,7 +42,7 @@ function ReviewPage() {
     }, { onConflict: "user_id,period_type,period_start" });
   }, [userId, data, r]);
 
-  const rows: [string, string, string?][] = [
+  const rows: [string, string, (string | undefined)?][] = [
     ["Days with any record", `${r.activeDays} of 7`],
     ["Check-ins", `${r.checkInDays} of 7`],
     ["Mood", val(r.averages.mood), r.previousAverages.mood !== null ? `previous week ${val(r.previousAverages.mood)}` : undefined],
