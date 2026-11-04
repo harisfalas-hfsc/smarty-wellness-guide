@@ -21,6 +21,7 @@ import { Route as EveningRouteImport } from './routes/evening'
 import { Route as ExperimentsRouteImport } from './routes/experiments'
 import { Route as HabitsRouteImport } from './routes/habits'
 import { Route as HomeRouteImport } from './routes/home'
+import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as MiddayRouteImport } from './routes/midday'
 import { Route as MissionsRouteImport } from './routes/missions'
@@ -92,6 +93,11 @@ const HabitsRoute = HabitsRouteImport.update({
 const HomeRoute = HomeRouteImport.update({
   id: '/home',
   path: '/home',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InsightsRoute = InsightsRouteImport.update({
+  id: '/insights',
+  path: '/insights',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JourneyRoute = JourneyRouteImport.update({
@@ -168,6 +174,7 @@ export interface FileRoutesByFullPath {
   '/experiments': typeof ExperimentsRoute
   '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
+  '/insights': typeof InsightsRoute
   '/journey': typeof JourneyRoute
   '/midday': typeof MiddayRoute
   '/missions': typeof MissionsRoute
@@ -194,6 +201,7 @@ export interface FileRoutesByTo {
   '/experiments': typeof ExperimentsRoute
   '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
+  '/insights': typeof InsightsRoute
   '/journey': typeof JourneyRoute
   '/midday': typeof MiddayRoute
   '/missions': typeof MissionsRoute
@@ -221,6 +229,7 @@ export interface FileRoutesById {
   '/experiments': typeof ExperimentsRoute
   '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
+  '/insights': typeof InsightsRoute
   '/journey': typeof JourneyRoute
   '/midday': typeof MiddayRoute
   '/missions': typeof MissionsRoute
@@ -249,6 +258,7 @@ export interface FileRouteTypes {
     | '/experiments'
     | '/habits'
     | '/home'
+    | '/insights'
     | '/journey'
     | '/midday'
     | '/missions'
@@ -275,6 +285,7 @@ export interface FileRouteTypes {
     | '/experiments'
     | '/habits'
     | '/home'
+    | '/insights'
     | '/journey'
     | '/midday'
     | '/missions'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/experiments'
     | '/habits'
     | '/home'
+    | '/insights'
     | '/journey'
     | '/midday'
     | '/missions'
@@ -328,6 +340,7 @@ export interface RootRouteChildren {
   ExperimentsRoute: typeof ExperimentsRoute
   HabitsRoute: typeof HabitsRoute
   HomeRoute: typeof HomeRoute
+  InsightsRoute: typeof InsightsRoute
   JourneyRoute: typeof JourneyRoute
   MiddayRoute: typeof MiddayRoute
   MissionsRoute: typeof MissionsRoute
@@ -426,6 +439,13 @@ declare module '@tanstack/react-router' {
       path: '/home'
       fullPath: '/home'
       preLoaderRoute: typeof HomeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/insights': {
+      id: '/insights'
+      path: '/insights'
+      fullPath: '/insights'
+      preLoaderRoute: typeof InsightsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/journey': {
@@ -528,6 +548,7 @@ const rootRouteChildren: RootRouteChildren = {
   ExperimentsRoute: ExperimentsRoute,
   HabitsRoute: HabitsRoute,
   HomeRoute: HomeRoute,
+  InsightsRoute: InsightsRoute,
   JourneyRoute: JourneyRoute,
   MiddayRoute: MiddayRoute,
   MissionsRoute: MissionsRoute,
