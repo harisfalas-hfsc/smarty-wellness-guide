@@ -37,7 +37,7 @@ const FILTERS: { key: string; label: string; match: (s: string) => boolean }[] =
   { key: "cancelled", label: "Cancelled", match: (s) => s === "cancelled" },
 ];
 const IDEAS = ["Run a 10K", "Read 20 books", "Learn a language", "Improve work-life balance", "Learn to swim", "Spend more time with my parents", "Travel somewhere new", "Become stronger"];
-export const selectCls = "h-10 w-full rounded-md border border-input bg-background px-3 text-sm";
+const selectCls = "h-10 w-full rounded-md border border-input bg-background px-3 text-sm";
 
 function BucketListPage() {
   const { state } = useWellness();
