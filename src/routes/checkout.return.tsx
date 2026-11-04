@@ -5,8 +5,8 @@ import { PageShell } from "@/components/PageShell";
 import { useSubscription } from "@/lib/use-subscription";
 
 export const Route = createFileRoute("/checkout/return")({
-  validateSearch: (s: Record<string, unknown>): { session_id?: string } => ({
-    session_id: typeof s.session_id === "string" ? s.session_id : undefined,
+  validateSearch: (s: Record<string, unknown>): { session_id?: string | undefined } => ({
+    session_id: typeof s['session_id'] === "string" ? s['session_id'] : undefined,
   }),
   head: () => ({ meta: [{ title: "Welcome to Smarty Wellness" }, { name: "robots", content: "noindex" }] }),
   component: CheckoutReturn,
