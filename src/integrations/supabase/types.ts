@@ -57,10 +57,18 @@ export type Database = {
           category: string
           completed_at: string | null
           created_at: string
+          description: string
           id: string
           legacy_id: string | null
+          linked_areas: string[]
+          notes: string
+          obstacles: string
+          priority: string
           progress: number
+          progress_mode: string
+          status: string
           target_date: string
+          target_on: string | null
           title: string
           updated_at: string
           user_id: string
@@ -70,10 +78,18 @@ export type Database = {
           category?: string
           completed_at?: string | null
           created_at?: string
+          description?: string
           id?: string
           legacy_id?: string | null
+          linked_areas?: string[]
+          notes?: string
+          obstacles?: string
+          priority?: string
           progress?: number
+          progress_mode?: string
+          status?: string
           target_date?: string
+          target_on?: string | null
           title: string
           updated_at?: string
           user_id?: string
@@ -83,10 +99,18 @@ export type Database = {
           category?: string
           completed_at?: string | null
           created_at?: string
+          description?: string
           id?: string
           legacy_id?: string | null
+          linked_areas?: string[]
+          notes?: string
+          obstacles?: string
+          priority?: string
           progress?: number
+          progress_mode?: string
+          status?: string
           target_date?: string
+          target_on?: string | null
           title?: string
           updated_at?: string
           user_id?: string
@@ -348,32 +372,44 @@ export type Database = {
       experiment_definitions: {
         Row: {
           active: boolean
+          area: string
           created_at: string
           days: number
           hypothesis: string
           id: string
+          measure: string
           measures: string[]
+          reason: string
           sort_order: number
+          target_behaviour: string
           title: string
         }
         Insert: {
           active?: boolean
+          area?: string
           created_at?: string
           days: number
           hypothesis?: string
           id: string
+          measure?: string
           measures?: string[]
+          reason?: string
           sort_order?: number
+          target_behaviour?: string
           title: string
         }
         Update: {
           active?: boolean
+          area?: string
           created_at?: string
           days?: number
           hypothesis?: string
           id?: string
+          measure?: string
           measures?: string[]
+          reason?: string
           sort_order?: number
+          target_behaviour?: string
           title?: string
         }
         Relationships: []
@@ -381,6 +417,7 @@ export type Database = {
       experiment_logs: {
         Row: {
           created_at: string
+          done: boolean
           id: string
           local_date: string
           measurements: Json
@@ -390,6 +427,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          done?: boolean
           id?: string
           local_date: string
           measurements?: Json
@@ -399,6 +437,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          done?: boolean
           id?: string
           local_date?: string
           measurements?: Json
@@ -416,6 +455,157 @@ export type Database = {
           },
           {
             foreignKeyName: "experiment_logs_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      goal_actions: {
+        Row: {
+          created_at: string
+          done_at: string | null
+          goal_id: string
+          id: string
+          milestone_id: string | null
+          source: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          done_at?: string | null
+          goal_id: string
+          id?: string
+          milestone_id?: string | null
+          source?: string
+          title: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          done_at?: string | null
+          goal_id?: string
+          id?: string
+          milestone_id?: string | null
+          source?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_actions_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "bucket_goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "goal_actions_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "goal_milestones"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "goal_actions_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      goal_milestones: {
+        Row: {
+          created_at: string
+          done_at: string | null
+          goal_id: string
+          id: string
+          sort_order: number
+          source: string
+          target_on: string | null
+          title: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          done_at?: string | null
+          goal_id: string
+          id?: string
+          sort_order?: number
+          source?: string
+          target_on?: string | null
+          title: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          done_at?: string | null
+          goal_id?: string
+          id?: string
+          sort_order?: number
+          source?: string
+          target_on?: string | null
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_milestones_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "bucket_goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "goal_milestones_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      goal_progress_events: {
+        Row: {
+          created_at: string
+          detail: string
+          goal_id: string
+          id: string
+          kind: string
+          progress: number | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          detail?: string
+          goal_id: string
+          id?: string
+          kind: string
+          progress?: number | null
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          detail?: string
+          goal_id?: string
+          id?: string
+          kind?: string
+          progress?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "goal_progress_events_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "bucket_goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "goal_progress_events_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -713,6 +903,54 @@ export type Database = {
           },
         ]
       }
+      personal_achievements: {
+        Row: {
+          achieved_on: string
+          category: string
+          created_at: string
+          goal_id: string | null
+          id: string
+          note: string
+          title: string
+          user_id: string
+        }
+        Insert: {
+          achieved_on: string
+          category?: string
+          created_at?: string
+          goal_id?: string | null
+          id?: string
+          note?: string
+          title: string
+          user_id?: string
+        }
+        Update: {
+          achieved_on?: string
+          category?: string
+          created_at?: string
+          goal_id?: string | null
+          id?: string
+          note?: string
+          title?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "personal_achievements_goal_id_fkey"
+            columns: ["goal_id"]
+            isOneToOne: false
+            referencedRelation: "bucket_goals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "personal_achievements_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       personal_time_entries: {
         Row: {
           category: string
@@ -913,6 +1151,38 @@ export type Database = {
           },
           {
             foreignKeyName: "recommendations_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      report_exports: {
+        Row: {
+          created_at: string
+          id: string
+          period_end: string
+          period_start: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          period_end: string
+          period_start: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          period_end?: string
+          period_start?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "report_exports_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
@@ -1173,38 +1443,65 @@ export type Database = {
       }
       user_experiments: {
         Row: {
+          baseline: Json
           created_at: string
+          custom_hypothesis: string | null
+          custom_title: string | null
           days_done: number
+          duration_days: number
           end_date: string | null
-          experiment_id: string
+          evaluation: Json
+          experiment_id: string | null
           id: string
+          measure: string
+          paused_at: string | null
+          reason: string
           result_summary: string | null
           start_date: string
           status: string
+          target_behaviour: string
           updated_at: string
           user_id: string
         }
         Insert: {
+          baseline?: Json
           created_at?: string
+          custom_hypothesis?: string | null
+          custom_title?: string | null
           days_done?: number
+          duration_days?: number
           end_date?: string | null
-          experiment_id: string
+          evaluation?: Json
+          experiment_id?: string | null
           id?: string
+          measure?: string
+          paused_at?: string | null
+          reason?: string
           result_summary?: string | null
           start_date: string
           status?: string
+          target_behaviour?: string
           updated_at?: string
           user_id?: string
         }
         Update: {
+          baseline?: Json
           created_at?: string
+          custom_hypothesis?: string | null
+          custom_title?: string | null
           days_done?: number
+          duration_days?: number
           end_date?: string | null
-          experiment_id?: string
+          evaluation?: Json
+          experiment_id?: string | null
           id?: string
+          measure?: string
+          paused_at?: string | null
+          reason?: string
           result_summary?: string | null
           start_date?: string
           status?: string
+          target_behaviour?: string
           updated_at?: string
           user_id?: string
         }
@@ -1458,6 +1755,7 @@ export type Database = {
           period_end: string
           period_start: string
           period_type: string
+          reflection: string
           summary: string
           trends: Json
           user_id: string
@@ -1468,6 +1766,7 @@ export type Database = {
           period_end: string
           period_start: string
           period_type: string
+          reflection?: string
           summary?: string
           trends?: Json
           user_id?: string
@@ -1478,6 +1777,7 @@ export type Database = {
           period_end?: string
           period_start?: string
           period_type?: string
+          reflection?: string
           summary?: string
           trends?: Json
           user_id?: string

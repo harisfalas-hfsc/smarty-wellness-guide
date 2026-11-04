@@ -29,6 +29,13 @@
       "when": 1793783260036,
       "tag": "0003_intelligence_engine",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793783973985,
+      "tag": "0004_personal_development",
+      "breakpoints": true
     }
   ]
 }
