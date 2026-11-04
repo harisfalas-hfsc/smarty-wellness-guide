@@ -180,9 +180,10 @@ export async function setChallengeDone(userId: string, challengeId: string, date
 }
 
 export async function insertBucketGoal(userId: string, g: Omit<BucketGoal, "id">) {
-  return check(await supabase.from("bucket_goals").insert({
+  const row = check<{ id: string }>(await supabase.from("bucket_goals").insert({
     user_id: userId, title: g.title, why: g.why, category: g.category, target_date: g.targetDate, progress: g.progress,
-  }).select("id").single()).id;
+  }).select("id").single());
+  return row.id;
 }
 
 export async function deleteBucketGoal(userId: string, id: string) {
@@ -191,8 +192,11 @@ export async function deleteBucketGoal(userId: string, id: string) {
 
 export async function insertCoachMessage(userId: string, m: Omit<CoachMessage, "id" | "at">) {
   const existing = check(await supabase.from("coach_conversations").select("id").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1));
-  const conversationId = existing[0]?.id
-    ?? check(await supabase.from("coach_conversations").insert({ user_id: userId }).select("id").single())!.id;
+  let conversationId = existing[0]?.id;
+  if (!conversationId) {
+    const created = check<{ id: string }>(await supabase.from("coach_conversations").insert({ user_id: userId }).select("id").single());
+    conversationId = created.id;
+  }
   check(await supabase.from("coach_messages").insert({ user_id: userId, conversation_id: conversationId, role: m.role, text: m.text }));
   check(await supabase.from("coach_conversations").update({ updated_at: new Date().toISOString() }).eq("id", conversationId));
 }
