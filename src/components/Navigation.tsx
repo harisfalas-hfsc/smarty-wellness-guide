@@ -1,5 +1,6 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
-import { BookOpen, CalendarCheck, ChevronLeft, ClipboardList, Compass, FlaskConical, Heart, Home, LineChart, ListChecks, LogIn, LogOut, Menu, Settings, Sparkles, Target, User, UserCircle, X, Sunrise, Sun, Moon, Wind, Droplets } from "lucide-react";
+import {
+  Sprout, BookOpen, CalendarCheck, ChevronLeft, ClipboardList, Compass, FlaskConical, Heart, Home, LineChart, ListChecks, LogIn, LogOut, Menu, Settings, Sparkles, Target, User, UserCircle, X, Sunrise, Sun, Moon, Wind, Droplets } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   DropdownMenu,
