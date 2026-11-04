@@ -91,6 +91,7 @@ function MissionCard({ m }: { m: Mission }) {
       </div>
       <Progress value={stepPct} className="mt-3" />
       <p className="mt-1 text-[11px] text-muted-foreground">{m.totalCompletions ?? 0} days completed in total</p>
+      {status === "active" && <MissionAdviceNote m={m} />}
 
       <div className="mt-4 flex flex-wrap gap-2 border-t border-border/60 pt-4">
         {status === "available" && <Button size="sm" onClick={() => setMissionStatus(m.id, "active")}><Play /> Start mission</Button>}
