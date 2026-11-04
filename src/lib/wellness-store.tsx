@@ -68,6 +68,7 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (prevUser.current !== userId) {
       qc.removeQueries({ queryKey: ["wellness"] });
+      qc.removeQueries({ queryKey: ["daily"] });
       prevUser.current = userId;
     }
   }, [userId, qc]);
