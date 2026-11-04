@@ -8,6 +8,10 @@ import { Progress } from "@/components/ui/progress";
 import { todayKey, useWellness } from "@/lib/wellness-store";
 import type { Mission } from "@/lib/wellness-types";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { adviseMission } from "@/lib/intelligence/engine";
 
 export const Route = createFileRoute("/missions")({
   head: () => ({
