@@ -51,12 +51,24 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       const price = prices.data[0];
       if (!price) throw new Error("Price not found");
       // EU consumer prices are shown VAT-inclusive (€19.99 is the total the member pays).
-      if (price.tax_behavior === "unspecified" || price.tax_behavior == null) {
-        await stripe.prices.update(price.id, { tax_behavior: "inclusive" });
+      let chargePrice = price;
+      if (price.tax_behavior !== "inclusive") {
+        const productId = typeof price.product === "string" ? price.product : price.product.id;
+        chargePrice = await stripe.prices.create({
+          product: productId,
+          currency: price.currency,
+          unit_amount: price.unit_amount ?? 0,
+          ...(price.recurring ? { recurring: { interval: price.recurring.interval, interval_count: price.recurring.interval_count } } : {}),
+          tax_behavior: "inclusive",
+          lookup_key: data.priceId,
+          transfer_lookup_key: true,
+          metadata: price.metadata,
+        });
+        await stripe.prices.update(price.id, { active: false });
       }
       const customerId = await resolveOrCreateCustomer(stripe, { email: u.user?.email ?? undefined, userId });
       const session = await stripe.checkout.sessions.create({
-        line_items: [{ price: price.id, quantity: 1 }],
+        line_items: [{ price: chargePrice.id, quantity: 1 }],
         mode: "subscription",
         ui_mode: "embedded_page",
         return_url: data.returnUrl,
