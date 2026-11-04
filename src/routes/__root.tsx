@@ -21,6 +21,10 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
 import { WellnessProvider } from "@/lib/wellness-store";
 import { AuthProvider, useAuth } from "@/lib/auth";
+import { useSubscription } from "@/lib/use-subscription";
+import { FREE_PATHS } from "@/lib/membership";
+import { Paywall } from "@/components/Paywall";
+import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { LegacyImportBanner } from "@/components/LegacyImportBanner";
 import { useWellness } from "@/lib/wellness-store";
 
@@ -147,32 +151,33 @@ function RootComponent() {
   );
 }
 
-const PUBLIC_PATHS = ["/", "/auth", "/reset-password", "/privacy", "/terms", "/disclaimer"];
 
 function AppFrame() {
   const { session, loading } = useAuth();
   const navigate = useNavigate();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  useEffect(() => {
-    if (loading || session) return;
-    if (!PUBLIC_PATHS.includes(pathname)) void navigate({ to: "/auth", search: { mode: "signin" } });
-  }, [loading, session, pathname, navigate]);
+  void navigate;
+  const { isActive, loading: subLoading } = useSubscription();
+  const isFree = FREE_PATHS.includes(pathname) || pathname.startsWith("/api/");
+  const locked = !isFree && !loading && !subLoading && !isActive;
+  const member = !!session && isActive;
 
   return (
     <div className="min-h-screen bg-background">
+      <PaymentTestModeBanner />
       <Navigation />
       <div className="mx-auto flex w-full max-w-7xl">
-        {session && <DesktopNav />}
+        {member && <DesktopNav />}
         <div className="min-w-0 flex-1">
-          {session && <LegacyImportBanner />}
+          {member && <LegacyImportBanner />}
           {session && <WellnessLoadError />}
           {/* Required: nested routes render here. */}
-          <Outlet />
+          {locked ? <Paywall /> : !isFree && (loading || subLoading) ? null : <Outlet />}
         </div>
       </div>
-      {!session && <SiteFooter />}
-      {session && <BottomNav />}
+      {!member && <SiteFooter />}
+      {member && <BottomNav />}
       <Toaster />
     </div>
   );

@@ -1,6 +1,6 @@
 import { Link, useRouter, useRouterState } from "@tanstack/react-router";
 import {
-  Sprout, BookOpen, CalendarCheck, ChevronLeft, ClipboardList, Compass, FlaskConical, Heart, Home, LineChart, ListChecks, LogIn, LogOut, Menu, Settings, Sparkles, Target, User, UserCircle, X, Sunrise, Sun, Moon, Wind, Droplets } from "lucide-react";
+  Sprout, BookOpen, CreditCard, CalendarCheck, ChevronLeft, ClipboardList, Compass, FlaskConical, Heart, Home, LineChart, ListChecks, LogIn, LogOut, Menu, Settings, Sparkles, Target, User, UserCircle, X, Sunrise, Sun, Moon, Wind, Droplets } from "lucide-react";
 import { useEffect, useState } from "react";
 import {
   DropdownMenu,
@@ -98,6 +98,11 @@ export function Navigation() {
               <DropdownMenuContent align="end" className="w-52">
                 <DropdownMenuLabel>Account</DropdownMenuLabel>
                 <DropdownMenuItem asChild>
+                  <Link to="/pricing">
+                    <CreditCard className="mr-2 h-4 w-4" /> Membership
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
                   <Link to="/auth" search={{ mode: "signin" }}>
                     <LogIn className="mr-2 h-4 w-4" /> Sign in
                   </Link>
@@ -134,6 +139,11 @@ export function Navigation() {
                   <DropdownMenuItem asChild>
                     <Link to="/journey">
                       <LineChart className="mr-2 h-4 w-4" /> My journey
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link to="/account">
+                      <CreditCard className="mr-2 h-4 w-4" /> Account & membership
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>

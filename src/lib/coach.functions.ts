@@ -42,6 +42,8 @@ export const askCoach = createServerFn({ method: "POST" })
     return { message, today: input.today, retry: Boolean(input.retry) };
   })
   .handler(async ({ data, context }) => {
+    const { data: __premium } = await context.supabase.rpc("has_active_subscription", { user_uuid: context.userId });
+    if (!__premium) throw new Error("An active Smarty Wellness membership is required.");
     const { supabase, userId } = context;
     const { loadWellnessState } = await import("@/lib/data/wellness-repo");
     const { loadDaily } = await import("@/lib/data/daily-repo");
@@ -138,6 +140,8 @@ export const suggestGoalPlan = createServerFn({ method: "POST" })
     return { goalId: i.goalId, today: i.today };
   })
   .handler(async ({ data, context }): Promise<PlanSuggestion> => {
+    const { data: __premium } = await context.supabase.rpc("has_active_subscription", { user_uuid: context.userId });
+    if (!__premium) throw new Error("An active Smarty Wellness membership is required.");
     const { supabase, userId } = context;
     const { loadWellnessState } = await import("@/lib/data/wellness-repo");
     const { loadDaily } = await import("@/lib/data/daily-repo");
