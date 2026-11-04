@@ -1,5 +1,8 @@
 // Central membership configuration. Change prices/benefits here only;
 // the amount charged is defined in the payments catalog under the same price id.
+/** Monthly price in euros (VAT included). Must match the payments catalog. */
+export const PREMIUM_PLAN_AMOUNT = 19.99;
+
 export const PREMIUM_PLAN = {
   priceId: "premium_monthly",
   name: "Smarty Wellness Premium",
@@ -18,7 +21,7 @@ export const PREMIUM_PLAN = {
 /** Pages anyone can open without a membership. */
 export const FREE_PATHS = [
   "/", "/auth", "/reset-password", "/privacy", "/terms", "/disclaimer",
-  "/pricing", "/account", "/checkout/return",
+  "/pricing", "/account", "/checkout/return", "/admin", "/messages", "/support",
 ];
 
 export type SubscriptionRow = {

@@ -44,6 +44,11 @@ export const askCoach = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     const { data: __premium } = await context.supabase.rpc("has_active_subscription", { user_uuid: context.userId });
     if (!__premium) throw new Error("An active Smarty Wellness membership is required.");
+    {
+      const since = new Date(Date.now() - 86_400_000).toISOString();
+      const { count: __used } = await context.supabase.from("coach_messages").select("id", { count: "exact", head: true }).eq("user_id", context.userId).eq("role", "user").gte("created_at", since);
+      if ((__used ?? 0) >= 60) throw new Error("You've reached today's Smarty Coach limit. Please come back tomorrow.");
+    }
     const { supabase, userId } = context;
     const { loadWellnessState } = await import("@/lib/data/wellness-repo");
     const { loadDaily } = await import("@/lib/data/daily-repo");

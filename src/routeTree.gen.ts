@@ -39,6 +39,7 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TodayRouteImport } from './routes/today'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
 import { Route as GoalsGoalIdRouteImport } from './routes/goals.$goalId'
+import { Route as ApiPublicJobsDailyMessagesRouteImport } from './routes/api/public/jobs/daily-messages'
 import { Route as ApiPublicPaymentsWebhookRouteImport } from './routes/api/public/payments/webhook'
 
 const IndexRoute = IndexRouteImport.update({
@@ -191,6 +192,12 @@ const GoalsGoalIdRoute = GoalsGoalIdRouteImport.update({
   path: '/goals/$goalId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicJobsDailyMessagesRoute =
+  ApiPublicJobsDailyMessagesRouteImport.update({
+    id: '/api/public/jobs/daily-messages',
+    path: '/api/public/jobs/daily-messages',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 const ApiPublicPaymentsWebhookRoute =
   ApiPublicPaymentsWebhookRouteImport.update({
     id: '/api/public/payments/webhook',
@@ -229,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/today': typeof TodayRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/goals/$goalId': typeof GoalsGoalIdRoute
+  '/api/public/jobs/daily-messages': typeof ApiPublicJobsDailyMessagesRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesByTo {
@@ -262,6 +270,7 @@ export interface FileRoutesByTo {
   '/today': typeof TodayRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/goals/$goalId': typeof GoalsGoalIdRoute
+  '/api/public/jobs/daily-messages': typeof ApiPublicJobsDailyMessagesRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRoutesById {
@@ -296,6 +305,7 @@ export interface FileRoutesById {
   '/today': typeof TodayRoute
   '/checkout/return': typeof CheckoutReturnRoute
   '/goals/$goalId': typeof GoalsGoalIdRoute
+  '/api/public/jobs/daily-messages': typeof ApiPublicJobsDailyMessagesRoute
   '/api/public/payments/webhook': typeof ApiPublicPaymentsWebhookRoute
 }
 export interface FileRouteTypes {
@@ -331,6 +341,7 @@ export interface FileRouteTypes {
     | '/today'
     | '/checkout/return'
     | '/goals/$goalId'
+    | '/api/public/jobs/daily-messages'
     | '/api/public/payments/webhook'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -364,6 +375,7 @@ export interface FileRouteTypes {
     | '/today'
     | '/checkout/return'
     | '/goals/$goalId'
+    | '/api/public/jobs/daily-messages'
     | '/api/public/payments/webhook'
   id:
     | '__root__'
@@ -397,6 +409,7 @@ export interface FileRouteTypes {
     | '/today'
     | '/checkout/return'
     | '/goals/$goalId'
+    | '/api/public/jobs/daily-messages'
     | '/api/public/payments/webhook'
   fileRoutesById: FileRoutesById
 }
@@ -431,6 +444,7 @@ export interface RootRouteChildren {
   TodayRoute: typeof TodayRoute
   CheckoutReturnRoute: typeof CheckoutReturnRoute
   GoalsGoalIdRoute: typeof GoalsGoalIdRoute
+  ApiPublicJobsDailyMessagesRoute: typeof ApiPublicJobsDailyMessagesRoute
   ApiPublicPaymentsWebhookRoute: typeof ApiPublicPaymentsWebhookRoute
 }
 
@@ -646,6 +660,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GoalsGoalIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/jobs/daily-messages': {
+      id: '/api/public/jobs/daily-messages'
+      path: '/api/public/jobs/daily-messages'
+      fullPath: '/api/public/jobs/daily-messages'
+      preLoaderRoute: typeof ApiPublicJobsDailyMessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/api/public/payments/webhook': {
       id: '/api/public/payments/webhook'
       path: '/api/public/payments/webhook'
@@ -687,6 +708,7 @@ const rootRouteChildren: RootRouteChildren = {
   TodayRoute: TodayRoute,
   CheckoutReturnRoute: CheckoutReturnRoute,
   GoalsGoalIdRoute: GoalsGoalIdRoute,
+  ApiPublicJobsDailyMessagesRoute: ApiPublicJobsDailyMessagesRoute,
   ApiPublicPaymentsWebhookRoute: ApiPublicPaymentsWebhookRoute,
 }
 export const routeTree = rootRouteImport
