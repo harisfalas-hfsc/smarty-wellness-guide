@@ -166,3 +166,30 @@ function MissionsPage() {
     </PageShell>
   );
 }
+
+/** Personalised progression advice from recorded behaviour; user decides whether to step down. */
+function MissionAdviceNote({ m }: { m: Mission }) {
+  const qc = useQueryClient();
+  const [busy, setBusy] = useState(false);
+  const advice = adviseMission(m, todayKey());
+  const canStepDown = (advice.kind === "easier" || advice.kind === "returning") && m.step > 1;
+  async function stepDown() {
+    setBusy(true);
+    const { error } = await supabase.rpc("adjust_mission_step", { _mission_id: m.id, _delta: -1, _reason: advice.kind === "returning" ? "returning" : "easier" });
+    setBusy(false);
+    if (error) { toast.error("Couldn't change the level. Please try again."); return; }
+    toast.success("Done — you're on an easier level now.");
+    await qc.invalidateQueries({ queryKey: ["wellness"] });
+  }
+  const tone = advice.kind === "ready" ? "border-calm/60 text-calm-deep" : advice.kind === "steady" ? "border-primary/30 text-muted-foreground" : "border-sun/70 text-sun-deep";
+  return (
+    <div className={cn("mt-3 rounded-2xl border-2 px-3 py-2 text-xs leading-5", tone)}>
+      {advice.message}
+      {canStepDown && (
+        <Button size="sm" variant="outline" className="mt-2 w-full sm:w-auto" disabled={busy} onClick={stepDown}>
+          Make it easier (level {m.step - 1})
+        </Button>
+      )}
+    </div>
+  );
+}
