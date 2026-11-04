@@ -25,7 +25,7 @@ export const Route = createFileRoute("/privacy")({
 
 function Privacy() {
   return (
-    <LegalLayout title="Privacy Policy" icon={<Shield className="h-5 w-5" />} lastUpdated="August 2026">
+    <LegalLayout title="Privacy Policy" icon={<Shield className="h-5 w-5" />} lastUpdated="November 2026">
       <p>
         At <strong>Smarty Wellness</strong> (smartywellness.com) we value your privacy and are
         committed to protecting your personal data. This Privacy Policy explains how Smarty
@@ -156,7 +156,14 @@ function Privacy() {
       <ul>
         <li><strong>Essential:</strong> authentication tokens, session security, fraud prevention.</li>
         <li><strong>Functional:</strong> UI preferences, check-in and mission progress.</li>
+        <li><strong>Payments:</strong> our payment provider (Stripe) sets cookies needed to process payments securely.</li>
+        <li><strong>Optional analytics:</strong> used only if you choose "Accept all" in the cookie banner.</li>
       </ul>
+      <p>
+        On your first visit we ask for your choice. You can change it at any time with the
+        "Cookie settings" link in the footer or on your Settings page. Essential cookies cannot be
+        turned off because the service cannot work without them.
+      </p>
 
       <h2>9. Children</h2>
       <p>

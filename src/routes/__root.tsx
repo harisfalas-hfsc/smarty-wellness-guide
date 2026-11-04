@@ -19,6 +19,7 @@ import { BottomNav } from "@/components/BottomNav";
 import { DesktopNav } from "@/components/DesktopNav";
 import { SiteFooter } from "@/components/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieBanner } from "@/components/CookieBanner";
 import { WellnessProvider } from "@/lib/wellness-store";
 import { AuthProvider, useAuth } from "@/lib/auth";
 import { useSubscription } from "@/lib/use-subscription";
@@ -178,6 +179,7 @@ function AppFrame() {
       </div>
       {!member && <SiteFooter />}
       {member && <BottomNav />}
+      <CookieBanner />
       <Toaster />
     </div>
   );
