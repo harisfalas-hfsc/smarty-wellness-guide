@@ -221,7 +221,7 @@ function NotificationSettings({ userId }: { userId: string }) {
   });
   const set = async (v: boolean) => {
     const { error } = await supabase.from("wellness_preferences").upsert({ user_id: userId, daily_messages: v }, { onConflict: "user_id" });
-    if (error) return toast.error("Could not save");
+    if (error) { toast.error("Could not save"); return; }
     void qc.invalidateQueries({ queryKey: ["notif-prefs", userId] });
   };
   return (

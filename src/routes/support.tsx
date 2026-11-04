@@ -55,12 +55,12 @@ function Support() {
   }
 
   const submit = async () => {
-    if (subject.trim().length < 3 || body.trim().length < 5) return toast.error("Please add a subject and a short description.");
+    if (subject.trim().length < 3 || body.trim().length < 5) { toast.error("Please add a subject and a short description."); return; }
     setBusy(true);
     const { data: t, error } = await supabase.from("support_threads").insert({ user_id: user.id, subject: subject.trim().slice(0, 150), category }).select("id").single();
     if (!error && t) await supabase.from("support_messages").insert({ thread_id: t.id, user_id: user.id, body: body.trim().slice(0, 5000) });
     setBusy(false);
-    if (error) return toast.error("Could not send. Please try again.");
+    if (error) { toast.error("Could not send. Please try again."); return; }
     toast.success("Sent! We'll reply in your message center.");
     setSubject(""); setBody("");
     void qc.invalidateQueries({ queryKey: ["support-threads"] });

@@ -2,6 +2,16 @@ import { createServerFn } from "@tanstack/react-start";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { PREMIUM_PLAN_AMOUNT } from "@/lib/membership";
 
+type Pt = { d: string; n: number };
+export type AdminReport = {
+  total_users: number; new_users: number; onboarded_new: number; first_checkin_new: number; first_ritual_new: number;
+  first_mission_new: number; coach_users_new: number; dau: number; wau: number; mau: number; active_in_range: number;
+  checkins: number; rituals: number; missions: number; challenges: number; coach_messages: number; inactive_14d: number;
+  returning: number; retained_week1: number; daily_new_users: Pt[]; daily_active: Pt[];
+  subs_live: { active: number; cancelling: number; past_due: number; new: number; cancelled: number };
+  subs_test: { active: number; total: number }; complimentary: number; open_support: number;
+};
+
 type Ctx = { supabase: any; userId: string };
 
 async function assertAdmin(context: Ctx) {
@@ -33,7 +43,7 @@ export const adminGetReport = createServerFn({ method: "POST" })
     const mrr = active * PREMIUM_PLAN_AMOUNT;
     const payingStart = active + Number(r.subs_live.cancelled);
     return {
-      report: r as Record<string, any>,
+      report: r as AdminReport,
       revenue: {
         mrr,
         arr: mrr * 12,
