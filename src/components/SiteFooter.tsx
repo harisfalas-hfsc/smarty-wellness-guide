@@ -58,6 +58,8 @@ export function SiteFooter() {
           </Link>
           <span className="text-muted-foreground/40">·</span>
           <Link to="/disclaimer" className="transition-colors hover:text-primary">Disclaimer</Link>
+          <span className="text-muted-foreground/40">·</span>
+          <button type="button" onClick={() => window.dispatchEvent(new Event("sw-open-cookie-settings"))} className="transition-colors hover:text-primary">Cookie settings</button>
         </div>
 
         <p className="text-center text-sm text-muted-foreground">

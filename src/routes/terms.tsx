@@ -25,7 +25,7 @@ export const Route = createFileRoute("/terms")({
 
 function Terms() {
   return (
-    <LegalLayout title="Terms & Conditions" icon={<FileText className="h-5 w-5" />} lastUpdated="August 2026">
+    <LegalLayout title="Terms & Conditions" icon={<FileText className="h-5 w-5" />} lastUpdated="November 2026">
       <p>
         Welcome to <strong>Smarty Wellness</strong> (smartywellness.com). By accessing or using our
         wellness guidance service, you agree to comply with and be bound by the following Terms
