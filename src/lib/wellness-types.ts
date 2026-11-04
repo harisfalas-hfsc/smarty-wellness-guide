@@ -108,7 +108,7 @@ export interface Mission {
   completed: boolean;
   completedDate?: string;
   /** available = not started; completed = finished every step. */
-  status?: "available" | "active" | "paused" | "completed";
+  status?: "available" | "active" | "paused" | "completed" | undefined;
   objective?: string;
   completionCriteria?: string;
   /** "manual" or the habit that credits it automatically. */
@@ -126,7 +126,7 @@ export interface Challenge {
   completed: boolean;
   completedDate?: string;
   category?: string;
-  cadence?: "daily" | "weekly" | "short";
+  cadence?: "daily" | "weekly" | "short" | undefined;
   instructions?: string;
   objective?: string;
   metric?: string;
