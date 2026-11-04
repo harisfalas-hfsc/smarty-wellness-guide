@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { todayKey, useWellness } from "@/lib/wellness-store";
 import { buildRecommendations, getTodaysChallenge, getTodaysMission } from "@/lib/recommendation";
 import { MOODS } from "@/lib/checkin-options";
+import { DailyDashboard } from "@/components/DailyDashboard";
 
 export const Route = createFileRoute("/today")({
   head: () => ({
@@ -114,6 +115,8 @@ function TodayPage() {
             )}
           </section>
         </div>}
+
+        <DailyDashboard />
 
         <section className="rounded-3xl border-2 border-primary/50 bg-card p-6 shadow-soft">
           <p className="text-[10px] font-bold uppercase tracking-widest text-primary">

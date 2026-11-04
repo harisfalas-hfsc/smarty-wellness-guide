@@ -28,3 +28,25 @@ describe("parseLegacy", () => {
     expect(out.skipped).toBe(2);
   });
 });
+
+import { progressPct, sumBy, weekDates } from "./daily-metrics";
+
+describe("daily habit totals", () => {
+  const rows = [
+    { d: "2026-11-04", ml: 250 },
+    { d: "2026-11-04", ml: 500 },
+    { d: "2026-11-03", ml: 1000 },
+  ];
+  it("sums only the given local day", () => {
+    expect(sumBy(rows, "2026-11-04", (r) => r.d, (r) => r.ml)).toBe(750);
+  });
+  it("caps progress at 100% and returns null without a target", () => {
+    expect(progressPct(750, 2000)).toBe(38);
+    expect(progressPct(3000, 2000)).toBe(100);
+    expect(progressPct(750, null)).toBeNull();
+  });
+  it("weeks start on Monday", () => {
+    expect(weekDates("2026-11-04")[0]).toBe("2026-11-02");
+    expect(weekDates("2026-11-04")[6]).toBe("2026-11-08");
+  });
+});

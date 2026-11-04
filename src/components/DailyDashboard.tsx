@@ -2,7 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { CheckCircle2, Circle, CircleDot } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { PERIODS, useDaily } from "@/lib/daily";
-import { useWellness } from "@/lib/wellness-store";
+import { todayKey, useWellness } from "@/lib/wellness-store";
 import { RITUAL_META } from "@/lib/ritual-content";
 import { cn } from "@/lib/utils";
 
@@ -27,7 +27,7 @@ export function DailyDashboard() {
     if (summary.water < expected * 0.7) nudges.push({ text: "You're behind on water today. A glass now?", to: "/habits" });
   }
   const activeMissions = state.missions.filter((m) => m.status === "active");
-  const missionsDone = activeMissions.filter((m) => m.completedDate === new Date().toLocaleDateString("en-CA")).length;
+  const missionsDone = activeMissions.filter((m) => m.completedDate === todayKey()).length;
   const activeChallenges = data.userChallenges.filter((u) => u.status === "active").length;
 
   const tiles = [

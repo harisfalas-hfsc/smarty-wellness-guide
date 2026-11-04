@@ -1,6 +1,11 @@
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   CalendarCheck,
+  Droplets,
+  Moon,
+  Sun,
+  Sunrise,
+  Wind,
   ClipboardList,
   Compass,
   FlaskConical,
@@ -16,6 +21,11 @@ const ITEMS = [
   { to: "/", label: "Home", Icon: Home },
   { to: "/today", label: "Today", Icon: CalendarCheck },
   { to: "/check-in", label: "Check-in", Icon: Heart },
+  { to: "/morning", label: "Morning", Icon: Sunrise },
+  { to: "/midday", label: "Midday reset", Icon: Sun },
+  { to: "/evening", label: "Evening", Icon: Moon },
+  { to: "/breathing", label: "Breathing", Icon: Wind },
+  { to: "/habits", label: "Habits", Icon: Droplets },
   { to: "/coach", label: "Coach", Icon: Sparkles },
   { to: "/missions", label: "Missions", Icon: Target },
   { to: "/challenges", label: "Challenges", Icon: ListChecks },
