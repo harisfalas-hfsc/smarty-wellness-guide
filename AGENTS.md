@@ -10,7 +10,8 @@
 <!-- LOVABLE:END -->
 
 ## Architecture rules
-- Wellness data lives in Lovable Cloud tables; `src/lib/data/wellness-repo.ts` is the only data layer and `useWellness()` caches it per user via TanStack Query — why: one source of truth, RLS-enforced isolation.
+- Wellness data lives in Lovable Cloud tables; `src/lib/data/*-repo.ts` are the only data layer, cached per user via TanStack Query (`useWellness()` for profile/missions/challenges, `useDaily()` for rituals and habit logs) — why: one source of truth, RLS-enforced isolation.
 - User-owned tables reference `public.profiles(id)` ON DELETE CASCADE and default `user_id` to `auth.uid()`; reusable definitions live in separate `*_definitions` tables — why: account deletion cascades and clients never supply user IDs.
 - Calendar dates use the user's local date (`src/lib/dates.ts`), timestamps are UTC — why: avoids the UTC day-rollover bug.
 - Old localStorage data is imported only via the user-confirmed banner (`src/lib/legacy-migration.ts`), never automatically or destructively.
+- Habit logs credit missions/challenges via database triggers (`credit_linked_progress`), and mission levelling happens in a trigger on mission completions — why: one shared completion system, no double logging.
