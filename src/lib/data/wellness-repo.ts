@@ -218,6 +218,8 @@ export async function clearAllWellnessData(userId: string) {
     "coach_messages", "coach_conversations", "recommendations", "experiment_logs", "user_experiments",
     "mission_completions", "user_mission_progress", "challenge_completions", "ritual_completions",
     "bucket_goals", "wellness_reviews", "check_ins", "wellness_profiles",
+    "user_challenge_days", "user_challenges", "ritual_activity_completions", "period_check_ins",
+    "breathing_sessions", "hydration_entries", "protein_entries", "personal_time_entries", "wellness_preferences",
   ] as const;
   for (const t of tables) check(await supabase.from(t).delete().eq("user_id", userId));
   check(await supabase.from("profiles").update({ onboarded_at: null }).eq("id", userId));

@@ -38,6 +38,7 @@ interface WellnessContextValue {
   completeOnboarding: () => void;
   toggleMission: (id: string) => void;
   toggleChallenge: (id: string) => void;
+  setMissionStatus: (id: string, status: "active" | "paused") => void;
   addBucketGoal: (goal: Omit<BucketGoal, "id">) => void;
   removeBucketGoal: (id: string) => void;
   addCoachMessage: (message: Omit<CoachMessage, "id" | "at">) => void;
@@ -136,7 +137,7 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
           ...s,
           missions: s.missions.map((m) => {
             if (m.id !== id) return m;
-            if (!undo) return { ...m, completed: true, completedDate: today };
+            if (!undo) return { ...m, completed: true, completedDate: today, status: m.status === "available" ? "active" : m.status };
             const { completedDate: _c, ...rest } = m;
             return { ...rest, completed: false };
           }),
@@ -168,6 +169,17 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
       );
     },
     [mutate, qc, userId],
+  );
+
+  const setMissionStatus = useCallback(
+    (id: string, status: "active" | "paused") => {
+      mutate(
+        (s) => ({ ...s, missions: s.missions.map((m) => (m.id === id ? { ...m, status } : m)) }),
+        (uid) => repo.setMissionStatus(uid, id, status),
+        "Couldn't update that mission.",
+      );
+    },
+    [mutate],
   );
 
   const addBucketGoal = useCallback<WellnessContextValue["addBucketGoal"]>(
@@ -225,12 +237,13 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
       completeOnboarding,
       toggleMission,
       toggleChallenge,
+      setMissionStatus,
       addBucketGoal,
       removeBucketGoal,
       addCoachMessage,
       reset,
     }),
-    [state, userId, query.isSuccess, query.error, todayCheckIn, saveCheckIn, updateProfile, completeOnboarding, toggleMission, toggleChallenge, addBucketGoal, removeBucketGoal, addCoachMessage, reset],
+    [state, userId, query.isSuccess, query.error, todayCheckIn, saveCheckIn, updateProfile, completeOnboarding, toggleMission, toggleChallenge, setMissionStatus, addBucketGoal, removeBucketGoal, addCoachMessage, reset],
   );
 
   return <WellnessContext.Provider value={value}>{children}</WellnessContext.Provider>;
