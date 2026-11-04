@@ -70,8 +70,8 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
     if (prevUser.current !== userId && prevUser.current !== null) {
       qc.removeQueries({ queryKey: ["wellness"] });
       qc.removeQueries({ queryKey: ["daily"] });
-      prevUser.current = userId;
     }
+    prevUser.current = userId;
   }, [userId, qc]);
 
   const query = useQuery({
