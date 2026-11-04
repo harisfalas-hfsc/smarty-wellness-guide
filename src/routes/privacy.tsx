@@ -25,7 +25,7 @@ export const Route = createFileRoute("/privacy")({
 
 function Privacy() {
   return (
-    <LegalLayout title="Privacy Policy" icon={<Shield className="h-5 w-5" />} lastUpdated="August 2026">
+    <LegalLayout title="Privacy Policy" icon={<Shield className="h-5 w-5" />} lastUpdated="November 2026">
       <p>
         At <strong>Smarty Wellness</strong> (smartywellness.com) we value your privacy and are
         committed to protecting your personal data. This Privacy Policy explains how Smarty
