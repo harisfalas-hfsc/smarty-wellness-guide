@@ -217,7 +217,7 @@ function HabitsPage() {
           <p className="text-[10px] font-bold uppercase tracking-widest text-mind-deep">Gentle reminders</p>
           <p className="mt-2 text-xs text-muted-foreground">When on, a short reminder appears on your Today page at the right time of day. No pop-ups.</p>
           <div className="mt-4 space-y-3">
-            {([["morning", "Morning Activation"], ["midday", "Midday Reset"], ["evening", "Evening Unwind"], ["hydration", "Drink water"]] as const).map(([k, label]) => (
+            {([["morning", "Morning Activation"], ["midday", "Midday Reset"], ["evening", "Evening Unwind"], ["hydration", "Drink water"], ["goals", "Goal milestones & target dates"], ["experiments", "Experiment check-ins"], ["reviews", "Weekly & monthly reviews"]] as const).map(([k, label]) => (
               <label key={k} className="flex items-center justify-between gap-3 text-sm font-semibold">
                 {label}
                 <Switch checked={Boolean(reminders[k])} onCheckedChange={(v) => void run((uid) => api.savePrefs(uid, { reminders: { ...reminders, [k]: v } }))} />

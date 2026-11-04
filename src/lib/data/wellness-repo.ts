@@ -223,7 +223,7 @@ export async function clearAllWellnessData(userId: string) {
   const tables = [
     "coach_messages", "coach_conversations", "recommendations", "experiment_logs", "user_experiments",
     "mission_completions", "user_mission_progress", "challenge_completions", "ritual_completions",
-    "bucket_goals", "wellness_reviews", "check_ins", "wellness_profiles",
+    "goal_actions", "goal_milestones", "goal_progress_events", "personal_achievements", "report_exports", "insight_snapshots", "mission_progress_events", "bucket_goals", "wellness_reviews", "check_ins", "wellness_profiles",
     "user_challenge_days", "user_challenges", "ritual_activity_completions", "period_check_ins",
     "breathing_sessions", "hydration_entries", "protein_entries", "personal_time_entries", "wellness_preferences",
   ] as const;
