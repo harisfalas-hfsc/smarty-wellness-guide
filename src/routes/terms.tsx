@@ -76,6 +76,23 @@ function Terms() {
       <h2>5. Membership &amp; Pricing</h2>
       <ul>
         <li>
+          Smarty Wellness Premium costs €19.99 per month (VAT included where applicable), billed
+          monthly in advance. There is no free trial. All features require an active membership.
+        </li>
+        <li>
+          Payments are processed securely by our payment provider; we never store your card details.
+          If a renewal payment fails, the provider retries automatically and we notify you; access
+          ends if payment cannot be collected.
+        </li>
+        <li>
+          Refunds: payments already made for the current month are not refunded on cancellation,
+          except where required by law or in case of a billing error. Contact support for billing issues.
+        </li>
+        <li>
+          Your wellness records are never deleted because a membership ends. You can download or
+          delete them at any time from your account.
+        </li>
+        <li>
           Where a paid membership is offered, the applicable price, billing period and included
           features are shown clearly before you confirm your purchase.
         </li>
