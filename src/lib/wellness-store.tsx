@@ -1,163 +1,26 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from "react";
-import type {
-  BucketGoal,
-  Challenge,
-  CheckIn,
-  CoachMessage,
-  Mission,
-  WellnessProfile,
-  WellnessState,
-} from "./wellness-types";
+/**
+ * Smarty Wellness state. The database (Lovable Cloud) is the source of truth;
+ * TanStack Query caches it per signed-in user. The useWellness() interface is
+ * unchanged so pages keep working. Writes are optimistic with rollback.
+ */
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, type ReactNode } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { useAuth } from "./auth";
+import { deviceTimeZone, localDateKey } from "./dates";
+import * as repo from "./data/wellness-repo";
+import type { BucketGoal, CheckIn, CoachMessage, WellnessProfile, WellnessState } from "./wellness-types";
 
-const STORAGE_KEY = "smarty-wellness:v1";
+export const LEGACY_STORAGE_KEY = "smarty-wellness:v1";
 
-const emptyProfile: WellnessProfile = {
-  personal: {
-    name: "",
-    age: "",
-    gender: "",
-    relationship: "",
-    children: "",
-    interests: "",
-    goals: "",
-  },
-  dailyLife: {
-    occupation: "",
-    workingHours: "",
-    commute: "",
-    responsibilities: "",
-    typicalSchedule: "",
-    freeTime: "",
-    familyResponsibilities: "",
-  },
-  physical: {
-    activityLevel: "",
-    trainingExperience: "",
-    fitnessLevel: "",
-    limitations: "",
-    pain: "",
-    energy: "",
-  },
-  nutrition: {
-    habits: "",
-    preferences: "",
-    goals: "",
-    restrictions: "",
-    consistency: "",
-  },
-  mental: {
-    stress: "",
-    mood: "",
-    motivation: "",
-    socialConnection: "",
-    outdoor: "",
-    hobbies: "",
-    reading: "",
-    entertainment: "",
-    personalTime: "",
-    sleepRoutine: "",
-  },
-};
-
-const starterMissions: Mission[] = [
-  {
-    id: "m-walk",
-    title: "Walk after lunch",
-    detail: "A short walk after your main meal steadies energy for the afternoon.",
-    area: "movement",
-    step: 1,
-    totalSteps: 4,
-    target: "10 minutes",
-    completed: false,
-  },
-  {
-    id: "m-read",
-    title: "Read before bed",
-    detail: "Replaces screen time and helps your sleep routine settle.",
-    area: "personal",
-    step: 1,
-    totalSteps: 4,
-    target: "2 pages",
-    completed: false,
-  },
-  {
-    id: "m-train",
-    title: "Train this week",
-    detail: "Consistency first. Two sessions is enough to build the habit.",
-    area: "training",
-    step: 1,
-    totalSteps: 3,
-    target: "2 sessions",
-    completed: false,
-  },
-  {
-    id: "m-call",
-    title: "Call someone you love",
-    detail: "Social connection is one of the strongest wellbeing levers.",
-    area: "social",
-    step: 1,
-    totalSteps: 3,
-    target: "1 call",
-    completed: false,
-  },
-  {
-    id: "m-home-meal",
-    title: "Prepare meals at home",
-    detail: "Cooking at home improves nutrition consistency without a diet.",
-    area: "nutrition",
-    step: 1,
-    totalSteps: 4,
-    target: "2 meals",
-    completed: false,
-  },
-];
-
-const starterChallenges: Challenge[] = [
-  { id: "c-stairs", title: "Take the stairs", detail: "Every time today.", completed: false },
-  { id: "c-walk", title: "Walk instead of driving", detail: "One short trip.", completed: false },
-  { id: "c-outside", title: "20 minutes outside", detail: "Daylight, any pace.", completed: false },
-  { id: "c-pages", title: "Read five pages", detail: "Anything you enjoy.", completed: false },
-  { id: "c-call", title: "Call someone", detail: "Someone you have not spoken to lately.", completed: false },
-  { id: "c-phone", title: "10 minutes without your phone", detail: "Leave it in another room.", completed: false },
-  { id: "c-cook", title: "Cook something healthy", detail: "Simple is fine.", completed: false },
-  { id: "c-sleep", title: "Go to bed 30 minutes earlier", detail: "Start the wind-down early.", completed: false },
-];
-
-const defaultState: WellnessState = {
+const emptyState: WellnessState = {
   onboarded: false,
-  profile: emptyProfile,
+  profile: repo.rowToProfile(null),
   checkIns: [],
-  missions: starterMissions,
-  challenges: starterChallenges,
+  missions: [],
+  challenges: [],
   bucketList: [],
-  experiments: [
-    {
-      id: "e-walk",
-      title: "Walk 15 minutes after lunch",
-      hypothesis: "Afternoon energy improves and stress drops.",
-      days: 7,
-      daysDone: 0,
-      status: "available",
-      measures: ["Energy", "Mood", "Stress", "Motivation"],
-    },
-    {
-      id: "e-sleep",
-      title: "Screens off 30 minutes before bed",
-      hypothesis: "Sleep quality and morning mood improve.",
-      days: 10,
-      daysDone: 0,
-      status: "available",
-      measures: ["Sleep", "Mood", "Energy"],
-    },
-  ],
+  experiments: [],
   coachMessages: [],
   completedActions: [],
 };
@@ -165,6 +28,7 @@ const defaultState: WellnessState = {
 interface WellnessContextValue {
   state: WellnessState;
   hydrated: boolean;
+  error: Error | null;
   todayCheckIn: CheckIn | null;
   saveCheckIn: (checkIn: Omit<CheckIn, "id" | "date">) => void;
   updateProfile: (
@@ -182,145 +46,179 @@ interface WellnessContextValue {
 
 const WellnessContext = createContext<WellnessContextValue | null>(null);
 
+/** The user's LOCAL calendar date (YYYY-MM-DD), not the UTC date. */
 export function todayKey() {
-  return new Date().toISOString().slice(0, 10);
+  return localDateKey();
 }
 
-function makeId(prefix: string) {
-  return `${prefix}-${Math.random().toString(36).slice(2, 10)}`;
+function tempId(prefix: string) {
+  return `${prefix}-tmp-${Date.now().toString(36)}${Math.floor(Math.random() * 1e6).toString(36)}`;
 }
+
+export const wellnessQueryKey = (userId: string) => ["wellness", userId] as const;
 
 export function WellnessProvider({ children }: { children: ReactNode }) {
-  const [state, setState] = useState<WellnessState>(defaultState);
-  const [hydrated, setHydrated] = useState(false);
+  const { user } = useAuth();
+  const userId = user?.id ?? null;
+  const qc = useQueryClient();
 
+  // Clear any previous account's data the moment the signed-in user changes.
+  const prevUser = useRef<string | null>(userId);
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(STORAGE_KEY);
-      if (raw) {
-        type StoredCheckIn = Omit<CheckIn, "needs"> & {
-          needs?: CheckIn["needs"];
-          need?: CheckIn["needs"][number] | null;
-        };
-        const stored = JSON.parse(raw) as Omit<WellnessState, "checkIns"> & {
-          checkIns?: StoredCheckIn[];
-        };
-        setState({
-          ...defaultState,
-          ...stored,
-          checkIns: (stored.checkIns ?? []).map((checkIn) => ({
-            ...checkIn,
-            needs:
-              checkIn.needs ?? (checkIn.need ? [checkIn.need] : []),
-          })),
-          missions: (stored.missions ?? starterMissions).map((mission) => ({
-            ...mission,
-            ...(mission.completed ? { completedDate: mission.completedDate ?? todayKey() } : {}),
-          })),
-          challenges: (stored.challenges ?? starterChallenges).map((challenge) => ({
-            ...challenge,
-            ...(challenge.completed ? { completedDate: challenge.completedDate ?? todayKey() } : {}),
-          })),
-        });
-      }
-    } catch {
-      /* ignore corrupted storage */
+    if (prevUser.current !== userId) {
+      qc.removeQueries({ queryKey: ["wellness"] });
+      prevUser.current = userId;
     }
-    setHydrated(true);
-  }, []);
+  }, [userId, qc]);
 
-  useEffect(() => {
-    if (!hydrated) return;
-    try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch {
-      /* storage unavailable */
-    }
-  }, [state, hydrated]);
+  const query = useQuery({
+    queryKey: wellnessQueryKey(userId ?? "anon"),
+    queryFn: () => repo.loadWellnessState(userId!),
+    enabled: Boolean(userId),
+    retry: 2,
+    staleTime: 30_000,
+  });
 
-  const saveCheckIn = useCallback<WellnessContextValue["saveCheckIn"]>((checkIn) => {
-    const date = todayKey();
-    setState((s) => ({
-      ...s,
-      checkIns: [
-        { ...checkIn, id: makeId("ci"), date },
-        ...s.checkIns.filter((c) => c.date !== date),
-      ],
-    }));
-  }, []);
+  const state = userId && query.data ? query.data : emptyState;
 
-  const updateProfile = useCallback<WellnessContextValue["updateProfile"]>((section, values) => {
-    setState((s) => ({
-      ...s,
-      profile: { ...s.profile, [section]: { ...s.profile[section], ...values } },
-    }));
-  }, []);
+  /** Optimistically apply `update`, persist with `write`, roll back on failure. */
+  const mutate = useCallback(
+    (update: (s: WellnessState) => WellnessState, write: (uid: string) => Promise<unknown>, failMsg: string) => {
+      if (!userId) return;
+      const key = wellnessQueryKey(userId);
+      const previous = qc.getQueryData<WellnessState>(key);
+      if (previous) qc.setQueryData(key, update(previous));
+      write(userId)
+        .catch((err: unknown) => {
+          console.error(err);
+          if (previous) qc.setQueryData(key, previous);
+          toast.error(failMsg);
+        })
+        .finally(() => void qc.invalidateQueries({ queryKey: key }));
+    },
+    [qc, userId],
+  );
+
+  const saveCheckIn = useCallback<WellnessContextValue["saveCheckIn"]>(
+    (checkIn) => {
+      const date = todayKey();
+      mutate(
+        (s) => ({ ...s, checkIns: [{ ...checkIn, id: tempId("ci"), date }, ...s.checkIns.filter((c) => c.date !== date)] }),
+        (uid) => repo.upsertCheckIn(uid, date, checkIn),
+        "Couldn't save your check-in. Please try again.",
+      );
+    },
+    [mutate],
+  );
+
+  const updateProfile = useCallback<WellnessContextValue["updateProfile"]>(
+    (section, values) => {
+      mutate(
+        (s) => ({ ...s, profile: { ...s.profile, [section]: { ...s.profile[section], ...values } } }),
+        (uid) => repo.upsertProfileSection(uid, section, values),
+        "Couldn't save your profile. Please try again.",
+      );
+    },
+    [mutate],
+  );
 
   const completeOnboarding = useCallback(() => {
-    setState((s) => ({ ...s, onboarded: true }));
-  }, []);
+    mutate((s) => ({ ...s, onboarded: true }), (uid) => repo.setOnboarded(uid, deviceTimeZone()), "Couldn't finish onboarding.");
+  }, [mutate]);
 
-  const toggleMission = useCallback((id: string) => {
-    setState((s) => ({
-      ...s,
-      missions: s.missions.map((m) =>
-        m.id === id
-          ? m.completed && m.completedDate === todayKey()
-            ? (({ completedDate: _completedDate, ...mission }) => ({ ...mission, completed: false }))(m)
-            : { ...m, completed: true, completedDate: todayKey() }
-          : m,
-      ),
-      completedActions: s.completedActions.includes(id)
-        ? s.completedActions.filter((a) => a !== id)
-        : [...s.completedActions, id],
-    }));
-  }, []);
-
-  const toggleChallenge = useCallback((id: string) => {
-    setState((s) => ({
-      ...s,
-      challenges: s.challenges.map((c) =>
-        c.id === id
-          ? c.completed && c.completedDate === todayKey()
-            ? (({ completedDate: _completedDate, ...challenge }) => ({ ...challenge, completed: false }))(c)
-            : { ...c, completed: true, completedDate: todayKey() }
-          : c,
-      ),
-      completedActions: s.completedActions.includes(id)
-        ? s.completedActions.filter((a) => a !== id)
-        : [...s.completedActions, id],
-    }));
-  }, []);
-
-  const addBucketGoal = useCallback<WellnessContextValue["addBucketGoal"]>((goal) => {
-    setState((s) => ({ ...s, bucketList: [{ ...goal, id: makeId("bg") }, ...s.bucketList] }));
-  }, []);
-
-  const removeBucketGoal = useCallback((id: string) => {
-    setState((s) => ({ ...s, bucketList: s.bucketList.filter((g) => g.id !== id) }));
-  }, []);
-
-  const addCoachMessage = useCallback<WellnessContextValue["addCoachMessage"]>((message) => {
-    setState((s) => ({
-      ...s,
-      coachMessages: [
-        ...s.coachMessages,
-        { ...message, id: makeId("cm"), at: new Date().toISOString() },
-      ],
-    }));
-  }, []);
-
-  const reset = useCallback(() => setState(defaultState), []);
-
-  const todayCheckIn = useMemo(
-    () => state.checkIns.find((c) => c.date === todayKey()) ?? null,
-    [state.checkIns],
+  const toggleMission = useCallback(
+    (id: string) => {
+      const today = todayKey();
+      const current = qc.getQueryData<WellnessState>(wellnessQueryKey(userId ?? "anon"))?.missions.find((m) => m.id === id);
+      const undo = Boolean(current?.completed && current.completedDate === today);
+      mutate(
+        (s) => ({
+          ...s,
+          missions: s.missions.map((m) => {
+            if (m.id !== id) return m;
+            if (!undo) return { ...m, completed: true, completedDate: today };
+            const { completedDate: _c, ...rest } = m;
+            return { ...rest, completed: false };
+          }),
+        }),
+        (uid) => repo.setMissionDone(uid, id, today, !undo),
+        "Couldn't update that mission.",
+      );
+    },
+    [mutate, qc, userId],
   );
+
+  const toggleChallenge = useCallback(
+    (id: string) => {
+      const today = todayKey();
+      const current = qc.getQueryData<WellnessState>(wellnessQueryKey(userId ?? "anon"))?.challenges.find((c) => c.id === id);
+      const undo = Boolean(current?.completed && current.completedDate === today);
+      mutate(
+        (s) => ({
+          ...s,
+          challenges: s.challenges.map((c) => {
+            if (c.id !== id) return c;
+            if (!undo) return { ...c, completed: true, completedDate: today };
+            const { completedDate: _c, ...rest } = c;
+            return { ...rest, completed: false };
+          }),
+        }),
+        (uid) => repo.setChallengeDone(uid, id, today, !undo),
+        "Couldn't update that challenge.",
+      );
+    },
+    [mutate, qc, userId],
+  );
+
+  const addBucketGoal = useCallback<WellnessContextValue["addBucketGoal"]>(
+    (goal) => {
+      mutate(
+        (s) => ({ ...s, bucketList: [{ ...goal, id: tempId("bg") }, ...s.bucketList] }),
+        (uid) => repo.insertBucketGoal(uid, goal),
+        "Couldn't save that goal.",
+      );
+    },
+    [mutate],
+  );
+
+  const removeBucketGoal = useCallback(
+    (id: string) => {
+      mutate(
+        (s) => ({ ...s, bucketList: s.bucketList.filter((g) => g.id !== id) }),
+        (uid) => repo.deleteBucketGoal(uid, id),
+        "Couldn't remove that goal.",
+      );
+    },
+    [mutate],
+  );
+
+  const addCoachMessage = useCallback<WellnessContextValue["addCoachMessage"]>(
+    (message) => {
+      mutate(
+        (s) => ({ ...s, coachMessages: [...s.coachMessages, { ...message, id: tempId("cm"), at: new Date().toISOString() }] }),
+        (uid) => repo.insertCoachMessage(uid, message),
+        "Couldn't save that message.",
+      );
+    },
+    [mutate],
+  );
+
+  const reset = useCallback(() => {
+    mutate(
+      (s) => ({ ...emptyState, missions: s.missions.map(({ completedDate: _c, ...m }) => ({ ...m, completed: false })), challenges: s.challenges.map(({ completedDate: _c, ...c }) => ({ ...c, completed: false })), experiments: s.experiments.map((e) => ({ ...e, status: "available" as const, daysDone: 0 })) }),
+      (uid) => repo.clearAllWellnessData(uid),
+      "Couldn't clear your data.",
+    );
+  }, [mutate]);
+
+  const today = todayKey();
+  const todayCheckIn = useMemo(() => state.checkIns.find((c) => c.date === today) ?? null, [state.checkIns, today]);
 
   const value = useMemo<WellnessContextValue>(
     () => ({
       state,
-      hydrated,
+      hydrated: Boolean(userId) && query.isSuccess,
+      error: (query.error as Error | null) ?? null,
       todayCheckIn,
       saveCheckIn,
       updateProfile,
@@ -332,20 +230,7 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
       addCoachMessage,
       reset,
     }),
-    [
-      state,
-      hydrated,
-      todayCheckIn,
-      saveCheckIn,
-      updateProfile,
-      completeOnboarding,
-      toggleMission,
-      toggleChallenge,
-      addBucketGoal,
-      removeBucketGoal,
-      addCoachMessage,
-      reset,
-    ],
+    [state, userId, query.isSuccess, query.error, todayCheckIn, saveCheckIn, updateProfile, completeOnboarding, toggleMission, toggleChallenge, addBucketGoal, removeBucketGoal, addCoachMessage, reset],
   );
 
   return <WellnessContext.Provider value={value}>{children}</WellnessContext.Provider>;

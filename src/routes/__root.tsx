@@ -1,4 +1,5 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { ErrorComponentProps } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider, useQueryClient } from "@tanstack/react-query";
 import {
   Outlet,
   Link,
@@ -20,6 +21,8 @@ import { SiteFooter } from "@/components/SiteFooter";
 import { Toaster } from "@/components/ui/sonner";
 import { WellnessProvider } from "@/lib/wellness-store";
 import { AuthProvider, useAuth } from "@/lib/auth";
+import { LegacyImportBanner } from "@/components/LegacyImportBanner";
+import { useWellness } from "@/lib/wellness-store";
 
 function NotFoundComponent() {
   return (
@@ -43,7 +46,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   console.error(error);
   const router = useRouter();
   useEffect(() => {
@@ -162,6 +165,8 @@ function AppFrame() {
       <div className="mx-auto flex w-full max-w-7xl">
         {session && <DesktopNav />}
         <div className="min-w-0 flex-1">
+          {session && <LegacyImportBanner />}
+          {session && <WellnessLoadError />}
           {/* Required: nested routes render here. */}
           <Outlet />
         </div>
@@ -169,6 +174,20 @@ function AppFrame() {
       {!session && <SiteFooter />}
       {session && <BottomNav />}
       <Toaster />
+    </div>
+  );
+}
+
+function WellnessLoadError() {
+  const { error } = useWellness();
+  const qc = useQueryClient();
+  if (!error) return null;
+  return (
+    <div className="mx-4 mt-4 rounded-3xl border-2 border-coral bg-card p-4 text-sm md:mx-6">
+      We couldn't load your wellness data.{" "}
+      <button className="font-bold underline" onClick={() => void qc.invalidateQueries({ queryKey: ["wellness"] })}>
+        Try again
+      </button>
     </div>
   );
 }
