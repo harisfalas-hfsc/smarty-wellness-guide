@@ -93,6 +93,17 @@ function SettingsPage() {
             </div>
           </div>
         </section>
+
+        <section className="rounded-3xl border-2 border-mind bg-card p-6 shadow-soft">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Legal &amp; privacy</p>
+          <div className="mt-3 flex flex-wrap gap-x-4 gap-y-2 text-sm font-semibold text-primary">
+            <Link to="/terms">Terms &amp; Conditions</Link>
+            <Link to="/privacy">Privacy Policy</Link>
+            <Link to="/disclaimer">Disclaimer &amp; Release of Liability</Link>
+            <button type="button" onClick={() => window.dispatchEvent(new Event("sw-open-cookie-settings"))}>Cookie settings</button>
+          </div>
+          <p className="mt-3 text-xs text-muted-foreground">Smarty Wellness · smartywellness.com</p>
+        </section>
       </div>
     </PageShell>
   );
