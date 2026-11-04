@@ -11,15 +11,20 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as BreathingRouteImport } from './routes/breathing'
 import { Route as BucketListRouteImport } from './routes/bucket-list'
 import { Route as ChallengesRouteImport } from './routes/challenges'
 import { Route as CheckInRouteImport } from './routes/check-in'
 import { Route as CoachRouteImport } from './routes/coach'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
+import { Route as EveningRouteImport } from './routes/evening'
 import { Route as ExperimentsRouteImport } from './routes/experiments'
+import { Route as HabitsRouteImport } from './routes/habits'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as JourneyRouteImport } from './routes/journey'
+import { Route as MiddayRouteImport } from './routes/midday'
 import { Route as MissionsRouteImport } from './routes/missions'
+import { Route as MorningRouteImport } from './routes/morning'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as PrivacyRouteImport } from './routes/privacy'
 import { Route as ProfileRouteImport } from './routes/profile'
@@ -37,6 +42,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BreathingRoute = BreathingRouteImport.update({
+  id: '/breathing',
+  path: '/breathing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BucketListRoute = BucketListRouteImport.update({
@@ -64,9 +74,19 @@ const DisclaimerRoute = DisclaimerRouteImport.update({
   path: '/disclaimer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EveningRoute = EveningRouteImport.update({
+  id: '/evening',
+  path: '/evening',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ExperimentsRoute = ExperimentsRouteImport.update({
   id: '/experiments',
   path: '/experiments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HabitsRoute = HabitsRouteImport.update({
+  id: '/habits',
+  path: '/habits',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRoute = HomeRouteImport.update({
@@ -79,9 +99,19 @@ const JourneyRoute = JourneyRouteImport.update({
   path: '/journey',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MiddayRoute = MiddayRouteImport.update({
+  id: '/midday',
+  path: '/midday',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MissionsRoute = MissionsRouteImport.update({
   id: '/missions',
   path: '/missions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MorningRoute = MorningRouteImport.update({
+  id: '/morning',
+  path: '/morning',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -128,15 +158,20 @@ const TodayRoute = TodayRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/breathing': typeof BreathingRoute
   '/bucket-list': typeof BucketListRoute
   '/challenges': typeof ChallengesRoute
   '/check-in': typeof CheckInRoute
   '/coach': typeof CoachRoute
   '/disclaimer': typeof DisclaimerRoute
+  '/evening': typeof EveningRoute
   '/experiments': typeof ExperimentsRoute
+  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
+  '/midday': typeof MiddayRoute
   '/missions': typeof MissionsRoute
+  '/morning': typeof MorningRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
@@ -149,15 +184,20 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/breathing': typeof BreathingRoute
   '/bucket-list': typeof BucketListRoute
   '/challenges': typeof ChallengesRoute
   '/check-in': typeof CheckInRoute
   '/coach': typeof CoachRoute
   '/disclaimer': typeof DisclaimerRoute
+  '/evening': typeof EveningRoute
   '/experiments': typeof ExperimentsRoute
+  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
+  '/midday': typeof MiddayRoute
   '/missions': typeof MissionsRoute
+  '/morning': typeof MorningRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
@@ -171,15 +211,20 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
+  '/breathing': typeof BreathingRoute
   '/bucket-list': typeof BucketListRoute
   '/challenges': typeof ChallengesRoute
   '/check-in': typeof CheckInRoute
   '/coach': typeof CoachRoute
   '/disclaimer': typeof DisclaimerRoute
+  '/evening': typeof EveningRoute
   '/experiments': typeof ExperimentsRoute
+  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
+  '/midday': typeof MiddayRoute
   '/missions': typeof MissionsRoute
+  '/morning': typeof MorningRoute
   '/onboarding': typeof OnboardingRoute
   '/privacy': typeof PrivacyRoute
   '/profile': typeof ProfileRoute
@@ -194,15 +239,20 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/breathing'
     | '/bucket-list'
     | '/challenges'
     | '/check-in'
     | '/coach'
     | '/disclaimer'
+    | '/evening'
     | '/experiments'
+    | '/habits'
     | '/home'
     | '/journey'
+    | '/midday'
     | '/missions'
+    | '/morning'
     | '/onboarding'
     | '/privacy'
     | '/profile'
@@ -215,15 +265,20 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/auth'
+    | '/breathing'
     | '/bucket-list'
     | '/challenges'
     | '/check-in'
     | '/coach'
     | '/disclaimer'
+    | '/evening'
     | '/experiments'
+    | '/habits'
     | '/home'
     | '/journey'
+    | '/midday'
     | '/missions'
+    | '/morning'
     | '/onboarding'
     | '/privacy'
     | '/profile'
@@ -236,15 +291,20 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/auth'
+    | '/breathing'
     | '/bucket-list'
     | '/challenges'
     | '/check-in'
     | '/coach'
     | '/disclaimer'
+    | '/evening'
     | '/experiments'
+    | '/habits'
     | '/home'
     | '/journey'
+    | '/midday'
     | '/missions'
+    | '/morning'
     | '/onboarding'
     | '/privacy'
     | '/profile'
@@ -258,15 +318,20 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
+  BreathingRoute: typeof BreathingRoute
   BucketListRoute: typeof BucketListRoute
   ChallengesRoute: typeof ChallengesRoute
   CheckInRoute: typeof CheckInRoute
   CoachRoute: typeof CoachRoute
   DisclaimerRoute: typeof DisclaimerRoute
+  EveningRoute: typeof EveningRoute
   ExperimentsRoute: typeof ExperimentsRoute
+  HabitsRoute: typeof HabitsRoute
   HomeRoute: typeof HomeRoute
   JourneyRoute: typeof JourneyRoute
+  MiddayRoute: typeof MiddayRoute
   MissionsRoute: typeof MissionsRoute
+  MorningRoute: typeof MorningRoute
   OnboardingRoute: typeof OnboardingRoute
   PrivacyRoute: typeof PrivacyRoute
   ProfileRoute: typeof ProfileRoute
@@ -291,6 +356,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/breathing': {
+      id: '/breathing'
+      path: '/breathing'
+      fullPath: '/breathing'
+      preLoaderRoute: typeof BreathingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bucket-list': {
@@ -328,11 +400,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DisclaimerRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/evening': {
+      id: '/evening'
+      path: '/evening'
+      fullPath: '/evening'
+      preLoaderRoute: typeof EveningRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/experiments': {
       id: '/experiments'
       path: '/experiments'
       fullPath: '/experiments'
       preLoaderRoute: typeof ExperimentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/habits': {
+      id: '/habits'
+      path: '/habits'
+      fullPath: '/habits'
+      preLoaderRoute: typeof HabitsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -349,11 +435,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JourneyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/midday': {
+      id: '/midday'
+      path: '/midday'
+      fullPath: '/midday'
+      preLoaderRoute: typeof MiddayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/missions': {
       id: '/missions'
       path: '/missions'
       fullPath: '/missions'
       preLoaderRoute: typeof MissionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/morning': {
+      id: '/morning'
+      path: '/morning'
+      fullPath: '/morning'
+      preLoaderRoute: typeof MorningRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -418,15 +518,20 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
+  BreathingRoute: BreathingRoute,
   BucketListRoute: BucketListRoute,
   ChallengesRoute: ChallengesRoute,
   CheckInRoute: CheckInRoute,
   CoachRoute: CoachRoute,
   DisclaimerRoute: DisclaimerRoute,
+  EveningRoute: EveningRoute,
   ExperimentsRoute: ExperimentsRoute,
+  HabitsRoute: HabitsRoute,
   HomeRoute: HomeRoute,
   JourneyRoute: JourneyRoute,
+  MiddayRoute: MiddayRoute,
   MissionsRoute: MissionsRoute,
+  MorningRoute: MorningRoute,
   OnboardingRoute: OnboardingRoute,
   PrivacyRoute: PrivacyRoute,
   ProfileRoute: ProfileRoute,

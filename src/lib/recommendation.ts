@@ -141,7 +141,8 @@ export function getTodaysMission(state: WellnessState, checkIn: CheckIn | null):
         "m-walk",
       ]
     : ["m-walk"];
-  return findByPreference(state.missions, preferredIds);
+  // Completed or paused missions never come back as recommendations.
+  return findByPreference(state.missions.filter((m) => m.status !== "completed" && m.status !== "paused"), preferredIds);
 }
 
 /** Choose a separate, optional extra that reflects the same check-in. */

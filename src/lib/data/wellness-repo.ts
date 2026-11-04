@@ -82,7 +82,7 @@ export async function loadWellnessState(userId: string): Promise<WellnessState> 
       supabase.from("check_ins").select("*").eq("user_id", userId).order("local_date", { ascending: false }).limit(400),
       supabase.from("mission_definitions").select("*").eq("active", true).order("sort_order"),
       supabase.from("user_mission_progress").select("*").eq("user_id", userId),
-      supabase.from("mission_completions").select("mission_id, local_date").eq("user_id", userId).order("local_date", { ascending: false }),
+      supabase.from("mission_completions").select("mission_id, local_date, step").eq("user_id", userId).order("local_date", { ascending: false }),
       supabase.from("challenge_definitions").select("*").eq("active", true).order("sort_order"),
       supabase.from("challenge_completions").select("challenge_id, local_date").eq("user_id", userId).order("local_date", { ascending: false }),
       supabase.from("bucket_goals").select("*").eq("user_id", userId).order("created_at", { ascending: false }),
@@ -100,12 +100,19 @@ export async function loadWellnessState(userId: string): Promise<WellnessState> 
   for (const r of check(mDone)) if (!latestMission.has(r.mission_id)) latestMission.set(r.mission_id, r.local_date);
   const latestChallenge = new Map<string, string>();
   for (const r of check(cDone)) if (!latestChallenge.has(r.challenge_id)) latestChallenge.set(r.challenge_id, r.local_date);
-  const progress = new Map(check(mProg).map((p) => [p.mission_id, p.step]));
+  const progRows = new Map(check(mProg).map((p) => [p.mission_id, p]));
+  const doneRows = check(mDone);
 
   const missions: Mission[] = check(mDefs).map((d) => {
-    const step = progress.get(d.id) ?? 1;
+    const prog = progRows.get(d.id);
+    const step = prog?.step ?? 1;
     const date = latestMission.get(d.id);
+    const mine = doneRows.filter((r) => r.mission_id === d.id);
     return {
+      status: (prog ? prog.status : "available") as Mission["status"],
+      objective: d.objective, completionCriteria: d.completion_criteria, metric: d.metric,
+      daysPerStep: d.days_per_step, totalCompletions: mine.length,
+      stepDays: mine.filter((r) => (r.step ?? step) === step).length,
       id: d.id, title: d.title, detail: d.detail, area: d.area as Mission["area"],
       step, totalSteps: d.total_steps,
       target: d.step_targets[step - 1] ?? d.step_targets[d.step_targets.length - 1] ?? "",
@@ -114,7 +121,11 @@ export async function loadWellnessState(userId: string): Promise<WellnessState> 
   });
   const challenges: Challenge[] = check(cDefs).map((d) => {
     const date = latestChallenge.get(d.id);
-    return { id: d.id, title: d.title, detail: d.detail, completed: Boolean(date), ...(date ? { completedDate: date } : {}) };
+    return {
+      id: d.id, title: d.title, detail: d.detail, completed: Boolean(date), ...(date ? { completedDate: date } : {}),
+      category: d.category, cadence: d.cadence as Challenge["cadence"], instructions: d.instructions, objective: d.objective,
+      metric: d.metric, goal: d.goal, targetDays: d.target_days, durationDays: d.duration_days,
+    };
   });
   const userExp = check(uExp);
   const experiments: Experiment[] = check(eDefs).map((d) => {
@@ -207,7 +218,13 @@ export async function clearAllWellnessData(userId: string) {
     "coach_messages", "coach_conversations", "recommendations", "experiment_logs", "user_experiments",
     "mission_completions", "user_mission_progress", "challenge_completions", "ritual_completions",
     "bucket_goals", "wellness_reviews", "check_ins", "wellness_profiles",
+    "user_challenge_days", "user_challenges", "ritual_activity_completions", "period_check_ins",
+    "breathing_sessions", "hydration_entries", "protein_entries", "personal_time_entries", "wellness_preferences",
   ] as const;
   for (const t of tables) check(await supabase.from(t).delete().eq("user_id", userId));
   check(await supabase.from("profiles").update({ onboarded_at: null }).eq("id", userId));
+}
+
+export async function setMissionStatus(userId: string, missionId: string, status: "active" | "paused") {
+  check(await supabase.from("user_mission_progress").upsert({ user_id: userId, mission_id: missionId, status }, { onConflict: "user_id,mission_id" }));
 }

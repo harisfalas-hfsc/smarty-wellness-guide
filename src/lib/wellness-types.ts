@@ -98,13 +98,25 @@ export interface Mission {
   id: string;
   title: string;
   detail: string;
-  area: "movement" | "training" | "nutrition" | "mind" | "social" | "personal";
+  area:
+    | "movement" | "training" | "nutrition" | "mind" | "social" | "personal"
+    | "sleep" | "hydration" | "development";
   /** Progressive habit ladder — current step and its target. */
   step: number;
   totalSteps: number;
   target: string;
   completed: boolean;
   completedDate?: string;
+  /** available = not started; completed = finished every step. */
+  status?: "available" | "active" | "paused" | "completed" | undefined;
+  objective?: string;
+  completionCriteria?: string;
+  /** "manual" or the habit that credits it automatically. */
+  metric?: string;
+  daysPerStep?: number;
+  /** Days completed at the current step. */
+  stepDays?: number;
+  totalCompletions?: number;
 }
 
 export interface Challenge {
@@ -113,6 +125,14 @@ export interface Challenge {
   detail: string;
   completed: boolean;
   completedDate?: string;
+  category?: string;
+  cadence?: "daily" | "weekly" | "short" | undefined;
+  instructions?: string;
+  objective?: string;
+  metric?: string;
+  goal?: number | null;
+  targetDays?: number;
+  durationDays?: number;
 }
 
 export interface BucketGoal {
