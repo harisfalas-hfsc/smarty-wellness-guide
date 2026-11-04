@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AccountRouteImport } from './routes/account'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BreathingRouteImport } from './routes/breathing'
 import { Route as BucketListRouteImport } from './routes/bucket-list'
@@ -24,6 +25,7 @@ import { Route as HabitsRouteImport } from './routes/habits'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as InsightsRouteImport } from './routes/insights'
 import { Route as JourneyRouteImport } from './routes/journey'
+import { Route as MessagesRouteImport } from './routes/messages'
 import { Route as MiddayRouteImport } from './routes/midday'
 import { Route as MissionsRouteImport } from './routes/missions'
 import { Route as MorningRouteImport } from './routes/morning'
@@ -35,6 +37,7 @@ import { Route as ProgressRouteImport } from './routes/progress'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as ReviewRouteImport } from './routes/review'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SupportRouteImport } from './routes/support'
 import { Route as TermsRouteImport } from './routes/terms'
 import { Route as TodayRouteImport } from './routes/today'
 import { Route as CheckoutReturnRouteImport } from './routes/checkout.return'
@@ -50,6 +53,11 @@ const IndexRoute = IndexRouteImport.update({
 const AccountRoute = AccountRouteImport.update({
   id: '/account',
   path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRoute = AuthRouteImport.update({
@@ -117,6 +125,11 @@ const JourneyRoute = JourneyRouteImport.update({
   path: '/journey',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MessagesRoute = MessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const MiddayRoute = MiddayRouteImport.update({
   id: '/midday',
   path: '/midday',
@@ -172,6 +185,11 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TermsRoute = TermsRouteImport.update({
   id: '/terms',
   path: '/terms',
@@ -208,6 +226,7 @@ const ApiPublicPaymentsWebhookRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/breathing': typeof BreathingRoute
   '/bucket-list': typeof BucketListRoute
@@ -221,6 +240,7 @@ export interface FileRoutesByFullPath {
   '/home': typeof HomeRoute
   '/insights': typeof InsightsRoute
   '/journey': typeof JourneyRoute
+  '/messages': typeof MessagesRoute
   '/midday': typeof MiddayRoute
   '/missions': typeof MissionsRoute
   '/morning': typeof MorningRoute
@@ -232,6 +252,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/review': typeof ReviewRoute
   '/settings': typeof SettingsRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/today': typeof TodayRoute
   '/checkout/return': typeof CheckoutReturnRoute
@@ -242,6 +263,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/breathing': typeof BreathingRoute
   '/bucket-list': typeof BucketListRoute
@@ -255,6 +277,7 @@ export interface FileRoutesByTo {
   '/home': typeof HomeRoute
   '/insights': typeof InsightsRoute
   '/journey': typeof JourneyRoute
+  '/messages': typeof MessagesRoute
   '/midday': typeof MiddayRoute
   '/missions': typeof MissionsRoute
   '/morning': typeof MorningRoute
@@ -266,6 +289,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/review': typeof ReviewRoute
   '/settings': typeof SettingsRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/today': typeof TodayRoute
   '/checkout/return': typeof CheckoutReturnRoute
@@ -277,6 +301,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/account': typeof AccountRoute
+  '/admin': typeof AdminRoute
   '/auth': typeof AuthRoute
   '/breathing': typeof BreathingRoute
   '/bucket-list': typeof BucketListRoute
@@ -290,6 +315,7 @@ export interface FileRoutesById {
   '/home': typeof HomeRoute
   '/insights': typeof InsightsRoute
   '/journey': typeof JourneyRoute
+  '/messages': typeof MessagesRoute
   '/midday': typeof MiddayRoute
   '/missions': typeof MissionsRoute
   '/morning': typeof MorningRoute
@@ -301,6 +327,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/review': typeof ReviewRoute
   '/settings': typeof SettingsRoute
+  '/support': typeof SupportRoute
   '/terms': typeof TermsRoute
   '/today': typeof TodayRoute
   '/checkout/return': typeof CheckoutReturnRoute
@@ -313,6 +340,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/account'
+    | '/admin'
     | '/auth'
     | '/breathing'
     | '/bucket-list'
@@ -326,6 +354,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/insights'
     | '/journey'
+    | '/messages'
     | '/midday'
     | '/missions'
     | '/morning'
@@ -337,6 +366,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/review'
     | '/settings'
+    | '/support'
     | '/terms'
     | '/today'
     | '/checkout/return'
@@ -347,6 +377,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/account'
+    | '/admin'
     | '/auth'
     | '/breathing'
     | '/bucket-list'
@@ -360,6 +391,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/insights'
     | '/journey'
+    | '/messages'
     | '/midday'
     | '/missions'
     | '/morning'
@@ -371,6 +403,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/review'
     | '/settings'
+    | '/support'
     | '/terms'
     | '/today'
     | '/checkout/return'
@@ -381,6 +414,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/account'
+    | '/admin'
     | '/auth'
     | '/breathing'
     | '/bucket-list'
@@ -394,6 +428,7 @@ export interface FileRouteTypes {
     | '/home'
     | '/insights'
     | '/journey'
+    | '/messages'
     | '/midday'
     | '/missions'
     | '/morning'
@@ -405,6 +440,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/review'
     | '/settings'
+    | '/support'
     | '/terms'
     | '/today'
     | '/checkout/return'
@@ -416,6 +452,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AccountRoute: typeof AccountRoute
+  AdminRoute: typeof AdminRoute
   AuthRoute: typeof AuthRoute
   BreathingRoute: typeof BreathingRoute
   BucketListRoute: typeof BucketListRoute
@@ -429,6 +466,7 @@ export interface RootRouteChildren {
   HomeRoute: typeof HomeRoute
   InsightsRoute: typeof InsightsRoute
   JourneyRoute: typeof JourneyRoute
+  MessagesRoute: typeof MessagesRoute
   MiddayRoute: typeof MiddayRoute
   MissionsRoute: typeof MissionsRoute
   MorningRoute: typeof MorningRoute
@@ -440,6 +478,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   ReviewRoute: typeof ReviewRoute
   SettingsRoute: typeof SettingsRoute
+  SupportRoute: typeof SupportRoute
   TermsRoute: typeof TermsRoute
   TodayRoute: typeof TodayRoute
   CheckoutReturnRoute: typeof CheckoutReturnRoute
@@ -462,6 +501,13 @@ declare module '@tanstack/react-router' {
       path: '/account'
       fullPath: '/account'
       preLoaderRoute: typeof AccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/auth': {
@@ -555,6 +601,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JourneyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/messages': {
+      id: '/messages'
+      path: '/messages'
+      fullPath: '/messages'
+      preLoaderRoute: typeof MessagesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/midday': {
       id: '/midday'
       path: '/midday'
@@ -632,6 +685,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/terms': {
       id: '/terms'
       path: '/terms'
@@ -680,6 +740,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AccountRoute: AccountRoute,
+  AdminRoute: AdminRoute,
   AuthRoute: AuthRoute,
   BreathingRoute: BreathingRoute,
   BucketListRoute: BucketListRoute,
@@ -693,6 +754,7 @@ const rootRouteChildren: RootRouteChildren = {
   HomeRoute: HomeRoute,
   InsightsRoute: InsightsRoute,
   JourneyRoute: JourneyRoute,
+  MessagesRoute: MessagesRoute,
   MiddayRoute: MiddayRoute,
   MissionsRoute: MissionsRoute,
   MorningRoute: MorningRoute,
@@ -704,6 +766,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   ReviewRoute: ReviewRoute,
   SettingsRoute: SettingsRoute,
+  SupportRoute: SupportRoute,
   TermsRoute: TermsRoute,
   TodayRoute: TodayRoute,
   CheckoutReturnRoute: CheckoutReturnRoute,
