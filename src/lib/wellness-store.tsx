@@ -66,7 +66,8 @@ export function WellnessProvider({ children }: { children: ReactNode }) {
   // Clear any previous account's data the moment the signed-in user changes.
   const prevUser = useRef<string | null>(userId);
   useEffect(() => {
-    if (prevUser.current !== userId) {
+    // Only clear on sign-out or account switch, not on the first sign-in load.
+    if (prevUser.current !== userId && prevUser.current !== null) {
       qc.removeQueries({ queryKey: ["wellness"] });
       qc.removeQueries({ queryKey: ["daily"] });
       prevUser.current = userId;
