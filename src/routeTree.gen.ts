@@ -19,6 +19,7 @@ import { Route as CoachRouteImport } from './routes/coach'
 import { Route as DisclaimerRouteImport } from './routes/disclaimer'
 import { Route as EveningRouteImport } from './routes/evening'
 import { Route as ExperimentsRouteImport } from './routes/experiments'
+import { Route as HabitsRouteImport } from './routes/habits'
 import { Route as HomeRouteImport } from './routes/home'
 import { Route as JourneyRouteImport } from './routes/journey'
 import { Route as MiddayRouteImport } from './routes/midday'
@@ -81,6 +82,11 @@ const EveningRoute = EveningRouteImport.update({
 const ExperimentsRoute = ExperimentsRouteImport.update({
   id: '/experiments',
   path: '/experiments',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HabitsRoute = HabitsRouteImport.update({
+  id: '/habits',
+  path: '/habits',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HomeRoute = HomeRouteImport.update({
@@ -160,6 +166,7 @@ export interface FileRoutesByFullPath {
   '/disclaimer': typeof DisclaimerRoute
   '/evening': typeof EveningRoute
   '/experiments': typeof ExperimentsRoute
+  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/midday': typeof MiddayRoute
@@ -185,6 +192,7 @@ export interface FileRoutesByTo {
   '/disclaimer': typeof DisclaimerRoute
   '/evening': typeof EveningRoute
   '/experiments': typeof ExperimentsRoute
+  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/midday': typeof MiddayRoute
@@ -211,6 +219,7 @@ export interface FileRoutesById {
   '/disclaimer': typeof DisclaimerRoute
   '/evening': typeof EveningRoute
   '/experiments': typeof ExperimentsRoute
+  '/habits': typeof HabitsRoute
   '/home': typeof HomeRoute
   '/journey': typeof JourneyRoute
   '/midday': typeof MiddayRoute
@@ -238,6 +247,7 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/evening'
     | '/experiments'
+    | '/habits'
     | '/home'
     | '/journey'
     | '/midday'
@@ -263,6 +273,7 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/evening'
     | '/experiments'
+    | '/habits'
     | '/home'
     | '/journey'
     | '/midday'
@@ -288,6 +299,7 @@ export interface FileRouteTypes {
     | '/disclaimer'
     | '/evening'
     | '/experiments'
+    | '/habits'
     | '/home'
     | '/journey'
     | '/midday'
@@ -314,6 +326,7 @@ export interface RootRouteChildren {
   DisclaimerRoute: typeof DisclaimerRoute
   EveningRoute: typeof EveningRoute
   ExperimentsRoute: typeof ExperimentsRoute
+  HabitsRoute: typeof HabitsRoute
   HomeRoute: typeof HomeRoute
   JourneyRoute: typeof JourneyRoute
   MiddayRoute: typeof MiddayRoute
@@ -399,6 +412,13 @@ declare module '@tanstack/react-router' {
       path: '/experiments'
       fullPath: '/experiments'
       preLoaderRoute: typeof ExperimentsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/habits': {
+      id: '/habits'
+      path: '/habits'
+      fullPath: '/habits'
+      preLoaderRoute: typeof HabitsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/home': {
@@ -506,6 +526,7 @@ const rootRouteChildren: RootRouteChildren = {
   DisclaimerRoute: DisclaimerRoute,
   EveningRoute: EveningRoute,
   ExperimentsRoute: ExperimentsRoute,
+  HabitsRoute: HabitsRoute,
   HomeRoute: HomeRoute,
   JourneyRoute: JourneyRoute,
   MiddayRoute: MiddayRoute,
