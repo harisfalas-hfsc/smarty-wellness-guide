@@ -47,7 +47,9 @@ function AdminPage() {
     enabled: !!session,
     queryFn: () => adminCheckAccess(),
   });
-  useEffect(() => window.scrollTo({ top: 0 }), [section]);
+  useEffect(() => {
+    window.scrollTo({ top: 0 });
+  }, [section]);
 
   if (loading || (session && access.isLoading)) {
     return <PageShell><Loader2 className="mx-auto mt-10 h-6 w-6 animate-spin text-primary" /></PageShell>;
