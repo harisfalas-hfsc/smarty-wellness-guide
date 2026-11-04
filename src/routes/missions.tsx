@@ -8,6 +8,10 @@ import { Progress } from "@/components/ui/progress";
 import { todayKey, useWellness } from "@/lib/wellness-store";
 import type { Mission } from "@/lib/wellness-types";
 import { cn } from "@/lib/utils";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { adviseMission } from "@/lib/intelligence/engine";
 
 export const Route = createFileRoute("/missions")({
   head: () => ({
@@ -91,6 +95,7 @@ function MissionCard({ m }: { m: Mission }) {
       </div>
       <Progress value={stepPct} className="mt-3" />
       <p className="mt-1 text-[11px] text-muted-foreground">{m.totalCompletions ?? 0} days completed in total</p>
+      {status === "active" && <MissionAdviceNote m={m} />}
 
       <div className="mt-4 flex flex-wrap gap-2 border-t border-border/60 pt-4">
         {status === "available" && <Button size="sm" onClick={() => setMissionStatus(m.id, "active")}><Play /> Start mission</Button>}
@@ -163,5 +168,32 @@ function MissionsPage() {
         Missions are not a punishment system. Missing a day changes nothing except the pace.
       </p>
     </PageShell>
+  );
+}
+
+/** Personalised progression advice from recorded behaviour; user decides whether to step down. */
+function MissionAdviceNote({ m }: { m: Mission }) {
+  const qc = useQueryClient();
+  const [busy, setBusy] = useState(false);
+  const advice = adviseMission(m, todayKey());
+  const canStepDown = (advice.kind === "easier" || advice.kind === "returning") && m.step > 1;
+  async function stepDown() {
+    setBusy(true);
+    const { error } = await supabase.rpc("adjust_mission_step", { _mission_id: m.id, _delta: -1, _reason: advice.kind === "returning" ? "returning" : "easier" });
+    setBusy(false);
+    if (error) { toast.error("Couldn't change the level. Please try again."); return; }
+    toast.success("Done — you're on an easier level now.");
+    await qc.invalidateQueries({ queryKey: ["wellness"] });
+  }
+  const tone = advice.kind === "ready" ? "border-calm/60 text-calm-deep" : advice.kind === "steady" ? "border-primary/30 text-muted-foreground" : "border-sun/70 text-sun-deep";
+  return (
+    <div className={cn("mt-3 rounded-2xl border-2 px-3 py-2 text-xs leading-5", tone)}>
+      {advice.message}
+      {canStepDown && (
+        <Button size="sm" variant="outline" className="mt-2 w-full sm:w-auto" disabled={busy} onClick={stepDown}>
+          Make it easier (level {m.step - 1})
+        </Button>
+      )}
+    </div>
   );
 }

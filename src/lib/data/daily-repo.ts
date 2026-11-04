@@ -4,6 +4,7 @@
  * Browser client under RLS; user_id is set explicitly AND enforced by policy.
  */
 import { supabase } from "@/integrations/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database, Json } from "@/integrations/supabase/types";
 
 type T = Database["public"]["Tables"];
@@ -34,6 +35,8 @@ export interface DailyData {
   userChallenges: UserChallenge[];
 }
 
+type Db = SupabaseClient<Database>;
+
 function ok<R>(res: { data: R | null; error: { message: string } | null }): R {
   if (res.error) throw new Error(res.error.message);
   return res.data as R;
@@ -41,20 +44,20 @@ function ok<R>(res: { data: R | null; error: { message: string } | null }): R {
 
 export const RITUAL_ID: Record<Period, string> = { morning: "r-morning", midday: "r-midday", evening: "r-evening" };
 
-export async function loadDaily(userId: string, since: string): Promise<DailyData> {
+export async function loadDaily(userId: string, since: string, db: Db = supabase): Promise<DailyData> {
   const [prefs, rituals, activities, aDone, rDone, pci, br, hy, pr, pt, uc, ucd] = await Promise.all([
-    supabase.from("wellness_preferences").select("*").eq("user_id", userId).maybeSingle(),
-    supabase.from("ritual_definitions").select("*").order("sort_order"),
-    supabase.from("ritual_activity_definitions").select("*").order("sort_order"),
-    supabase.from("ritual_activity_completions").select("*").eq("user_id", userId).gte("local_date", since),
-    supabase.from("ritual_completions").select("*").eq("user_id", userId).gte("local_date", since),
-    supabase.from("period_check_ins").select("*").eq("user_id", userId).gte("local_date", since).order("local_date", { ascending: false }),
-    supabase.from("breathing_sessions").select("*").eq("user_id", userId).gte("local_date", since).order("completed_at", { ascending: false }),
-    supabase.from("hydration_entries").select("*").eq("user_id", userId).gte("local_date", since).order("created_at", { ascending: false }),
-    supabase.from("protein_entries").select("*").eq("user_id", userId).gte("local_date", since).order("created_at", { ascending: false }),
-    supabase.from("personal_time_entries").select("*").eq("user_id", userId).gte("local_date", since).order("created_at", { ascending: false }),
-    supabase.from("user_challenges").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(50),
-    supabase.from("user_challenge_days").select("user_challenge_id, local_date").eq("user_id", userId),
+    db.from("wellness_preferences").select("*").eq("user_id", userId).maybeSingle(),
+    db.from("ritual_definitions").select("*").order("sort_order"),
+    db.from("ritual_activity_definitions").select("*").order("sort_order"),
+    db.from("ritual_activity_completions").select("*").eq("user_id", userId).gte("local_date", since),
+    db.from("ritual_completions").select("*").eq("user_id", userId).gte("local_date", since),
+    db.from("period_check_ins").select("*").eq("user_id", userId).gte("local_date", since).order("local_date", { ascending: false }),
+    db.from("breathing_sessions").select("*").eq("user_id", userId).gte("local_date", since).order("completed_at", { ascending: false }),
+    db.from("hydration_entries").select("*").eq("user_id", userId).gte("local_date", since).order("created_at", { ascending: false }),
+    db.from("protein_entries").select("*").eq("user_id", userId).gte("local_date", since).order("created_at", { ascending: false }),
+    db.from("personal_time_entries").select("*").eq("user_id", userId).gte("local_date", since).order("created_at", { ascending: false }),
+    db.from("user_challenges").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(50),
+    db.from("user_challenge_days").select("user_challenge_id, local_date").eq("user_id", userId),
   ]);
   const days = ok(ucd);
   return {

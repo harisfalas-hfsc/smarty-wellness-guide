@@ -32,6 +32,7 @@ const ITEMS = [
   { to: "/bucket-list", label: "Bucket list", Icon: Compass },
   { to: "/experiments", label: "Experiments", Icon: FlaskConical },
   { to: "/journey", label: "Journey", Icon: LineChart },
+  { to: "/insights", label: "Insights", Icon: Compass },
   { to: "/review", label: "Review", Icon: ClipboardList },
 ] as const;
 

@@ -15,3 +15,5 @@
 - Calendar dates use the user's local date (`src/lib/dates.ts`), timestamps are UTC — why: avoids the UTC day-rollover bug.
 - Old localStorage data is imported only via the user-confirmed banner (`src/lib/legacy-migration.ts`), never automatically or destructively.
 - Habit logs credit missions/challenges via database triggers (`credit_linked_progress`), and mission levelling happens in a trigger on mission completions — why: one shared completion system, no double logging.
+- Intelligence (recommendations, life gaps, patterns, mission advice, weekly review) is one pure engine in `src/lib/intelligence/engine.ts`, used by both the UI (`useIntelligence`) and Smarty Coach's server function — why: every surface reads the same context and can't contradict another.
+- Smarty Coach runs only in `src/lib/coach.functions.ts` (authenticated server function, Lovable AI Gateway); repos accept an optional user-scoped client so the server reuses them under RLS — why: no keys in the browser, no duplicate data access.

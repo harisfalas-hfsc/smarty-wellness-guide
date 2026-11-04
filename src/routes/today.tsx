@@ -8,6 +8,7 @@ import { todayKey, useWellness } from "@/lib/wellness-store";
 import { buildRecommendations, getTodaysChallenge, getTodaysMission } from "@/lib/recommendation";
 import { MOODS } from "@/lib/checkin-options";
 import { DailyDashboard } from "@/components/DailyDashboard";
+import { DailyIntelligence } from "@/components/DailyIntelligence";
 
 export const Route = createFileRoute("/today")({
   head: () => ({
@@ -48,23 +49,7 @@ function TodayPage() {
       />
 
       <div className="space-y-5">
-        {primary && <SmartyCard eyebrow={todayCheckIn ? "Step 2 · Your recommendation" : "Start here"} title={primary.headline}>
-          <p className="text-lg font-bold sm:text-xl">{primary.action}</p>
-          <p className="mt-2 text-sm leading-6 text-muted-foreground">{primary.reason}</p>
-          {primary.externalUrl ? (
-            <a href={primary.externalUrl} target="_blank" rel="noreferrer" style={{ textDecoration: "none" }}>
-              <Button size="lg" className="mt-5 w-full sm:w-auto">
-                {primary.ctaLabel}
-              </Button>
-            </a>
-          ) : (
-            <Link to="/check-in" style={{ textDecoration: "none" }}>
-              <Button size="lg" className="mt-5 w-full sm:w-auto">
-                {primary.ctaLabel}
-              </Button>
-            </Link>
-          )}
-        </SmartyCard>}
+        <DailyIntelligence />
 
         {todayCheckIn && <div className="grid gap-4 lg:grid-cols-2">
           <section className="rounded-3xl border-2 border-calm/60 bg-card p-6 shadow-soft">

@@ -188,7 +188,8 @@ function NavDrawer({ onClose }: { onClose: () => void }) {
         { to: "/bucket-list", label: "Bucket list", Icon: Compass },
         { to: "/experiments", label: "Wellness experiments", Icon: FlaskConical },
         { to: "/journey", label: "Journey", Icon: LineChart },
-        { to: "/review", label: "Wellness review", Icon: ClipboardList },
+        { to: "/insights", label: "Your insights", Icon: Compass },
+        { to: "/review", label: "Weekly review", Icon: ClipboardList },
       ],
     },
     {

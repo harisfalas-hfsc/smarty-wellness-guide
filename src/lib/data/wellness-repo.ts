@@ -4,6 +4,7 @@
  * client for inserts: the database defaults it to auth.uid().
  */
 import { supabase } from "@/integrations/supabase/client";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "@/integrations/supabase/types";
 import type {
   BucketGoal,
@@ -69,31 +70,34 @@ export function sectionToColumns<S extends keyof WellnessProfile>(
   return out as WPInsert;
 }
 
+/** Any client acting as the user (browser client or server-side user client). */
+export type Db = SupabaseClient<Database>;
+
 function check<T>(res: { data: T | null; error: { message: string } | null }): T {
   if (res.error) throw new Error(res.error.message);
   return res.data as T;
 }
 
-export async function loadWellnessState(userId: string): Promise<WellnessState> {
+export async function loadWellnessState(userId: string, db: Db = supabase): Promise<WellnessState> {
   const [profile, wp, checkIns, mDefs, mProg, mDone, cDefs, cDone, goals, eDefs, uExp, conv] =
     await Promise.all([
-      supabase.from("profiles").select("onboarded_at").eq("id", userId).maybeSingle(),
-      supabase.from("wellness_profiles").select("*").eq("user_id", userId).maybeSingle(),
-      supabase.from("check_ins").select("*").eq("user_id", userId).order("local_date", { ascending: false }).limit(400),
-      supabase.from("mission_definitions").select("*").eq("active", true).order("sort_order"),
-      supabase.from("user_mission_progress").select("*").eq("user_id", userId),
-      supabase.from("mission_completions").select("mission_id, local_date, step").eq("user_id", userId).order("local_date", { ascending: false }),
-      supabase.from("challenge_definitions").select("*").eq("active", true).order("sort_order"),
-      supabase.from("challenge_completions").select("challenge_id, local_date").eq("user_id", userId).order("local_date", { ascending: false }),
-      supabase.from("bucket_goals").select("*").eq("user_id", userId).order("created_at", { ascending: false }),
-      supabase.from("experiment_definitions").select("*").eq("active", true).order("sort_order"),
-      supabase.from("user_experiments").select("*").eq("user_id", userId).order("created_at", { ascending: false }),
-      supabase.from("coach_conversations").select("id").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1),
+      db.from("profiles").select("onboarded_at").eq("id", userId).maybeSingle(),
+      db.from("wellness_profiles").select("*").eq("user_id", userId).maybeSingle(),
+      db.from("check_ins").select("*").eq("user_id", userId).order("local_date", { ascending: false }).limit(400),
+      db.from("mission_definitions").select("*").eq("active", true).order("sort_order"),
+      db.from("user_mission_progress").select("*").eq("user_id", userId),
+      db.from("mission_completions").select("mission_id, local_date, step").eq("user_id", userId).order("local_date", { ascending: false }),
+      db.from("challenge_definitions").select("*").eq("active", true).order("sort_order"),
+      db.from("challenge_completions").select("challenge_id, local_date").eq("user_id", userId).order("local_date", { ascending: false }),
+      db.from("bucket_goals").select("*").eq("user_id", userId).order("created_at", { ascending: false }),
+      db.from("experiment_definitions").select("*").eq("active", true).order("sort_order"),
+      db.from("user_experiments").select("*").eq("user_id", userId).order("created_at", { ascending: false }),
+      db.from("coach_conversations").select("id").eq("user_id", userId).order("updated_at", { ascending: false }).limit(1),
     ]);
 
   const convId = check(conv)[0]?.id;
   const msgs = convId
-    ? check(await supabase.from("coach_messages").select("id, role, text, created_at").eq("conversation_id", convId).order("created_at"))
+    ? check(await db.from("coach_messages").select("id, role, text, created_at").eq("conversation_id", convId).order("created_at"))
     : [];
 
   const latestMission = new Map<string, string>();
@@ -117,6 +121,8 @@ export async function loadWellnessState(userId: string): Promise<WellnessState> 
       step, totalSteps: d.total_steps,
       target: d.step_targets[step - 1] ?? d.step_targets[d.step_targets.length - 1] ?? "",
       completed: Boolean(date), ...(date ? { completedDate: date } : {}),
+      completionDates: mine.map((r) => r.local_date),
+      ...(prog ? { startedAt: prog.started_at } : {}),
     };
   });
   const challenges: Challenge[] = check(cDefs).map((d) => {

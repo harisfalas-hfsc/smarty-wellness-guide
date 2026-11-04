@@ -1,139 +1,162 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { Send, Sparkles } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { MessageCircle, RotateCcw, Send, Trash2 } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import { useServerFn } from "@tanstack/react-start";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { PageShell } from "@/components/PageShell";
 import { PageHeader } from "@/components/PageHeader";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { useWellness } from "@/lib/wellness-store";
+import { useDaily } from "@/lib/daily";
+import { askCoach, clearCoachHistory } from "@/lib/coach.functions";
 
 export const Route = createFileRoute("/coach")({
   head: () => ({
     meta: [
       { title: "Smarty Coach — Smarty Wellness" },
-      {
-        name: "description",
-        content:
-          "Tell Smarty Coach how you feel in plain words. It reads your profile, check-ins and habits and suggests the next realistic action.",
-      },
-      { property: "og:title", content: "Smarty Coach" },
-      {
-        property: "og:description",
-        content: "A professional wellness and lifestyle guidance system, not a therapist.",
-      },
+      { name: "description", content: "A personal wellness coach that reads your check-ins, habits and goals and suggests one realistic next step." },
+      { property: "og:title", content: "Smarty Coach — Smarty Wellness" },
+      { property: "og:description", content: "Practical, personal wellness guidance based on your own records. Not a medical service." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: CoachPage,
 });
 
 const STARTERS = [
-  "I feel exhausted.",
-  "I have no motivation.",
-  "I have been very stressed.",
-  "I haven't trained for a week.",
+  "Why am I always tired?",
+  "I've been very stressed this week.",
+  "What should I focus on today?",
   "I don't have time today.",
-  "I want to start running.",
-  "I want to improve my life.",
+  "How did my week go?",
+  "Help me set a realistic goal.",
 ];
 
-/** Placeholder acknowledgement. The reasoning engine is not built yet — this
- * never pretends to analyse the message. */
-const HOLDING_REPLY =
-  "Noted. Smarty Coach is being connected to your wellness profile, check-ins and schedule. Once it is live, it will answer here with one realistic action rather than a list of advice. In the meantime, your check-in already drives today's recommendation.";
+type Pending = { text: string; failed: string | null };
 
 function CoachPage() {
-  const { state, addCoachMessage, todayCheckIn } = useWellness();
+  const { state } = useWellness();
+  const { today } = useDaily();
+  const qc = useQueryClient();
+  const ask = useServerFn(askCoach);
+  const clear = useServerFn(clearCoachHistory);
   const [text, setText] = useState("");
+  const [pending, setPending] = useState<Pending | null>(null);
+  const [thinking, setThinking] = useState(false);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const endRef = useRef<HTMLDivElement>(null);
 
-  function send(message: string) {
+  const messages = state.coachMessages;
+  // Hide the optimistic copy once the saved message arrives.
+  const lastSavedUser = [...messages].reverse().find((m) => m.role === "user")?.text;
+  const showPending = pending && !(pending.failed === null && !thinking && lastSavedUser === pending.text);
+
+  useEffect(() => { endRef.current?.scrollIntoView({ behavior: "smooth", block: "end" }); }, [messages.length, thinking, pending]);
+  useEffect(() => { inputRef.current?.focus(); }, []);
+
+  async function send(message: string, retry = false) {
     const trimmed = message.trim();
-    if (!trimmed) return;
-    addCoachMessage({ role: "user", text: trimmed });
-    addCoachMessage({ role: "coach", text: HOLDING_REPLY });
-    setText("");
+    if ((!trimmed && !retry) || thinking) return;
+    setPending({ text: trimmed, failed: null });
+    if (!retry) setText("");
+    setThinking(true);
+    try {
+      await ask({ data: { message: trimmed, today, retry } });
+      await qc.invalidateQueries({ queryKey: ["wellness"] });
+      setPending(null);
+    } catch (err) {
+      await qc.invalidateQueries({ queryKey: ["wellness"] });
+      setPending({ text: trimmed, failed: err instanceof Error ? err.message : "Something went wrong." });
+    } finally {
+      setThinking(false);
+      inputRef.current?.focus();
+    }
   }
+
+  async function clearHistory() {
+    if (!window.confirm("Delete your whole conversation with Smarty Coach? This can't be undone.")) return;
+    try { await clear(); await qc.invalidateQueries({ queryKey: ["wellness"] }); setPending(null); toast.success("Conversation deleted."); }
+    catch { toast.error("Couldn't delete the conversation."); }
+  }
+
+  const lastIsUser = messages.length > 0 && messages[messages.length - 1]!.role === "user";
 
   return (
     <PageShell width="3xl">
-      <PageHeader
-        eyebrow="The intelligence layer"
-        icon={Sparkles}
-        title="Smarty Coach"
-        subtitle="Talk normally. You do not need to know the right question to ask."
-      />
+      <PageHeader eyebrow="Your wellness coach" icon={MessageCircle} title="Smarty Coach"
+        subtitle="Talk normally. Smarty Coach reads your check-ins, habits, goals and missions before it answers." />
 
-      <section className="rounded-3xl border-2 border-primary bg-card p-5 shadow-soft sm:p-6">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          What Smarty Coach considers
-        </p>
-        <p className="mt-2 text-sm leading-6 text-muted-foreground">
-          Your wellness profile, daily check-ins, recent changes, training, nutrition, movement,
-          stress, energy, motivation, sleep, schedule, responsibilities, goals, missions and what
-          has worked for you before.
-          {todayCheckIn
-            ? " Today's check-in is already available to it."
-            : " Check in today so it has something current to work with."}
-        </p>
-      </section>
-
-      <div className="mt-5 space-y-3">
-        {state.coachMessages.length === 0 ? (
+      <div className="space-y-3" aria-live="polite">
+        {messages.length === 0 && !showPending && (
           <div className="rounded-3xl border-2 border-calm/60 bg-card p-6 text-sm leading-6 text-muted-foreground shadow-soft">
-            Start with how you actually feel. For example: "I've had a heavy week at work and I
-            haven't trained."
+            Start with how you actually feel — for example: "I've had a heavy week at work and I haven't trained."
           </div>
-        ) : (
-          state.coachMessages.map((m) => (
-            <div
-              key={m.id}
-              className={
-                m.role === "user"
-                  ? "ml-auto max-w-[85%] rounded-3xl rounded-br-lg bg-primary px-4 py-3 text-sm font-medium text-primary-foreground"
-                  : "mr-auto max-w-[90%] rounded-3xl rounded-bl-lg border-2 border-calm/60 bg-card px-4 py-3 text-sm leading-6 text-foreground"
-              }
-            >
-              {m.text}
-            </div>
-          ))
         )}
+        {messages.map((m) => (
+          <Bubble key={m.id} role={m.role} text={m.text} />
+        ))}
+        {showPending && pending && lastSavedUser !== pending.text && pending.text && <Bubble role="user" text={pending.text} />}
+        {thinking && (
+          <div className="mr-auto flex w-fit items-center gap-2 rounded-3xl rounded-bl-lg border-2 border-calm/60 bg-card px-4 py-3 text-sm text-muted-foreground">
+            <span className="flex gap-1" aria-hidden>
+              <span className="h-2 w-2 animate-bounce rounded-full bg-calm [animation-delay:-0.3s]" />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-calm [animation-delay:-0.15s]" />
+              <span className="h-2 w-2 animate-bounce rounded-full bg-calm" />
+            </span>
+            Looking at your records…
+          </div>
+        )}
+        {!thinking && (pending?.failed || (lastIsUser && !pending)) && (
+          <div className="rounded-2xl border-2 border-energy/60 bg-card p-4 text-sm">
+            <p>{pending?.failed ?? "Smarty Coach hasn't answered your last message yet."}</p>
+            <Button size="sm" variant="outline" className="mt-2" onClick={() => send(pending?.text ?? "", true)}><RotateCcw /> Retry</Button>
+          </div>
+        )}
+        <div ref={endRef} />
       </div>
 
-      <div className="mt-5">
-        <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
-          Or start with one of these
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          {STARTERS.map((s) => (
-            <button
-              key={s}
-              type="button"
-              onClick={() => send(s)}
-              className="cursor-pointer rounded-full border-2 border-mind/50 bg-card px-4 py-2 text-xs font-semibold text-mind-deep transition hover:border-mind hover:bg-mind/10"
-            >
-              {s}
-            </button>
-          ))}
+      {messages.length < 2 && (
+        <div className="mt-5">
+          <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Or start with one of these</p>
+          <div className="mt-3 flex flex-wrap gap-2">
+            {STARTERS.map((s) => (
+              <button key={s} type="button" disabled={thinking} onClick={() => send(s)}
+                className="cursor-pointer rounded-full border-2 border-mind/50 bg-card px-4 py-2 text-xs font-semibold text-mind-deep transition hover:border-mind hover:bg-mind/10 disabled:opacity-50">
+                {s}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className="mt-5 flex items-end gap-2">
-        <Textarea
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          rows={2}
-          placeholder="Tell Smarty how you are doing…"
-          className="min-h-[3.25rem] rounded-2xl"
-        />
-        <Button size="lg" onClick={() => send(text)} aria-label="Send">
-          <Send className="h-4 w-4" />
-        </Button>
-      </div>
+      <form className="sticky bottom-20 mt-5 flex items-end gap-2 rounded-3xl border-2 border-primary/50 bg-card p-2 shadow-soft md:bottom-4"
+        onSubmit={(e) => { e.preventDefault(); void send(text); }}>
+        <Textarea ref={inputRef} value={text} onChange={(e) => setText(e.target.value)} rows={2} maxLength={2000}
+          onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); void send(text); } }}
+          placeholder="Tell Smarty how you are doing…" className="min-h-[3.25rem] resize-none rounded-2xl border-0 shadow-none focus-visible:ring-0" />
+        <Button type="submit" size="lg" disabled={thinking || !text.trim()} aria-label="Send"><Send className="h-4 w-4" /></Button>
+      </form>
 
-      <p className="mt-5 pb-2 text-xs leading-5 text-muted-foreground">
-        Smarty Coach provides wellness and lifestyle guidance. It is not a doctor, psychologist or
-        therapist and does not diagnose or treat any condition. If something feels beyond everyday
-        stress, please speak with a qualified professional.
-      </p>
+      <div className="mt-4 flex flex-wrap items-start justify-between gap-3 pb-2">
+        <p className="max-w-xl text-xs leading-5 text-muted-foreground">
+          Smarty Coach gives wellness and lifestyle guidance. It is not a doctor, psychologist or therapist and does not diagnose or treat any condition. If something feels beyond everyday stress, please speak with a qualified professional.
+        </p>
+        {messages.length > 0 && <Button size="sm" variant="ghost" onClick={clearHistory}><Trash2 /> Delete conversation</Button>}
+      </div>
     </PageShell>
+  );
+}
+
+function Bubble({ role, text }: { role: "user" | "coach"; text: string }) {
+  return role === "user" ? (
+    <div className="ml-auto max-w-[85%] whitespace-pre-wrap rounded-3xl rounded-br-lg bg-primary px-4 py-3 text-sm font-medium text-primary-foreground">{text}</div>
+  ) : (
+    <div className="prose prose-sm mr-auto max-w-[90%] rounded-3xl rounded-bl-lg border-2 border-calm/60 bg-card px-4 py-3 text-sm leading-6 text-foreground [&_p]:my-1 [&_ul]:my-1 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5">
+      <ReactMarkdown>{text}</ReactMarkdown>
+    </div>
   );
 }

@@ -455,6 +455,44 @@ export type Database = {
           },
         ]
       }
+      insight_snapshots: {
+        Row: {
+          created_at: string
+          id: string
+          kind: string
+          local_date: string
+          payload: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          kind: string
+          local_date: string
+          payload?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          kind?: string
+          local_date?: string
+          payload?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insight_snapshots_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       legacy_imports: {
         Row: {
           completed_at: string | null
@@ -591,6 +629,51 @@ export type Database = {
           total_steps?: number
         }
         Relationships: []
+      }
+      mission_progress_events: {
+        Row: {
+          created_at: string
+          from_step: number | null
+          id: string
+          mission_id: string
+          reason: string
+          to_step: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          from_step?: number | null
+          id?: string
+          mission_id: string
+          reason?: string
+          to_step: number
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          from_step?: number | null
+          id?: string
+          mission_id?: string
+          reason?: string
+          to_step?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_progress_events_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "mission_definitions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mission_progress_events_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       period_check_ins: {
         Row: {
@@ -737,55 +820,73 @@ export type Database = {
         Row: {
           action: string
           area: string | null
+          benefit: string | null
           challenge_id: string | null
           check_in_id: string | null
           completed_at: string | null
           created_at: string
+          difficulty: string | null
+          est_minutes: number | null
           headline: string
           id: string
           kind: string
           level: string
           local_date: string | null
           mission_id: string | null
+          postponed_until: string | null
           product: string | null
           reason: string
+          rec_key: string | null
           status: string
+          updated_at: string
           user_id: string
         }
         Insert: {
           action?: string
           area?: string | null
+          benefit?: string | null
           challenge_id?: string | null
           check_in_id?: string | null
           completed_at?: string | null
           created_at?: string
+          difficulty?: string | null
+          est_minutes?: number | null
           headline?: string
           id?: string
           kind: string
           level?: string
           local_date?: string | null
           mission_id?: string | null
+          postponed_until?: string | null
           product?: string | null
           reason?: string
+          rec_key?: string | null
           status?: string
+          updated_at?: string
           user_id?: string
         }
         Update: {
           action?: string
           area?: string | null
+          benefit?: string | null
           challenge_id?: string | null
           check_in_id?: string | null
           completed_at?: string | null
           created_at?: string
+          difficulty?: string | null
+          est_minutes?: number | null
           headline?: string
           id?: string
           kind?: string
           level?: string
           local_date?: string | null
           mission_id?: string | null
+          postponed_until?: string | null
           product?: string | null
           reason?: string
+          rec_key?: string | null
           status?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: [
@@ -1396,6 +1497,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      adjust_mission_step: {
+        Args: { _delta: number; _mission_id: string; _reason: string }
+        Returns: number
+      }
       credit_linked_progress: {
         Args: { _date: string; _user: string }
         Returns: undefined
